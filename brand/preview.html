@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>TRLBLZR — Brand Kit Preview</title>
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --bg-2: #141414;
+    --fg: #F5F5F5;
+    --mute: #888;
+    --orange: #E85D2C;
+    --border: #222;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.5;
+  }
+  header {
+    padding: 60px 40px 30px;
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 {
+    font-size: 14px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--mute);
+    margin: 0 0 8px;
+    font-weight: 500;
+  }
+  header h2 {
+    font-size: 36px;
+    margin: 0 0 8px;
+    font-weight: 900;
+    letter-spacing: 2px;
+  }
+  header .accent { color: var(--orange); }
+  header p { color: var(--mute); max-width: 720px; margin: 16px 0 0; }
+  section {
+    padding: 48px 40px;
+    border-bottom: 1px solid var(--border);
+  }
+  section h3 {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--mute);
+    margin: 0 0 24px;
+    font-weight: 600;
+  }
+  .grid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+  .tile {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .tile.light { background: #F5F5F5; }
+  .tile-media {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .tile-media img { width: 100%; height: 100%; object-fit: contain; }
+  .tile-info {
+    padding: 12px 14px;
+    font-size: 12px;
+    color: var(--mute);
+    background: var(--bg-2);
+    border-top: 1px solid var(--border);
+  }
+  .tile-info .name { color: var(--fg); font-weight: 600; }
+  .tile.light .tile-info { color: #999; background: #1A1A1A; }
+  .full-tile { grid-column: 1 / -1; }
+  .full-tile .tile-media { aspect-ratio: auto; padding: 24px; }
+  .full-tile .tile-media img { width: 100%; height: auto; max-height: 240px; }
+  .palette { display: flex; gap: 16px; }
+  .swatch { flex: 1; height: 140px; border-radius: 6px;
+            display: flex; align-items: flex-end; padding: 16px;
+            font-family: ui-monospace, monospace; font-size: 12px; }
+  .video-wrap { background: #000; border-radius: 6px; overflow: hidden; }
+  .video-wrap video { width: 100%; display: block; }
+  .meta { display: flex; gap: 24px; margin-top: 16px; color: var(--mute); font-size: 13px; }
+  .meta strong { color: var(--fg); }
+</style>
+</head>
+<body>
+<header>
+  <h1>TRLBLZR · BRAND KIT</h1>
+  <h2>Logo · Identité · Hero <span class="accent">/</span></h2>
+  <p>Aperçu du kit de marque retravaillé : icône raffinée avec courbes topographiques organiques, lockup horizontal complet, déclinaisons monochromes et favicons. Hero vidéo étalonné en B&W chaud (ombres tirées vers le orange brand), 22 s, ~5 Mo, optimisé web.</p>
+</header>
+
+<section>
+  <h3>Palette</h3>
+  <div class="palette">
+    <div class="swatch" style="background:#0A0A0A; color:#888;">#0A0A0A · Noir</div>
+    <div class="swatch" style="background:#E85D2C; color:#0A0A0A;">#E85D2C · Orange</div>
+    <div class="swatch" style="background:#F5F5F5; color:#0A0A0A;">#F5F5F5 · Blanc</div>
+    <div class="swatch" style="background:#888888; color:#0A0A0A;">#888888 · Gris secondaire</div>
+  </div>
+</section>
+
+<section>
+  <h3>Lockup horizontal</h3>
+  <div class="grid">
+    <div class="tile full-tile">
+      <div class="tile-media"><img src="lockups/lockup_horizontal.png" alt=""></div>
+      <div class="tile-info"><span class="name">lockup_horizontal</span> · fond sombre · SVG + PNG</div>
+    </div>
+    <div class="tile full-tile light">
+      <div class="tile-media"><img src="lockups/lockup_horizontal_light.png" alt=""></div>
+      <div class="tile-info"><span class="name">lockup_horizontal_light</span> · fond clair · SVG + PNG</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h3>Icône — variantes</h3>
+  <div class="grid">
+    <div class="tile">
+      <div class="tile-media"><img src="icons/icon_full.png" alt=""></div>
+      <div class="tile-info"><span class="name">icon_full</span> · principal · 512 px+</div>
+    </div>
+    <div class="tile">
+      <div class="tile-media"><img src="icons/icon_simple.png" alt=""></div>
+      <div class="tile-info"><span class="name">icon_simple</span> · taille ≤ 64 px</div>
+    </div>
+    <div class="tile light">
+      <div class="tile-media"><img src="icons/icon_on_light.png" alt=""></div>
+      <div class="tile-info"><span class="name">icon_on_light</span> · couleur sur fond clair</div>
+    </div>
+    <div class="tile light">
+      <div class="tile-media"><img src="icons/icon_simple_on_light.png" alt=""></div>
+      <div class="tile-info"><span class="name">icon_simple_on_light</span> · petit, fond clair</div>
+    </div>
+    <div class="tile">
+      <div class="tile-media" style="background:#333;"><img src="icons/icon_mono_white.png" alt=""></div>
+      <div class="tile-info"><span class="name">icon_mono_white</span> · monochrome, transparent</div>
+    </div>
+    <div class="tile light">
+      <div class="tile-media" style="background:#DDD;"><img src="icons/icon_mono_black.png" alt=""></div>
+      <div class="tile-info"><span class="name">icon_mono_black</span> · monochrome, transparent</div>
+    </div>
+    <div class="tile">
+      <div class="tile-media"><img src="icons/icon_mono_orange.png" alt=""></div>
+      <div class="tile-info"><span class="name">icon_mono_orange</span> · monochrome, transparent</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h3>Favicons & app icons</h3>
+  <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));">
+    <div class="tile">
+      <div class="tile-media" style="background:#0A0A0A;"><img src="favicons/favicon_16.png" alt="" style="width:64px;height:64px;image-rendering:pixelated;"></div>
+      <div class="tile-info"><span class="name">favicon_16</span> · 16 × 16 px</div>
+    </div>
+    <div class="tile">
+      <div class="tile-media" style="background:#0A0A0A;"><img src="favicons/favicon_32.png" alt="" style="width:96px;height:96px;image-rendering:pixelated;"></div>
+      <div class="tile-info"><span class="name">favicon_32</span> · 32 × 32 px</div>
+    </div>
+    <div class="tile">
+      <div class="tile-media" style="background:#0A0A0A;"><img src="favicons/favicon_64.png" alt="" style="width:140px;height:140px;"></div>
+      <div class="tile-info"><span class="name">favicon_64</span> · 64 × 64 px</div>
+    </div>
+    <div class="tile">
+      <div class="tile-media" style="background:#0A0A0A;"><img src="favicons/apple-touch-icon.png" alt="" style="width:180px;height:180px;"></div>
+      <div class="tile-info"><span class="name">apple-touch-icon</span> · 180 × 180 px</div>
+    </div>
+    <div class="tile">
+      <div class="tile-media" style="background:#0A0A0A;"><img src="favicons/android-chrome-192x192.png" alt="" style="width:192px;height:192px;"></div>
+      <div class="tile-info"><span class="name">android-chrome-192</span></div>
+    </div>
+    <div class="tile">
+      <div class="tile-media" style="background:#0A0A0A;"><img src="favicons/android-chrome-512x512.png" alt="" style="width:220px;height:220px;"></div>
+      <div class="tile-info"><span class="name">android-chrome-512</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h3>Hero video — 22 s, B&W chaud + vignette, web optimisé</h3>
+  <div class="video-wrap">
+    <video src="../hero/hero_720p.mp4" poster="../hero/hero_poster.jpg"
+           controls muted loop playsinline></video>
+  </div>
+  <div class="meta">
+    <span><strong>Durée</strong> 22 s</span>
+    <span><strong>Résolution</strong> 1280 × 720</span>
+    <span><strong>Poids</strong> 5.1 Mo</span>
+    <span><strong>Codec</strong> H.264 (faststart)</span>
+    <span><strong>Audio</strong> aucun</span>
+    <span><strong>Étalonnage</strong> B&W + ombres chaudes + vignette + S-curve</span>
+  </div>
+</section>
+
+<section>
+  <h3>Wordmark seul</h3>
+  <div class="grid">
+    <div class="tile full-tile">
+      <div class="tile-media"><img src="lockups/wordmark.png" alt=""></div>
+      <div class="tile-info"><span class="name">wordmark</span> · sans icône</div>
+    </div>
+    <div class="tile full-tile light">
+      <div class="tile-media"><img src="lockups/wordmark_light.png" alt=""></div>
+      <div class="tile-info"><span class="name">wordmark_light</span></div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

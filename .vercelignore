@@ -1,0 +1,27 @@
+# Fichiers macOS
+.DS_Store
+**/.DS_Store
+
+# Fichiers temporaires laissés par les premières passes (sources avant traitement)
+_icon_master.png
+icon_cropped.png
+icon_thumb.png
+
+# Inputs originaux (déjà repris dans brand/)
+icon.PNG
+logo.PNG
+style.PNG
+
+# Source HEIC (déjà traité en JPG dans sessions/)
+sessions/Annecy.jpeg
+
+# Docs internes (pas besoin sur le web)
+APPLY_BACKEND.md
+brand/USAGE.md
+
+# IDE / éditeurs
+.vscode/
+.idea/
+
+# Logs Vercel locaux
+.vercel/

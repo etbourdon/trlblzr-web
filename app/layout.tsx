@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
-import { Space_Grotesk, JetBrains_Mono, Instrument_Serif, Inter } from 'next/font/google';
+import { Montserrat, JetBrains_Mono, Instrument_Serif, Inter } from 'next/font/google';
 import './globals.css';
 
-const display = Space_Grotesk({
+const display = Montserrat({
   subsets: ['latin'],
   variable: '--font-display',
-  weight: ['500', '700'],
+  weight: ['500', '600', '700', '800', '900'],
   display: 'swap',
 });
 

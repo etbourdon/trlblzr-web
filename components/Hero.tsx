@@ -2,11 +2,31 @@ import Link from 'next/link';
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex flex-col justify-between px-6 md:px-10 pt-24 pb-10 overflow-hidden">
-      {/* Topographic SVG background — subtle */}
+    <section className="relative min-h-screen flex flex-col justify-between px-6 md:px-10 pt-32 pb-10 overflow-hidden bg-trail-black">
+      {/* Background video — drop a file at /public/videos/hero.mp4 to activate */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="metadata"
+        aria-hidden="true"
+        className="absolute inset-0 w-full h-full object-cover opacity-50 z-0"
+      >
+        <source src="/videos/hero.webm" type="video/webm" />
+        <source src="/videos/hero.mp4" type="video/mp4" />
+      </video>
+
+      {/* Gradient overlay for legibility over the video */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 opacity-[0.04] pointer-events-none"
+        className="absolute inset-0 z-[1] bg-gradient-to-b from-trail-black/30 via-trail-black/60 to-trail-black"
+      />
+
+      {/* Subtle topographic accent — visible when no video */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 z-[1] opacity-[0.06] pointer-events-none"
         style={{
           backgroundImage:
             "radial-gradient(circle at 20% 50%, transparent 30%, #E8501C 31%, transparent 32%), radial-gradient(circle at 30% 60%, transparent 38%, #E8501C 39%, transparent 40%), radial-gradient(circle at 40% 50%, transparent 46%, #E8501C 47%, transparent 48%)",
@@ -15,22 +35,28 @@ export default function Hero() {
       />
 
       <div className="flex-1 flex flex-col justify-center max-w-7xl mx-auto w-full relative z-10">
-        <p className="font-mono text-[11px] tracking-[0.3em] text-ember mb-6">
-          TRLBLZR // 0001 — WEEK-END · TRAIL &amp; MOVEMENT
+        <p className="font-mono text-[10px] md:text-[11px] tracking-[0.3em] text-ember mb-6">
+          TRLBLZR // 0001 — TRAIL RUNNING BUSINESS CLUB
         </p>
 
-        <h1 className="font-display font-bold text-[14vw] md:text-[10vw] lg:text-[9rem] xl:text-[12rem] leading-[0.85] tracking-tight text-paper-white">
-          ENTRE DANS
+        <h1 className="font-display font-black text-[clamp(2.5rem,8vw,7rem)] leading-[0.95] tracking-tight text-paper-white uppercase">
+          Entre dans
           <br />
-          L&apos;<span className="text-ember">EXTRA</span>ORDINAIRE.
+          l&apos;<span className="text-ember">extra</span>
+          <wbr />
+          ordinaire.
         </h1>
 
-        <p className="mt-10 max-w-xl font-sans text-base md:text-lg text-ash leading-relaxed">
+        <p className="mt-8 md:mt-10 max-w-xl font-sans text-base md:text-lg text-ash leading-relaxed">
           Des immersions de course en montagne pour dirigeants, conduites par des
-          athlètes de trail professionnels. <span className="text-paper-white">On ne pitche pas — on s&apos;aligne.</span> Le mouvement fait le reste.
+          athlètes de trail professionnels.{' '}
+          <span className="text-paper-white">
+            On ne pitche pas — on s&apos;aligne.
+          </span>{' '}
+          Le mouvement fait le reste.
         </p>
 
-        <div className="mt-12 flex flex-wrap items-center gap-4">
+        <div className="mt-10 md:mt-12 flex flex-wrap items-center gap-4">
           <Link
             href="#apply"
             className="font-mono text-xs tracking-[0.2em] bg-ember text-trail-black px-6 py-3 rounded-full hover:bg-paper-white transition-colors"

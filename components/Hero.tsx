@@ -10,17 +10,27 @@ export default function Hero() {
         muted
         playsInline
         preload="metadata"
+        poster="/videos/hero-poster.jpg"
         aria-hidden="true"
-        className="absolute inset-0 w-full h-full object-cover opacity-50 z-0"
+        className="absolute inset-0 w-full h-full object-cover z-0"
       >
-        <source src="/videos/hero.webm" type="video/webm" />
         <source src="/videos/hero.mp4" type="video/mp4" />
       </video>
 
-      {/* Gradient overlay for legibility over the video */}
+      {/* Vignette douce pour focaliser le regard */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 z-[1] bg-gradient-to-b from-trail-black/30 via-trail-black/60 to-trail-black"
+        className="absolute inset-0 z-[1] pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse at center, transparent 40%, rgba(10,10,10,0.4) 100%)',
+        }}
+      />
+
+      {/* Gradient overlay subtil pour lisibilité texte (sans assombrir la vidéo) */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 z-[1] bg-gradient-to-b from-trail-black/30 via-transparent to-trail-black/80"
       />
 
       {/* Subtle topographic accent — visible when no video */}
@@ -39,7 +49,7 @@ export default function Hero() {
           TRLBLZR // 0001 — TRAIL RUNNING BUSINESS CLUB
         </p>
 
-        <h1 className="font-display font-black text-[clamp(2.5rem,8vw,7rem)] leading-[0.95] tracking-tight text-paper-white uppercase">
+        <h1 className="font-display font-bold text-[clamp(2.5rem,8vw,7rem)] leading-[0.95] tracking-tight text-paper-white uppercase">
           Entre dans
           <br />
           l&apos;<span className="text-ember">extra</span>

@@ -15,7 +15,7 @@ export default function Header() {
         />
         <div className="flex flex-col leading-none">
           <div className="flex items-baseline gap-0">
-            <span className="font-display font-black text-3xl md:text-4xl tracking-tight text-paper-white">
+            <span className="font-display font-bold text-3xl md:text-4xl tracking-tight text-paper-white">
               TRLBLZR
             </span>
             <span className="font-display font-bold text-xl md:text-2xl tracking-tight text-ember">

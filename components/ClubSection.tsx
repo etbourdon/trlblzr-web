@@ -2,9 +2,10 @@
 
 import Link from 'next/link';
 import { useLocale } from '@/lib/locale-provider';
+import { pimUrl } from '@/lib/i18n';
 
 export default function ClubSection() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
 
   return (
     <section id="club" className="px-6 md:px-10 py-24 md:py-32 border-t border-stone">
@@ -63,12 +64,28 @@ export default function ClubSection() {
               </li>
             </ul>
 
-            <Link
-              href="/apply"
-              className="mt-10 inline-block font-mono text-[11px] tracking-[0.2em] text-paper-white border border-paper-white/30 px-6 py-3 rounded-full hover:border-ember hover:text-ember transition-colors"
-            >
-              {t.club.cta.toUpperCase()} ↗
-            </Link>
+            <div className="mt-10 flex flex-wrap items-center gap-3">
+              {/* CTA primaire : Apply (TRLBLZR WE) */}
+              <Link
+                href="/apply"
+                className="font-mono text-[11px] tracking-[0.2em] bg-ember text-trail-black px-6 py-3 rounded-full hover:bg-paper-white transition-colors"
+              >
+                {t.club.ctaApply.toUpperCase()} ↗
+              </Link>
+              {/* CTA secondaire : Rejoins le réseau (Pitch in Motion → WhatsApp) */}
+              <a
+                href={pimUrl('#join', locale, {
+                  source: 'trlblzr',
+                  medium: 'club',
+                  campaign: 'network_return',
+                })}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono text-[11px] tracking-[0.2em] text-paper-white border border-paper-white/30 px-6 py-3 rounded-full hover:border-ember hover:text-ember transition-colors"
+              >
+                {t.club.ctaNetwork.toUpperCase()} ↗
+              </a>
+            </div>
           </div>
         </div>
       </div>

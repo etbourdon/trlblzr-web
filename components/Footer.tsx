@@ -2,9 +2,10 @@
 
 import Link from 'next/link';
 import { useLocale } from '@/lib/locale-provider';
+import { pimUrl } from '@/lib/i18n';
 
 export default function Footer() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
 
   return (
     <footer className="px-6 md:px-10 py-12 border-t border-stone">
@@ -74,6 +75,20 @@ export default function Footer() {
             <li>
               <a href="mailto:etienne@bourdon.com" className="hover:text-ember transition-colors">
                 Email
+              </a>
+            </li>
+            <li className="pt-2 mt-2 border-t border-stone/60">
+              <a
+                href={pimUrl('', locale, {
+                  source: 'trlblzr',
+                  medium: 'footer',
+                  campaign: 'sister_brand',
+                })}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-ember transition-colors"
+              >
+                {t.footer.sisterBrand} ↗
               </a>
             </li>
           </ul>

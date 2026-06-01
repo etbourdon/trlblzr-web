@@ -76,9 +76,9 @@ export type Dict = {
   };
   testimonials: { aurore: string; florian: string; antoine: string; alice: string };
   athletes: { roleUltra: string; roleTrail: string };
-  club: { statLabel: string; tagline: string; item1: string; item2: string; item3: string; cta: string };
+  club: { statLabel: string; tagline: string; item1: string; item2: string; item3: string; cta: string; ctaApply: string; ctaNetwork: string };
   final: { eyebrow: string; titleLine1: string; titleLine2Pre: string; titleLine2Highlight: string; body1: string; body2: string; cta: string };
-  footer: { descr: string; explore: string; follow: string; copyright: string; tagline: string };
+  footer: { descr: string; explore: string; follow: string; copyright: string; tagline: string; sisterBrand: string };
   apply: {
     step1: string; step2: string; step3: string;
     s1Eyebrow: string; s1Title: string; s1TitleHighlight: string; s1Lead: string;
@@ -190,6 +190,8 @@ export const dictionary: Record<Locale, Dict> = {
       item2: 'Communauté WhatsApp + LinkedIn pour partager training, expérience, news Trail × Leadership.',
       item3: 'Accès prioritaire aux informations et opportunités.',
       cta: 'Rejoindre le club',
+      ctaApply: 'Postuler',
+      ctaNetwork: 'Rejoins le réseau',
     },
     final: {
       eyebrow: 'Go further',
@@ -206,6 +208,7 @@ export const dictionary: Record<Locale, Dict> = {
       follow: 'Suivre',
       copyright: '© 2026 TRLBLZR · All rights reserved',
       tagline: 'Courir — Échanger — Se perfectionner — Recommencer',
+      sisterBrand: 'Pitch in Motion',
     },
     apply: {
       step1: 'Profil', step2: 'Informations', step3: 'Envoi',
@@ -342,6 +345,8 @@ export const dictionary: Record<Locale, Dict> = {
       item2: 'WhatsApp + LinkedIn community to share training, experience, Trail × Leadership news.',
       item3: 'Priority access to news and opportunities.',
       cta: 'Join the club',
+      ctaApply: 'Apply',
+      ctaNetwork: 'Join the network',
     },
     final: {
       eyebrow: 'Go further',
@@ -358,6 +363,7 @@ export const dictionary: Record<Locale, Dict> = {
       follow: 'Follow',
       copyright: '© 2026 TRLBLZR · All rights reserved',
       tagline: 'Run — Talk — Sharpen — Repeat',
+      sisterBrand: 'Pitch in Motion',
     },
     apply: {
       step1: 'Profile', step2: 'Info', step3: 'Send',

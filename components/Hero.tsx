@@ -18,7 +18,7 @@ export default function Hero() {
         aria-hidden="true"
         className="absolute inset-0 w-full h-full object-cover z-0"
       >
-        <source src="/videos/hero.mp4" type="video/mp4" />
+        <source src="/hero/hero_720p.mp4" type="video/mp4" />
       </video>
 
       <div

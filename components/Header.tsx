@@ -28,32 +28,31 @@ export default function Header() {
               .run
             </span>
           </div>
-          {/* Sous-titre systématique — FR: "TRACE TON SENTIER" / EN: "BLAZE YOUR TRAIL" */}
           <span className="font-display font-semibold text-[8px] md:text-[10px] tracking-[0.25em] text-ember mt-1.5">
-            {t.header.sublogo}
+            TRAIL RUNNING BUSINESS CLUB
           </span>
         </div>
       </Link>
 
       <nav className="hidden lg:flex items-center gap-8 font-mono text-[11px] tracking-[0.2em] text-paper-white">
-        <Link href="#circle" className="hover:text-ember transition-colors">
-          {t.header.navExperiences}
+        <Link href="#sessions" className="hover:text-ember transition-colors">
+          {t.nav.sessions.toUpperCase()}
+        </Link>
+        <Link href="#athletes" className="hover:text-ember transition-colors">
+          {t.nav.athletes.toUpperCase()}
         </Link>
         <Link href="#club" className="hover:text-ember transition-colors">
-          {t.header.navClub}
-        </Link>
-        <Link href="#philosophy" className="hover:text-ember transition-colors">
-          {t.header.navPhilosophy}
+          {t.nav.club.toUpperCase()}
         </Link>
       </nav>
 
       <div className="flex items-center gap-4">
         <LangSwitcher />
         <Link
-          href="#apply"
+          href="/apply"
           className="font-mono text-[11px] tracking-[0.2em] bg-ember text-trail-black px-4 py-2 rounded-full hover:bg-paper-white transition-colors"
         >
-          {t.header.ctaApply}
+          {t.common.apply.toUpperCase()} ↗
         </Link>
       </div>
     </header>

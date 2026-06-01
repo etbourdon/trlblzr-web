@@ -8,7 +8,6 @@ export default function Hero() {
 
   return (
     <section className="relative min-h-screen flex flex-col justify-between px-6 md:px-10 pt-32 pb-10 overflow-hidden bg-trail-black">
-      {/* Background video — drop a file at /public/videos/hero.mp4 to activate */}
       <video
         autoPlay
         loop
@@ -22,7 +21,6 @@ export default function Hero() {
         <source src="/videos/hero.mp4" type="video/mp4" />
       </video>
 
-      {/* Vignette douce pour focaliser le regard */}
       <div
         aria-hidden="true"
         className="absolute inset-0 z-[1] pointer-events-none"
@@ -31,75 +29,45 @@ export default function Hero() {
             'radial-gradient(ellipse at center, transparent 40%, rgba(10,10,10,0.4) 100%)',
         }}
       />
-
-      {/* Gradient overlay subtil pour lisibilité texte */}
       <div
         aria-hidden="true"
         className="absolute inset-0 z-[1] bg-gradient-to-b from-trail-black/30 via-transparent to-trail-black/80"
       />
 
-      {/* Subtle topographic accent */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 z-[1] opacity-[0.06] pointer-events-none"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 20% 50%, transparent 30%, #E8501C 31%, transparent 32%), radial-gradient(circle at 30% 60%, transparent 38%, #E8501C 39%, transparent 40%), radial-gradient(circle at 40% 50%, transparent 46%, #E8501C 47%, transparent 48%)",
-          backgroundSize: '600px 600px',
-        }}
-      />
-
       <div className="flex-1 flex flex-col justify-center max-w-7xl mx-auto w-full relative z-10">
-        {/* Eyebrow */}
         <p className="font-mono text-[10px] md:text-[11px] tracking-[0.3em] text-ember mb-6">
-          {t.hero.eyebrow}
+          {t.hero.tag} <span className="text-paper-white/70">{t.hero.label}</span>
         </p>
 
-        {/* H1 — composition typo display */}
-        <h1 className="font-display font-bold text-[clamp(2.5rem,8vw,7rem)] leading-[0.95] tracking-tight text-paper-white uppercase">
-          {t.hero.h1Line1}
+        <h1 className="font-display font-bold text-[clamp(2.5rem,8vw,7rem)] leading-[0.95] tracking-tight text-paper-white">
+          {t.hero.titleLine1}
           <br />
-          {t.hero.h1Line2Pre}
-          <span className="text-ember">{t.hero.h1Line2Highlight}</span>
-          <wbr />
-          {t.hero.h1Line2Post}
+          {t.hero.titleLine2}
         </h1>
 
-        {/* Description explicite — Week-ends de trail pour dirigeants pionniers */}
-        <p className="mt-8 md:mt-10 max-w-2xl font-serif italic text-xl md:text-2xl text-paper-white/90 leading-snug">
-          {t.hero.descriptionStart}
-          <span className="text-paper-white font-semibold not-italic font-display">
-            {t.hero.descriptionHighlight}
-          </span>
-          {t.hero.descriptionEnd}
-        </p>
-
-        {/* Body */}
-        <p className="mt-6 max-w-xl font-sans text-base md:text-lg text-ash leading-relaxed">
-          {t.hero.bodyStart}
-          <span className="text-paper-white">{t.hero.bodyHighlight}</span>
-          {t.hero.bodyEnd}
+        <p className="mt-8 md:mt-10 max-w-2xl font-sans text-base md:text-lg text-ash leading-relaxed">
+          {t.hero.lead}
         </p>
 
         <div className="mt-10 md:mt-12 flex flex-wrap items-center gap-4">
           <Link
-            href="#apply"
+            href="/apply"
             className="font-mono text-xs tracking-[0.2em] bg-ember text-trail-black px-6 py-3 rounded-full hover:bg-paper-white transition-colors"
           >
-            {t.hero.ctaPrimary}
+            {t.hero.ctaPrimary.toUpperCase()} ↗
           </Link>
           <Link
-            href="#circle"
+            href="#sessions"
             className="font-mono text-xs tracking-[0.2em] text-paper-white border border-paper-white/30 px-6 py-3 rounded-full hover:border-ember hover:text-ember transition-colors"
           >
-            {t.hero.ctaSecondary}
+            {t.hero.ctaSecondary.toUpperCase()}
           </Link>
         </div>
       </div>
 
       <div className="flex justify-between items-end font-mono text-[10px] tracking-[0.2em] text-ash relative z-10">
-        <span>{t.hero.bottomLabel}</span>
-        <span className="hidden md:inline">{t.hero.scrollHint}</span>
+        <span>{t.hero.session}</span>
+        <span className="hidden md:inline">{t.hero.scroll}</span>
       </div>
     </section>
   );

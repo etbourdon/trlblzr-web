@@ -5,10 +5,11 @@ import CircleSection from '@/components/CircleSection';
 import PastEditionsSection from '@/components/PastEditionsSection';
 import AthletesSection from '@/components/AthletesSection';
 import ClubSection from '@/components/ClubSection';
-import ManifestoLong from '@/components/ManifestoLong';
 import Newsletter from '@/components/Newsletter';
 import Footer from '@/components/Footer';
 
+// Structure home — alignée sur le site statique trlblzr.run :
+// Hero · Manifesto · 01 NEXT · 02 PAST EDITIONS (+ témoignages) · 03 ATHLETES · 04 THE CLUB · Go further · Footer
 export default function Home() {
   return (
     <>
@@ -20,7 +21,6 @@ export default function Home() {
         <PastEditionsSection />
         <AthletesSection />
         <ClubSection />
-        <ManifestoLong />
         <Newsletter />
       </main>
       <Footer />

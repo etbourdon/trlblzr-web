@@ -46,61 +46,60 @@ export const upcomingSessions: Session[] = [
 
 // 5 éditions passées, ordre chronologique inverse (plus récente d'abord).
 // Carrousel horizontal pour absorber les éditions à venir.
+// Past editions — numérotation reprise du site statique (0001-0004) + 0005 pour Annecy mai 2026.
+// L'ordre dans le carrousel = anti-chronologique (plus récent d'abord).
+// Les textes (location/dates/theme/intro) ne sont plus utilisés directement ;
+// les composants vont chercher les libellés bilingues dans le dictionnaire i18n via le slug.
 export const pastEditions: Session[] = [
   {
     slug: 'annecy-2026-05',
-    number: '0001',
-    location: 'ANNECY',
-    dates: 'MAI 2026',
-    theme: 'PERFORMANCE',
+    number: '0005',
+    location: 'Annecy',
+    dates: 'Mai 2026',
+    theme: 'Performance',
     status: 'past',
-    intro:
-      "Trois jours dans le massif des Bauges autour de la performance. Une quinzaine de dirigeants, des athlètes de trail, des sentiers exigeants au-dessus du lac d'Annecy. On a écouté ce que les élites avaient appris du long, du dur, du lent. On est repartis avec un cadre.",
+    intro: 'Massif des Bauges',
     videoSrc: '/videos/Annecy26.mp4',
     videoPoster: '/videos/Annecy26-poster.jpg',
   },
   {
     slug: 'annecy-2026-04',
-    number: '0000',
-    location: 'ANNECY',
-    dates: 'AVRIL 2026',
-    theme: 'PRINTEMPS',
+    number: '0004',
+    location: 'Annecy',
+    dates: 'Avril 2026',
+    theme: 'Printemps',
     status: 'past',
-    intro:
-      "Retour dans les Aravis au sortir de l'hiver. Le printemps en montagne, des dénivelés francs, et la même règle : on court, on échange, on dort tôt.",
+    intro: '',
     videoSrc: '/videos/past/annecy_avril_2026.mp4',
   },
   {
     slug: 'vercors-2026-03',
-    number: '0000',
-    location: 'VERCORS',
-    dates: 'MARS 2026',
-    theme: 'HIVER',
+    number: '0003',
+    location: 'Vercors',
+    dates: 'Mars 2026',
+    theme: 'Hiver',
     status: 'past',
-    intro:
-      "Édition hivernale sur les sentiers du Vercors. Rythme soutenu, conditions exigeantes, ascension partagée. Le froid trie ce qui compte.",
+    intro: '',
     videoSrc: '/videos/past/vercors_mars_2026.mp4',
   },
   {
     slug: 'vercors-2025-08',
-    number: '0000',
-    location: 'VERCORS',
-    dates: 'AOÛT 2025',
-    theme: 'RÉSILIENCE',
+    number: '0002',
+    location: 'Vercors',
+    dates: 'Août 2025',
+    theme: 'Hauts Plateaux',
     status: 'past',
-    intro:
-      "Une édition fondatrice. Plateaux du Vercors, dénivelé long, soirées sans téléphone, débats jusque tard. C'est de là que vient TRLBLZR.",
+    intro: '',
     videoSrc: '/videos/past/vercors_2025.mp4',
   },
   {
     slug: 'annecy-2025-04',
-    number: '0000',
-    location: 'ANNECY',
-    dates: 'AVRIL 2025',
-    theme: 'PERFORMANCE',
+    number: '0001',
+    location: 'Annecy',
+    dates: 'Avril 2025',
+    theme: 'Aravis',
     status: 'past',
-    intro:
-      "Premier WE dans les Aravis. Une dizaine de fondateurs, une championne du monde de trail, et la confirmation qu'on tenait quelque chose.",
+    intro: '',
     videoSrc: '/videos/past/annecy_2025.mp4',
   },
 ];

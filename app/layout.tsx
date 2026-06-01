@@ -32,9 +32,9 @@ const sans = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'TRLBLZR · Trace ton sentier.',
+  title: 'TRLBLZR.RUN — Trail Running Business Club',
   description:
-    "TRLBLZR — Week-ends de trail pour dirigeants pionniers. Tous niveaux de course bienvenus. Immersions de 48 heures en montagne conduites par des athlètes de trail professionnels.",
+    "Du trail running en montagne pour dirigeants, avec des athlètes professionnels. On ne pitche pas — on s'aligne.",
   icons: {
     icon: '/icon.png',
   },

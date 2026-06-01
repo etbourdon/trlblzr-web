@@ -1,6 +1,6 @@
-// TRLBLZR i18n — même pattern que PIM (URL ?lang= + localStorage).
-// Détection automatique de ?lang=fr ou ?lang=en au mount → préserve la langue
-// si le visiteur arrive depuis pitchinmotion.com avec une locale choisie.
+// TRLBLZR i18n — dictionnaire complet FR + EN.
+// Repris à l'identique du site statique trlblzr.run (i18n.js).
+// Stratégie : URL ?lang= + localStorage. La langue se propage cross-brand via ?lang=.
 
 export type Locale = 'fr' | 'en';
 
@@ -9,98 +9,407 @@ export const DEFAULT_LOCALE: Locale = 'fr';
 export const LOCALE_STORAGE_KEY = 'trlblzr-locale';
 
 export type Dict = {
-  header: {
-    sublogo: string;
-    navExperiences: string;
-    navClub: string;
-    navPhilosophy: string;
-    ctaApply: string;
-  };
+  meta: { titleHome: string; titleApply: string; desc: string };
+  nav: { sessions: string; athletes: string; club: string };
+  common: { apply: string; back: string };
   hero: {
-    eyebrow: string;
-    h1Line1: string;
-    h1Line2Pre: string;
-    h1Line2Highlight: string;
-    h1Line2Post: string;
-    descriptionStart: string;
-    descriptionHighlight: string;
-    descriptionEnd: string;
-    bodyStart: string;
-    bodyHighlight: string;
-    bodyEnd: string;
+    tag: string;
+    label: string;
+    titleLine1: string;
+    titleLine2: string;
+    lead: string;
     ctaPrimary: string;
     ctaSecondary: string;
-    bottomLabel: string;
-    scrollHint: string;
+    session: string;
+    scroll: string;
+  };
+  manifesto: { label: string; titleA: string; titleB: string; body: string };
+  sections: {
+    nextIndex: string;
+    nextHeading: string;
+    nextLink: string;
+    pastIndex: string;
+    pastHeading: string;
+    athletesIndex: string;
+    athletesHeading: string;
+    clubIndex: string;
+    clubHeading: string;
+  };
+  sessions: {
+    annecyDate: string;
+    annecyTheme: string;
+    annecyPlace: string;
+    annecyBody: string;
+    vercorsDate: string;
+    vercorsTheme: string;
+    vercorsPlace: string;
+    vercorsBody: string;
+    tbdTag: string;
+    tbdSub: string;
+    tbdLabel: string;
+    tbdDate: string;
+    tbdTheme: string;
+    tbdPlace: string;
+    tbdBody: string;
+    tbdCta: string;
+    applyShort: string;
+  };
+  past: {
+    e0001Meta: string;
+    e0001TitleLine1: string;
+    e0001TitleLine2: string;
+    e0001Body: string;
+    e0002Meta: string;
+    e0002TitleLine1: string;
+    e0002TitleLine2: string;
+    e0002Body: string;
+    e0003Meta: string;
+    e0003TitleLine1: string;
+    e0003TitleLine2: string;
+    e0003Body: string;
+    e0004Meta: string;
+    e0004TitleLine1: string;
+    e0004TitleLine2: string;
+    e0004Body: string;
+    playHint: string;
+    testimonialsLabel: string;
+  };
+  testimonials: { aurore: string; florian: string; antoine: string; alice: string };
+  athletes: { roleUltra: string; roleTrail: string };
+  club: { statLabel: string; tagline: string; item1: string; item2: string; item3: string; cta: string };
+  final: { eyebrow: string; titleLine1: string; titleLine2Pre: string; titleLine2Highlight: string; body1: string; body2: string; cta: string };
+  footer: { descr: string; explore: string; follow: string; copyright: string; tagline: string };
+  apply: {
+    step1: string; step2: string; step3: string;
+    s1Eyebrow: string; s1Title: string; s1TitleHighlight: string; s1Lead: string;
+    s1DirigeantTitleLine1: string; s1DirigeantTitleLine2: string; s1DirigeantDesc: string;
+    s1AthleteTitleLine1: string; s1AthleteTitleLine2: string; s1AthleteDesc: string;
+    s1Note: string;
+    s2Eyebrow: string; s2TitleDirigeant: string; s2TitleAthlete: string; s2Lead: string;
+    s2ProfileLabel: string; s2ChangeLink: string; s2SessionLabel: string;
+    s2Firstname: string; s2Lastname: string; s2Company: string;
+    s2Itra: string; s2ItraHint: string; s2Utmb: string; s2UtmbHint: string;
+    s2Email: string; s2Whatsapp: string; s2Linkedin: string; s2LinkedinOptional: string;
+    s2Rgpd: string; s2Submit: string; s2Submitting: string;
+    s3Eyebrow: string; s3Title: string; s3TitleHighlight: string; s3Thanks: string; s3Ref: string;
+    s3Suite: string; s3Body: string; s3Step1: string; s3Step2: string; s3Step3: string;
+    s3CtaCal: string; s3CtaHome: string; s3Contact: string;
   };
 };
 
 export const dictionary: Record<Locale, Dict> = {
   fr: {
-    header: {
-      sublogo: 'TRACE TON SENTIER',
-      navExperiences: 'EXPERIENCES',
-      navClub: 'THE CLUB',
-      navPhilosophy: 'PHILOSOPHY',
-      ctaApply: 'APPLY ↗',
+    meta: {
+      titleHome: 'TRLBLZR.RUN — Trail Running Business Club',
+      titleApply: 'Postuler — TRLBLZR.RUN',
+      desc: "Du trail running en montagne pour dirigeants, avec des athlètes professionnels. On ne pitche pas — on s'aligne.",
     },
+    nav: { sessions: 'Sessions', athletes: 'Athletes', club: 'The Club' },
+    common: { apply: 'Postuler', back: '← Retour' },
     hero: {
-      eyebrow: 'TRLBLZR // 0001 — TRACE TON SENTIER',
-      h1Line1: 'Entre dans',
-      h1Line2Pre: "l'",
-      h1Line2Highlight: 'extra',
-      h1Line2Post: 'ordinaire.',
-      descriptionStart: 'Week-ends de trail ',
-      descriptionHighlight: 'pour dirigeants pionniers',
-      descriptionEnd: '. Tous niveaux de course bienvenus.',
-      bodyStart:
-        'Immersions conduites par des athlètes de trail professionnels. ',
-      bodyHighlight: "On ne pitche pas — on s'aligne.",
-      bodyEnd: ' Le mouvement fait le reste.',
-      ctaPrimary: 'POSTULER ↗',
-      ctaSecondary: 'VOIR LES SESSIONS',
-      bottomLabel: 'SESSION // 0001 — ANNECY · 22-24 MAI 2026',
-      scrollHint: '↓ SCROLL',
+      tag: 'TRLBLZR // 0001',
+      label: 'Trail Running Business Club',
+      titleLine1: 'Entre dans',
+      titleLine2: "l'extraordinaire.",
+      lead: "Du Trail Running en montagne pour dirigeants de tous les niveaux, avec des athlètes de trail professionnels. On ne pitche pas — on s'aligne. Le mouvement fait le reste.",
+      ctaPrimary: 'Postuler',
+      ctaSecondary: 'Voir les sessions →',
+      session: 'Session // 0002 — Vercors · Août 2025',
+      scroll: '↓ Scroll',
+    },
+    manifesto: {
+      label: 'Manifesto',
+      titleA: 'Résilience',
+      titleB: 'Vitesse',
+      body: 'On ne vient pas chercher un chrono. On vient apprendre à durer.',
+    },
+    sections: {
+      nextIndex: '01 / 04 — NEXT',
+      nextHeading: 'Prochaines sessions',
+      nextLink: 'Toutes les expériences →',
+      pastIndex: '02 / 04 — PAST EDITIONS',
+      pastHeading: "Ce qu'ils en disent",
+      athletesIndex: '03 / 04 — ATHLETES',
+      athletesHeading: 'Les pros qui nous accompagnent',
+      clubIndex: '04 / 04 — THE CLUB',
+      clubHeading: 'La communauté',
+    },
+    sessions: {
+      annecyDate: '22 — 24 Mai 2026',
+      annecyTheme: 'Performance',
+      annecyPlace: 'Massif des Bauges',
+      annecyBody: "Trois jours dans la région d'Annecy autour d'un thème : la performance. Tu cours sur les sentiers du massif des Bauges, tu écoutes ce que les élites du trail ont appris du long, du dur, du lent. Tu repars avec un cadre, pas une recette.",
+      vercorsDate: '03 — 05 Juillet 2026',
+      vercorsTheme: 'Longévité',
+      vercorsPlace: 'Hauts plateaux du Vercors',
+      vercorsBody: "Trois jours sur les hauts plateaux du Vercors, autour d'un thème qui change tout : la longévité. Comment durer, comment se réparer, comment construire un corps qui tient sur la durée. Le sentier devient laboratoire.",
+      tbdTag: 'À venir',
+      tbdSub: 'Date et lieu à annoncer',
+      tbdLabel: 'Bientôt',
+      tbdDate: 'Automne 2026',
+      tbdTheme: 'Nouvelle session',
+      tbdPlace: 'Thème à révéler',
+      tbdBody: "Une troisième session prend forme. Lieu, dates et thématique seront annoncés bientôt. Inscris-toi pour être prévenu en priorité et avoir accès aux premières places.",
+      tbdCta: 'Rester informé',
+      applyShort: 'Postuler',
+    },
+    past: {
+      e0001Meta: 'Avril 2025',
+      e0001TitleLine1: 'Annecy',
+      e0001TitleLine2: '— Aravis',
+      e0001Body: "Premier week-end dans les Aravis. Une dizaine de fondateurs, une championne du monde de trail, et la confirmation qu'on tenait quelque chose.",
+      e0002Meta: 'Août 2025',
+      e0002TitleLine1: 'Vercors',
+      e0002TitleLine2: '— Hauts Plateaux',
+      e0002Body: "Une édition fondatrice. Plateaux du Vercors, dénivelé long, soirées sans téléphone, débats jusque tard. C'est de là que vient TRLBLZR.",
+      e0003Meta: 'Mars 2026',
+      e0003TitleLine1: 'Vercors',
+      e0003TitleLine2: '— Hiver',
+      e0003Body: "Édition hivernale sur les sentiers du Vercors. Rythme soutenu, conditions exigeantes, ascension partagée. Le froid trie ce qui compte.",
+      e0004Meta: 'Avril 2026',
+      e0004TitleLine1: 'Annecy',
+      e0004TitleLine2: '— Printemps',
+      e0004Body: "Retour dans les Aravis au sortir de l'hiver. Le printemps en montagne, des dénivelés francs, et la même règle : on court, on échange, on dort tôt.",
+      playHint: '▶ Hover to play',
+      testimonialsLabel: '— Témoignages',
+    },
+    testimonials: {
+      aurore: "On n'est pas là pour se comparer, mais pour définir son propre objectif et l'atteindre. Un très bon dosage de sport, de discussions informelles et de moments collectifs.",
+      florian: "Je suis revenu avec une énergie que je n'avais pas eue depuis des semaines. J'en suis sorti avec un plan clair : business, nutrition, perf. Motivation au max.",
+      antoine: "Un format aussi unique qu'intense : des kilomètres, du D+, des échanges profonds, une énergie collective dingue. C'est rare de pouvoir se livrer sans filtre.",
+      alice: "Dans ces moments-là, quelque chose se passe. On tombe les masques, on sort des titres, des fonctions. Et on revient à quelque chose de plus simple : le mouvement, l'effort, le collectif.",
+    },
+    athletes: {
+      roleUltra: 'Ultra-Trailer · Co-founder Trail Running Lab',
+      roleTrail: 'Athlète trail',
+    },
+    club: {
+      statLabel: 'Coureurs · Entrepreneurs',
+      tagline: 'Plus de 250 entrepreneurs et investisseurs qui courent ensemble — sans petits fours, sans slides, en vrai.',
+      item1: 'Social Runs hebdomadaires à Paris et Lyon, in real life.',
+      item2: 'Communauté WhatsApp + LinkedIn pour partager training, expérience, news Trail × Leadership.',
+      item3: 'Accès prioritaire aux informations et opportunités.',
+      cta: 'Rejoindre le club',
+    },
+    final: {
+      eyebrow: 'Go further',
+      titleLine1: 'Rejoins',
+      titleLine2Pre: 'le ',
+      titleLine2Highlight: 'sentier.',
+      body1: "S'abonner ou postule directement pour une session.",
+      body2: "Un appel découverte de 30 minutes pour vérifier que c'est aligné — pour toi comme pour nous.",
+      cta: 'Postuler',
+    },
+    footer: {
+      descr: "Trail running en montagne pour dirigeants. On ne pitche pas — on s'aligne. Le mouvement fait le reste.",
+      explore: 'Explorer',
+      follow: 'Suivre',
+      copyright: '© 2026 TRLBLZR · All rights reserved',
+      tagline: 'Courir — Échanger — Se perfectionner — Recommencer',
+    },
+    apply: {
+      step1: 'Profil', step2: 'Informations', step3: 'Envoi',
+      s1Eyebrow: 'Postuler / Étape 1 sur 3',
+      s1Title: 'Rejoindre',
+      s1TitleHighlight: 'le club.',
+      s1Lead: "Quelques minutes pour qu'on apprenne à se connaître. Sélectionne d'abord ton profil — les informations qu'on te demandera ensuite dépendent de ce choix.",
+      s1DirigeantTitleLine1: 'Dirigeant',
+      s1DirigeantTitleLine2: 'Entrepreneur',
+      s1DirigeantDesc: 'Fondateur, CEO, investisseur, leader. Tu veux rejoindre la communauté et participer à une session — quel que soit ton niveau de trail.',
+      s1AthleteTitleLine1: 'Athlète',
+      s1AthleteTitleLine2: 'Pro / Élite',
+      s1AthleteDesc: 'Trail runner pro ou semi-pro. Tu peux nous rejoindre pour partager ton expérience, encadrer les sessions et bénéficier de la communauté.',
+      s1Note: 'Sessions traitées sous 48–72 h. Si éligible, tu recevras un lien pour réserver un appel découverte de 30 min avec Etienne.',
+      s2Eyebrow: 'Postuler / Étape 2 sur 3',
+      s2TitleDirigeant: 'Profil dirigeant.',
+      s2TitleAthlete: 'Profil athlète.',
+      s2Lead: "Tout ce qu'il nous faut pour évaluer ta candidature. WhatsApp est notre canal principal de communication pour les sessions.",
+      s2ProfileLabel: 'Profil sélectionné',
+      s2ChangeLink: 'Changer →',
+      s2SessionLabel: 'Session ciblée',
+      s2Firstname: 'Prénom', s2Lastname: 'Nom', s2Company: 'Société',
+      s2Itra: 'Index ITRA', s2ItraHint: 'Index ITRA (ou laisse vide si pas applicable)',
+      s2Utmb: 'Index UTMB', s2UtmbHint: 'Index UTMB (ou laisse vide)',
+      s2Email: 'Email', s2Whatsapp: 'WhatsApp', s2Linkedin: 'LinkedIn',
+      s2LinkedinOptional: '(optionnel)',
+      s2Rgpd: "J'accepte que mes informations soient utilisées par TRLBLZR.RUN pour traiter ma candidature et me recontacter. Conformément au RGPD, je peux à tout moment demander la suppression de mes données en écrivant à etienne@bourdon.com.",
+      s2Submit: 'Soumettre ma candidature',
+      s2Submitting: 'Envoi en cours…',
+      s3Eyebrow: 'Postuler / Étape 3 sur 3',
+      s3Title: 'Candidature',
+      s3TitleHighlight: 'reçue.',
+      s3Thanks: 'On revient vers toi sous 48 à 72 heures avec une réponse personnalisée.',
+      s3Ref: 'Référence —',
+      s3Suite: 'Voici la suite',
+      s3Body: "Etienne va personnellement étudier ta candidature. Toutes les soumissions passent par une revue manuelle — c'est ce qui garde le club exigeant.",
+      s3Step1: "Revue de ta candidature (48–72 h). On évalue le profil et l'alignement avec les sessions à venir.",
+      s3Step2: "Réponse par email. Si éligible, tu recevras un lien direct pour réserver un appel découverte de 30 min avec Etienne, qui finalise l'inscription.",
+      s3Step3: "Sinon, on t'écrit aussi. Si la session ciblée est complète ou si le timing n'est pas le bon, on revient vers toi dès qu'une fenêtre se libère.",
+      s3CtaCal: 'Réserver un appel découverte',
+      s3CtaHome: "Retour à l'accueil",
+      s3Contact: 'Une question urgente ? Écris-moi à',
     },
   },
   en: {
-    header: {
-      sublogo: 'BLAZE YOUR TRAIL',
-      navExperiences: 'EXPERIENCES',
-      navClub: 'THE CLUB',
-      navPhilosophy: 'PHILOSOPHY',
-      ctaApply: 'APPLY ↗',
+    meta: {
+      titleHome: 'TRLBLZR.RUN — Trail Running Business Club',
+      titleApply: 'Apply — TRLBLZR.RUN',
+      desc: "Mountain trail running for executives, alongside professional athletes. We don't pitch — we align. The movement does the rest.",
     },
+    nav: { sessions: 'Sessions', athletes: 'Athletes', club: 'The Club' },
+    common: { apply: 'Apply', back: '← Back' },
     hero: {
-      eyebrow: 'TRLBLZR // 0001 — BLAZE YOUR TRAIL',
-      h1Line1: 'Enter the',
-      h1Line2Pre: '',
-      h1Line2Highlight: 'extra',
-      h1Line2Post: 'ordinary.',
-      descriptionStart: 'Trail weekends ',
-      descriptionHighlight: 'for pioneer leaders',
-      descriptionEnd: '. All running levels welcome.',
-      bodyStart: 'Immersions led by professional trail athletes. ',
-      bodyHighlight: 'No pitching — alignment.',
-      bodyEnd: ' Movement does the rest.',
-      ctaPrimary: 'APPLY ↗',
-      ctaSecondary: 'SEE SESSIONS',
-      bottomLabel: 'SESSION // 0001 — ANNECY · MAY 22-24, 2026',
-      scrollHint: '↓ SCROLL',
+      tag: 'TRLBLZR // 0001',
+      label: 'Trail Running Business Club',
+      titleLine1: 'Step into',
+      titleLine2: 'the extraordinary.',
+      lead: "Mountain trail running for executives at every level, run alongside pro trail athletes. We don't pitch — we align. The movement does the rest.",
+      ctaPrimary: 'Apply',
+      ctaSecondary: 'See the sessions →',
+      session: 'Session // 0002 — Vercors · August 2025',
+      scroll: '↓ Scroll',
+    },
+    manifesto: {
+      label: 'Manifesto',
+      titleA: 'Resilience',
+      titleB: 'Speed',
+      body: "We're not here to chase a time. We're here to learn how to last.",
+    },
+    sections: {
+      nextIndex: '01 / 04 — NEXT',
+      nextHeading: 'Upcoming sessions',
+      nextLink: 'All experiences →',
+      pastIndex: '02 / 04 — PAST EDITIONS',
+      pastHeading: 'What they say',
+      athletesIndex: '03 / 04 — ATHLETES',
+      athletesHeading: 'The pros that join us',
+      clubIndex: '04 / 04 — THE CLUB',
+      clubHeading: 'The community',
+    },
+    sessions: {
+      annecyDate: 'May 22 — 24, 2026',
+      annecyTheme: 'Performance',
+      annecyPlace: 'Massif des Bauges',
+      annecyBody: 'Three days in the Annecy region around one theme: performance. You run the Bauges trails. You listen to what trail elites have learned from the long, the hard, the slow. You leave with a framework, not a recipe.',
+      vercorsDate: 'July 3 — 5, 2026',
+      vercorsTheme: 'Longevity',
+      vercorsPlace: 'Vercors Plateaus',
+      vercorsBody: 'Three days on the Vercors high plateaus, around a theme that changes everything: longevity. How to last, how to recover, how to build a body that holds up over time. The trail becomes a lab.',
+      tbdTag: 'Coming up',
+      tbdSub: 'Date and place to be announced',
+      tbdLabel: 'Soon',
+      tbdDate: 'Fall 2026',
+      tbdTheme: 'New session',
+      tbdPlace: 'Theme to be revealed',
+      tbdBody: 'A third session is taking shape. Location, dates and theme will be announced soon. Sign up to get notified first and access early spots.',
+      tbdCta: 'Stay informed',
+      applyShort: 'Apply',
+    },
+    past: {
+      e0001Meta: 'April 2025',
+      e0001TitleLine1: 'Annecy',
+      e0001TitleLine2: '— Aravis',
+      e0001Body: 'First weekend in the Aravis. A dozen founders, a trail world champion, and confirmation that we had something.',
+      e0002Meta: 'August 2025',
+      e0002TitleLine1: 'Vercors',
+      e0002TitleLine2: '— High Plateaus',
+      e0002Body: 'A founding edition. Vercors plateaus, long elevation, phone-free evenings, debates late into the night. This is where TRLBLZR comes from.',
+      e0003Meta: 'March 2026',
+      e0003TitleLine1: 'Vercors',
+      e0003TitleLine2: '— Winter',
+      e0003Body: 'Winter edition on the Vercors trails. Sustained pace, demanding conditions, shared ascent. The cold filters what matters.',
+      e0004Meta: 'April 2026',
+      e0004TitleLine1: 'Annecy',
+      e0004TitleLine2: '— Spring',
+      e0004Body: "Back to the Aravis at winter's end. Spring in the mountains, honest elevation gains, and the same rule: we run, we talk, we sleep early.",
+      playHint: '▶ Hover to play',
+      testimonialsLabel: '— Testimonials',
+    },
+    testimonials: {
+      aurore: "We're not here to compare ourselves but to define our own goal and reach it. A great balance of sport, informal discussions and collective moments.",
+      florian: "I came back with an energy I hadn't had in weeks. I left with a clear plan: business, nutrition, performance. Motivation maxed out.",
+      antoine: "A format as unique as it is intense: kilometers, vertical gain, deep exchanges, an incredible collective energy. It's rare to be able to open up without a filter.",
+      alice: 'In those moments, something happens. The masks drop, we step out of titles and roles. And we return to something simpler: movement, effort, the collective.',
+    },
+    athletes: {
+      roleUltra: 'Ultra-Trailer · Co-founder Trail Running Lab',
+      roleTrail: 'Trail athlete',
+    },
+    club: {
+      statLabel: 'Runners · Entrepreneurs',
+      tagline: 'More than 250 entrepreneurs and investors running together — no canapés, no slides, the real thing.',
+      item1: 'Weekly social runs in Paris and Lyon, in real life.',
+      item2: 'WhatsApp + LinkedIn community to share training, experience, Trail × Leadership news.',
+      item3: 'Priority access to news and opportunities.',
+      cta: 'Join the club',
+    },
+    final: {
+      eyebrow: 'Go further',
+      titleLine1: 'Join',
+      titleLine2Pre: 'the ',
+      titleLine2Highlight: 'trail.',
+      body1: 'Subscribe, or apply directly to a session.',
+      body2: "A 30-minute discovery call to check it's a fit — for you as much as for us.",
+      cta: 'Apply',
+    },
+    footer: {
+      descr: "Mountain trail running for executives. We don't pitch — we align. The movement does the rest.",
+      explore: 'Explore',
+      follow: 'Follow',
+      copyright: '© 2026 TRLBLZR · All rights reserved',
+      tagline: 'Run — Talk — Sharpen — Repeat',
+    },
+    apply: {
+      step1: 'Profile', step2: 'Info', step3: 'Send',
+      s1Eyebrow: 'Apply / Step 1 of 3',
+      s1Title: 'Join',
+      s1TitleHighlight: 'the club.',
+      s1Lead: 'A few minutes to get to know each other. Pick your profile first — the questions we ask next depend on this choice.',
+      s1DirigeantTitleLine1: 'Executive',
+      s1DirigeantTitleLine2: 'Entrepreneur',
+      s1DirigeantDesc: 'Founder, CEO, investor, leader. You want to join the community and take part in a session — whatever your trail level.',
+      s1AthleteTitleLine1: 'Athlete',
+      s1AthleteTitleLine2: 'Pro / Elite',
+      s1AthleteDesc: 'Pro or semi-pro trail runner. Join us to share your experience, run the sessions and tap into the community.',
+      s1Note: "Applications processed within 48–72 h. If eligible, you'll receive a link to book a 30-min discovery call with Etienne.",
+      s2Eyebrow: 'Apply / Step 2 of 3',
+      s2TitleDirigeant: 'Executive profile.',
+      s2TitleAthlete: 'Athlete profile.',
+      s2Lead: 'Everything we need to assess your application. WhatsApp is our main session communication channel.',
+      s2ProfileLabel: 'Selected profile',
+      s2ChangeLink: 'Change →',
+      s2SessionLabel: 'Targeted session',
+      s2Firstname: 'First name', s2Lastname: 'Last name', s2Company: 'Company',
+      s2Itra: 'ITRA index', s2ItraHint: 'ITRA index (or leave blank if not applicable)',
+      s2Utmb: 'UTMB index', s2UtmbHint: 'UTMB index (or leave blank)',
+      s2Email: 'Email', s2Whatsapp: 'WhatsApp', s2Linkedin: 'LinkedIn',
+      s2LinkedinOptional: '(optional)',
+      s2Rgpd: 'I agree that my information is used by TRLBLZR.RUN to process my application and contact me. Under GDPR, I can request deletion of my data at any time by writing to etienne@bourdon.com.',
+      s2Submit: 'Submit my application',
+      s2Submitting: 'Sending…',
+      s3Eyebrow: 'Apply / Step 3 of 3',
+      s3Title: 'Application',
+      s3TitleHighlight: 'received.',
+      s3Thanks: 'We get back to you within 48–72 hours with a personal reply.',
+      s3Ref: 'Reference —',
+      s3Suite: "Here's what happens next",
+      s3Body: "Etienne will personally review your application. Every submission goes through a manual review — that's what keeps the club exacting.",
+      s3Step1: 'Application review (48–72 h). We assess the profile and the fit with upcoming sessions.',
+      s3Step2: "Email response. If eligible, you'll get a direct link to book a 30-min discovery call with Etienne, who finalizes your registration.",
+      s3Step3: "If not, we still write back. If the targeted session is full or the timing is off, we'll come back as soon as a window opens.",
+      s3CtaCal: 'Book a discovery call',
+      s3CtaHome: 'Back to homepage',
+      s3Contact: 'Urgent? Write to me at',
     },
   },
 };
 
-// Construit une URL pitchinmotion.com avec la locale propagée
-// (pour quand TRLBLZR voudra renvoyer vers PIM)
 export function pimUrl(
   path: string,
   locale: Locale,
   utm: { source: string; medium: string; campaign: string },
 ): string {
-  const url = new URL(
-    `https://pitchinmotion.com${path.startsWith('#') ? '/' : ''}${path}`,
-  );
+  const url = new URL(`https://pitchinmotion.com${path.startsWith('#') ? '/' : ''}${path}`);
   url.searchParams.set('utm_source', utm.source);
   url.searchParams.set('utm_medium', utm.medium);
   url.searchParams.set('utm_campaign', utm.campaign);

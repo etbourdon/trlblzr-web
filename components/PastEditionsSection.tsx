@@ -1,21 +1,42 @@
 'use client';
 
 import { useRef, useEffect, useState } from 'react';
-import { pastEditions, featuredTestimonials, type Session } from '@/lib/content';
+import { useLocale } from '@/lib/locale-provider';
+import { pastEditions, type Session } from '@/lib/content';
+import type { Dict } from '@/lib/i18n';
+
+// Mapping slug → clés i18n pour les past editions
+const PAST_KEYS: Record<string, keyof Dict['past'] | undefined> = {};
 
 export default function PastEditionsSection() {
+  const { t } = useLocale();
+
+  // Helper : récupère meta/title/body depuis le dict en fonction du number
+  function getPastTexts(number: string) {
+    type K = '0001' | '0002' | '0003' | '0004' | '0005';
+    const num = number as K;
+    const map: Record<K, { meta: string; titleLine1: string; titleLine2: string; body: string }> = {
+      '0001': { meta: t.past.e0001Meta, titleLine1: t.past.e0001TitleLine1, titleLine2: t.past.e0001TitleLine2, body: t.past.e0001Body },
+      '0002': { meta: t.past.e0002Meta, titleLine1: t.past.e0002TitleLine1, titleLine2: t.past.e0002TitleLine2, body: t.past.e0002Body },
+      '0003': { meta: t.past.e0003Meta, titleLine1: t.past.e0003TitleLine1, titleLine2: t.past.e0003TitleLine2, body: t.past.e0003Body },
+      '0004': { meta: t.past.e0004Meta, titleLine1: t.past.e0004TitleLine1, titleLine2: t.past.e0004TitleLine2, body: t.past.e0004Body },
+      // 0005 = Annecy mai 2026 — pas encore traduit dans i18n.js du statique, on hard-code ici
+      '0005': { meta: 'Mai 2026', titleLine1: 'Annecy', titleLine2: '— Bauges', body: '' },
+    };
+    return map[num] || { meta: '', titleLine1: '', titleLine2: '', body: '' };
+  }
+
   return (
     <section className="px-6 md:px-10 py-24 md:py-32 border-t border-stone">
       <div className="max-w-7xl mx-auto mb-12">
         <p className="font-mono text-[11px] tracking-[0.3em] text-ember mb-4">
-          02 / 03 — PAST EDITIONS
+          {t.sections.pastIndex}
         </p>
         <h2 className="font-display font-bold text-5xl md:text-7xl tracking-tight leading-none text-paper-white">
-          Ce qu&apos;ils en disent
+          {t.sections.pastHeading}
         </h2>
       </div>
 
-      {/* Carrousel horizontal des éditions passées — scroll-snap natif */}
       <div className="overflow-x-auto snap-x snap-mandatory scrollbar-hide pl-6 md:pl-10 mb-20">
         <ul className="flex gap-5 pb-4">
           {pastEditions.map((edition) => (
@@ -23,29 +44,29 @@ export default function PastEditionsSection() {
               key={edition.slug}
               className="snap-start flex-shrink-0 w-[80vw] sm:w-[55vw] md:w-[40vw] lg:w-[28vw]"
             >
-              <EditionCard edition={edition} />
+              <EditionCard edition={edition} texts={getPastTexts(edition.number)} playHint={t.past.playHint} />
             </li>
           ))}
           <li className="flex-shrink-0 w-6 md:w-10" aria-hidden="true" />
         </ul>
       </div>
 
-      <div className="max-w-7xl mx-auto px-0 mb-16">
-        <p className="font-mono text-[10px] tracking-[0.25em] text-ash">
-          → SCROLL POUR PARCOURIR · {pastEditions.length} ÉDITIONS · ▶ HOVER SUR LES VIDÉOS
-        </p>
-      </div>
-
-      {/* Témoignages — carrousel auto-scroll */}
-      <TestimonialsCarousel />
+      <TestimonialsCarousel testimonialsLabel={t.past.testimonialsLabel} />
     </section>
   );
 }
 
-function EditionCard({ edition }: { edition: Session }) {
+function EditionCard({
+  edition,
+  texts,
+  playHint,
+}: {
+  edition: Session;
+  texts: { meta: string; titleLine1: string; titleLine2: string; body: string };
+  playHint: string;
+}) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const hasVideo = Boolean(edition.videoSrc);
-  const hasImage = Boolean(edition.imageSrc || edition.videoPoster);
 
   const handleEnter = () => {
     const v = videoRef.current;
@@ -54,15 +75,12 @@ function EditionCard({ edition }: { edition: Session }) {
       v.play().catch(() => {});
     }
   };
-
   const handleLeave = () => {
     const v = videoRef.current;
-    if (v && hasVideo) {
-      v.pause();
-    }
+    if (v && hasVideo) v.pause();
   };
 
-  const visualBg = edition.videoPoster || edition.imageSrc;
+  const visualBg = edition.videoPoster;
 
   return (
     <article
@@ -72,15 +90,7 @@ function EditionCard({ edition }: { edition: Session }) {
     >
       <div
         className="aspect-[4/5] relative overflow-hidden"
-        style={
-          visualBg
-            ? {
-                backgroundImage: `url(${visualBg})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }
-            : undefined
-        }
+        style={visualBg ? { backgroundImage: `url(${visualBg})`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
       >
         {hasVideo && (
           <video
@@ -95,104 +105,95 @@ function EditionCard({ edition }: { edition: Session }) {
             className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
           />
         )}
-        {!hasImage && !hasVideo && (
+        {!visualBg && !hasVideo && (
           <div className="absolute inset-0 bg-gradient-to-br from-ember/10 via-transparent to-transparent" />
         )}
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-t from-stone via-transparent to-transparent"
-        />
+        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-stone via-transparent to-transparent" />
         {hasVideo && (
-          <div className="absolute top-3 right-3 bg-trail-black/70 backdrop-blur-sm rounded-full px-3 py-1.5 flex items-center gap-1.5">
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-              <path d="M2 1L9 5L2 9V1Z" fill="#E8501C" />
-            </svg>
-            <span className="font-mono text-[9px] tracking-[0.2em] text-paper-white">
-              FILM
-            </span>
+          <div className="absolute top-3 right-3 bg-trail-black/70 backdrop-blur-sm rounded-full px-3 py-1.5">
+            <span className="font-mono text-[9px] tracking-[0.2em] text-paper-white">{playHint}</span>
           </div>
         )}
       </div>
 
       <div className="p-6 md:p-7 flex-1 flex flex-col">
         <div className="flex items-center justify-between font-mono text-[10px] tracking-[0.25em] text-ember mb-3">
-          <span>{edition.dates}</span>
-          <span className="text-ash">{edition.theme}</span>
+          <span>// {edition.number}</span>
+          <span className="text-ash">{texts.meta}</span>
         </div>
-        <h3 className="font-display font-bold text-2xl md:text-3xl tracking-tight text-paper-white">
-          {edition.location}
+        <h3 className="font-display font-bold text-2xl md:text-3xl tracking-tight text-paper-white leading-tight">
+          {texts.titleLine1}
+          <br />
+          {texts.titleLine2}
         </h3>
-        <p className="mt-3 font-sans text-sm text-paper-white/70 leading-relaxed flex-1">
-          {edition.intro}
-        </p>
+        {texts.body && (
+          <p className="mt-3 font-sans text-sm text-paper-white/70 leading-relaxed flex-1">{texts.body}</p>
+        )}
       </div>
     </article>
   );
 }
 
-function TestimonialsCarousel() {
+function TestimonialsCarousel({ testimonialsLabel }: { testimonialsLabel: string }) {
+  const { t } = useLocale();
+  const items = [
+    { quote: t.testimonials.aurore, author: 'Aurore Malherbes', role: 'Co-founder Padok · CTO Fairly Made' },
+    { quote: t.testimonials.florian, author: 'Florian Marin', role: 'Fondateur Le Cadre' },
+    { quote: t.testimonials.antoine, author: 'Antoine Clément', role: 'Co-founder Trail Running Lab · Ultra-Trailer' },
+    { quote: t.testimonials.alice, author: 'Alice Potiron', role: 'Founder Move & Win' },
+  ];
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
-  const total = featuredTestimonials.length;
 
-  // Auto-scroll toutes les 6 secondes
   useEffect(() => {
     if (paused) return;
-    const timer = setInterval(() => {
-      setIndex((i) => (i + 1) % total);
-    }, 6000);
+    const timer = setInterval(() => setIndex((i) => (i + 1) % items.length), 6000);
     return () => clearInterval(timer);
-  }, [paused, total]);
+  }, [paused, items.length]);
 
   return (
-    <div className="max-w-7xl mx-auto px-0">
+    <div className="max-w-7xl mx-auto px-6 md:px-10">
       <p className="font-mono text-[11px] tracking-[0.3em] text-ember mb-8">
-        TESTIMONIALS
+        {testimonialsLabel.toUpperCase()}
       </p>
 
       <div
-        className="relative min-h-[200px] md:min-h-[160px]"
+        className="relative min-h-[200px] md:min-h-[180px]"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
-        {featuredTestimonials.map((t, i) => (
+        {items.map((it, i) => (
           <figure
-            key={t.author}
-            className={`absolute inset-0 transition-opacity duration-1000 ${
-              i === index ? 'opacity-100' : 'opacity-0 pointer-events-none'
-            }`}
+            key={it.author}
+            className={`absolute inset-0 transition-opacity duration-1000 ${i === index ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
             aria-hidden={i !== index}
           >
             <div className="border-l-2 border-ember pl-6 max-w-3xl">
               <blockquote className="font-serif italic text-xl md:text-2xl text-paper-white leading-snug">
-                « {t.quote} »
+                « {it.quote} »
               </blockquote>
               <figcaption className="mt-5 font-mono text-[11px] tracking-[0.2em] text-ash">
-                <span className="text-paper-white">{t.author.toUpperCase()}</span>
+                <span className="text-paper-white">{it.author.toUpperCase()}</span>
                 <br />
-                <span className="text-ash">{t.role}</span>
+                <span className="text-ash">{it.role}</span>
               </figcaption>
             </div>
           </figure>
         ))}
       </div>
 
-      {/* Pagination dots */}
-      <div className="mt-6 flex items-center gap-2" role="tablist" aria-label="Témoignages">
-        {featuredTestimonials.map((t, i) => (
+      <div className="mt-6 flex items-center gap-2">
+        {items.map((it, i) => (
           <button
-            key={t.author}
+            key={it.author}
             type="button"
             onClick={() => setIndex(i)}
-            aria-selected={i === index}
-            aria-label={`Témoignage ${i + 1} sur ${total} — ${t.author}`}
-            className={`h-1.5 rounded-full transition-all ${
-              i === index ? 'bg-ember w-8' : 'bg-ash/40 w-4 hover:bg-ash'
-            }`}
+            aria-label={`Témoignage ${i + 1}`}
+            className={`h-1.5 rounded-full transition-all ${i === index ? 'bg-ember w-8' : 'bg-ash/40 w-4 hover:bg-ash'}`}
           />
         ))}
         <span className="ml-3 font-mono text-[10px] tracking-[0.25em] text-ash">
-          {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
+          {String(index + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}
         </span>
       </div>
     </div>

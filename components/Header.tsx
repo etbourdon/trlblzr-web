@@ -1,7 +1,13 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import LangSwitcher from './LangSwitcher';
+import { useLocale } from '@/lib/locale-provider';
 
 export default function Header() {
+  const { t } = useLocale();
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 px-6 md:px-10 py-4 flex items-center justify-between bg-gradient-to-b from-trail-black/80 via-trail-black/40 to-transparent backdrop-blur-[2px]">
       <Link href="/" className="flex items-center gap-3 group">
@@ -24,35 +30,30 @@ export default function Header() {
           </div>
           {/* Sous-titre systématique — FR: "TRACE TON SENTIER" / EN: "BLAZE YOUR TRAIL" */}
           <span className="font-display font-semibold text-[8px] md:text-[10px] tracking-[0.25em] text-ember mt-1.5">
-            TRACE TON SENTIER
+            {t.header.sublogo}
           </span>
         </div>
       </Link>
 
       <nav className="hidden lg:flex items-center gap-8 font-mono text-[11px] tracking-[0.2em] text-paper-white">
         <Link href="#circle" className="hover:text-ember transition-colors">
-          EXPERIENCES
+          {t.header.navExperiences}
         </Link>
         <Link href="#club" className="hover:text-ember transition-colors">
-          THE CLUB
+          {t.header.navClub}
         </Link>
         <Link href="#philosophy" className="hover:text-ember transition-colors">
-          PHILOSOPHY
+          {t.header.navPhilosophy}
         </Link>
       </nav>
 
       <div className="flex items-center gap-4">
-        <span
-          className="hidden md:inline font-mono text-[10px] tracking-[0.2em] text-ash"
-          aria-label="Langue"
-        >
-          <span className="text-paper-white">FR</span> · EN
-        </span>
+        <LangSwitcher />
         <Link
           href="#apply"
-          className="font-mono text-[11px] tracking-[0.2em] bg-ember text-trail-black px-5 py-2.5 rounded-full hover:bg-paper-white transition-colors"
+          className="font-mono text-[11px] tracking-[0.2em] bg-ember text-trail-black px-4 py-2 rounded-full hover:bg-paper-white transition-colors"
         >
-          APPLY ↗
+          {t.header.ctaApply}
         </Link>
       </div>
     </header>

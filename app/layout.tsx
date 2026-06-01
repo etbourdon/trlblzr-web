@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Space_Grotesk, JetBrains_Mono, Instrument_Serif, Inter } from 'next/font/google';
+import { LocaleProvider } from '@/lib/locale-provider';
 import './globals.css';
 
 const display = Space_Grotesk({
@@ -49,7 +50,9 @@ export default function RootLayout({
       lang="fr"
       className={`${display.variable} ${mono.variable} ${serif.variable} ${sans.variable}`}
     >
-      <body className="font-sans bg-trail-black text-paper-white">{children}</body>
+      <body className="font-sans bg-trail-black text-paper-white">
+        <LocaleProvider>{children}</LocaleProvider>
+      </body>
     </html>
   );
 }

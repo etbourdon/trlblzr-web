@@ -12,22 +12,11 @@ export type Session = {
   athlete?: string;
   spotsTotal?: number;
   spotsLeft?: number;
+  videoSrc?: string;      // si défini : preview au hover sur la card
+  videoPoster?: string;
 };
 
 export const upcomingSessions: Session[] = [
-  {
-    slug: 'annecy-2026-05',
-    number: '0001',
-    location: 'ANNECY',
-    dates: '22 — 24 MAI 2026',
-    theme: 'PERFORMANCE',
-    status: 'upcoming',
-    intro:
-      "Trois jours dans la région d'Annecy autour d'un thème : la performance. Tu cours sur les sentiers du massif des Bauges, tu écoutes ce que les élites du trail ont appris du long, du dur, du lent. Tu repars avec un cadre, pas une recette.",
-    athlete: 'À confirmer',
-    spotsTotal: 10,
-    spotsLeft: 6,
-  },
   {
     slug: 'vercors-2026-07',
     number: '0002',
@@ -44,6 +33,18 @@ export const upcomingSessions: Session[] = [
 ];
 
 export const pastEditions: Session[] = [
+  {
+    slug: 'annecy-2026-05',
+    number: '0001',
+    location: 'ANNECY',
+    dates: '22 — 24 MAI 2026',
+    theme: 'PERFORMANCE',
+    status: 'past',
+    intro:
+      "Trois jours dans le massif des Bauges autour de la performance. Une quinzaine de dirigeants, des athlètes de trail, des sentiers exigeants au-dessus du lac d'Annecy. On a écouté ce que les élites avaient appris du long, du dur, du lent. On est repartis avec un cadre.",
+    videoSrc: '/videos/Annecy26.mp4',
+    videoPoster: '/videos/Annecy26-poster.jpg',
+  },
   {
     slug: 'vercors-2025-08',
     number: '0000',

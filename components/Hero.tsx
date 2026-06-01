@@ -1,6 +1,11 @@
+'use client';
+
 import Link from 'next/link';
+import { useLocale } from '@/lib/locale-provider';
 
 export default function Hero() {
+  const { t } = useLocale();
+
   return (
     <section className="relative min-h-screen flex flex-col justify-between px-6 md:px-10 pt-32 pb-10 overflow-hidden bg-trail-black">
       {/* Background video — drop a file at /public/videos/hero.mp4 to activate */}
@@ -27,13 +32,13 @@ export default function Hero() {
         }}
       />
 
-      {/* Gradient overlay subtil pour lisibilité texte (sans assombrir la vidéo) */}
+      {/* Gradient overlay subtil pour lisibilité texte */}
       <div
         aria-hidden="true"
         className="absolute inset-0 z-[1] bg-gradient-to-b from-trail-black/30 via-transparent to-trail-black/80"
       />
 
-      {/* Subtle topographic accent — visible when no video */}
+      {/* Subtle topographic accent */}
       <div
         aria-hidden="true"
         className="absolute inset-0 z-[1] opacity-[0.06] pointer-events-none"
@@ -45,34 +50,35 @@ export default function Hero() {
       />
 
       <div className="flex-1 flex flex-col justify-center max-w-7xl mx-auto w-full relative z-10">
-        {/* Sous-titre systématique — FR: "TRACE TON SENTIER" / EN: "BLAZE YOUR TRAIL" */}
+        {/* Eyebrow */}
         <p className="font-mono text-[10px] md:text-[11px] tracking-[0.3em] text-ember mb-6">
-          TRLBLZR // 0001 — TRACE TON SENTIER
+          {t.hero.eyebrow}
         </p>
 
+        {/* H1 — composition typo display */}
         <h1 className="font-display font-bold text-[clamp(2.5rem,8vw,7rem)] leading-[0.95] tracking-tight text-paper-white uppercase">
-          Entre dans
+          {t.hero.h1Line1}
           <br />
-          l&apos;<span className="text-ember">extra</span>
+          {t.hero.h1Line2Pre}
+          <span className="text-ember">{t.hero.h1Line2Highlight}</span>
           <wbr />
-          ordinaire.
+          {t.hero.h1Line2Post}
         </h1>
 
-        {/* Description explicite TRLBLZR — FR / EN: "Trail weekends for pioneer leaders. All running levels welcome." */}
+        {/* Description explicite — Week-ends de trail pour dirigeants pionniers */}
         <p className="mt-8 md:mt-10 max-w-2xl font-serif italic text-xl md:text-2xl text-paper-white/90 leading-snug">
-          Week-ends de trail{' '}
+          {t.hero.descriptionStart}
           <span className="text-paper-white font-semibold not-italic font-display">
-            pour dirigeants pionniers
+            {t.hero.descriptionHighlight}
           </span>
-          . Tous niveaux de course bienvenus.
+          {t.hero.descriptionEnd}
         </p>
 
+        {/* Body */}
         <p className="mt-6 max-w-xl font-sans text-base md:text-lg text-ash leading-relaxed">
-          Immersions conduites par des athlètes de trail professionnels.{' '}
-          <span className="text-paper-white">
-            On ne pitche pas — on s&apos;aligne.
-          </span>{' '}
-          Le mouvement fait le reste.
+          {t.hero.bodyStart}
+          <span className="text-paper-white">{t.hero.bodyHighlight}</span>
+          {t.hero.bodyEnd}
         </p>
 
         <div className="mt-10 md:mt-12 flex flex-wrap items-center gap-4">
@@ -80,20 +86,20 @@ export default function Hero() {
             href="#apply"
             className="font-mono text-xs tracking-[0.2em] bg-ember text-trail-black px-6 py-3 rounded-full hover:bg-paper-white transition-colors"
           >
-            POSTULER ↗
+            {t.hero.ctaPrimary}
           </Link>
           <Link
             href="#circle"
             className="font-mono text-xs tracking-[0.2em] text-paper-white border border-paper-white/30 px-6 py-3 rounded-full hover:border-ember hover:text-ember transition-colors"
           >
-            VOIR LES SESSIONS
+            {t.hero.ctaSecondary}
           </Link>
         </div>
       </div>
 
       <div className="flex justify-between items-end font-mono text-[10px] tracking-[0.2em] text-ash relative z-10">
-        <span>SESSION // 0001 — ANNECY · 22-24 MAI 2026</span>
-        <span className="hidden md:inline">↓ SCROLL</span>
+        <span>{t.hero.bottomLabel}</span>
+        <span className="hidden md:inline">{t.hero.scrollHint}</span>
       </div>
     </section>
   );

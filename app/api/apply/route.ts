@@ -16,9 +16,15 @@ import { NextRequest, NextResponse } from 'next/server';
 const NOTION_API_URL = 'https://api.notion.com/v1/pages';
 const NOTION_VERSION = '2022-06-28';
 
+// Mapping slug → libellé Notion (doit EXACTEMENT matcher les options Select de la colonne Session).
+// On supporte les anciens slugs du site statique ET les nouveaux du Next.js.
 const SESSION_LABELS: Record<string, string> = {
-  'vercors-juillet-2026': 'Vercors — Juillet 2026 · Longévité',
+  // Slugs du site statique (compat backwards si liens externes pointent encore là)
   'annecy-mai-2026': 'Annecy — Mai 2026 · Performance',
+  'vercors-juillet-2026': 'Vercors — Juillet 2026 · Longévité',
+  // Slugs du Next.js (depuis lib/content.ts)
+  'vercors-2026-07': 'Vercors — Juillet 2026 · Longévité',
+  'tba-2026-s2': '— Sans session ciblée —',
   '': '— Sans session ciblée —',
 };
 
@@ -115,8 +121,13 @@ export async function POST(req: NextRequest) {
     const notionBody = await notionRes.json();
     if (!notionRes.ok) {
       console.error('Notion API error', notionRes.status, notionBody);
+      // On expose le message + le code Notion pour aider au debug
+      const detail =
+        notionBody.message ||
+        (notionBody.code ? `code: ${notionBody.code}` : null) ||
+        `HTTP ${notionRes.status}`;
       return NextResponse.json(
-        { error: 'Notion API rejected the request', details: notionBody.message || null },
+        { error: `Notion: ${detail}` },
         { status: 502 },
       );
     }

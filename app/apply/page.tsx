@@ -386,9 +386,17 @@ function StepInfos({
         </label>
 
         {submitError && (
-          <p className="font-mono text-xs text-ember border border-ember/50 px-4 py-3 rounded">
-            ⚠ {submitError}
-          </p>
+          <div className="font-mono text-xs text-ember border border-ember/50 px-4 py-3 rounded">
+            <p className="font-bold mb-2">⚠ Une erreur est survenue</p>
+            <p className="text-paper-white/80">{submitError}</p>
+            <p className="mt-3 text-paper-white/60 text-[10px]">
+              Si le problème persiste, écris à{' '}
+              <a href="mailto:etienne@bourdon.com" className="text-ember hover:underline">
+                etienne@bourdon.com
+              </a>{' '}
+              en mentionnant le message ci-dessus.
+            </p>
+          </div>
         )}
 
         <div className="flex items-center gap-4 pt-4">

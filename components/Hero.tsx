@@ -14,7 +14,7 @@ export default function Hero() {
         muted
         playsInline
         preload="metadata"
-        poster="/videos/hero-poster.jpg"
+        poster="/hero/hero_720p_poster.jpg"
         aria-hidden="true"
         className="absolute inset-0 w-full h-full object-cover z-0"
       >

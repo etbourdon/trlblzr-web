@@ -15,12 +15,31 @@ export default function ClubSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
           <div className="md:col-span-5">
-            <div className="aspect-square bg-stone relative overflow-hidden flex items-center justify-center">
-              <span className="font-display font-bold text-7xl md:text-9xl text-ember/20">
-                250+
-              </span>
-              <div className="absolute bottom-4 left-4 font-mono text-[10px] tracking-[0.25em] text-paper-white/60">
-                COUREURS · ENTREPRENEURS
+            <div
+              className="aspect-square relative overflow-hidden flex items-end p-6"
+              style={{
+                backgroundImage: 'url(/videos/Annecy26-poster.jpg)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            >
+              {/* Gradient bottom-up pour lisibilité texte */}
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 bg-gradient-to-t from-trail-black/85 via-trail-black/40 to-transparent"
+              />
+              {/* Touche ember discrète en haut */}
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 bg-gradient-to-br from-ember/15 via-transparent to-transparent mix-blend-overlay"
+              />
+              <div className="relative z-10">
+                <span className="font-display font-bold text-7xl md:text-9xl text-paper-white leading-none">
+                  250+
+                </span>
+                <div className="mt-2 font-mono text-[10px] tracking-[0.25em] text-paper-white/85">
+                  COUREURS · ENTREPRENEURS
+                </div>
               </div>
             </div>
           </div>

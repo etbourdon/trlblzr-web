@@ -3,6 +3,7 @@ import Hero from '@/components/Hero';
 import ManifestoShort from '@/components/ManifestoShort';
 import CircleSection from '@/components/CircleSection';
 import PastEditionsSection from '@/components/PastEditionsSection';
+import AthletesSection from '@/components/AthletesSection';
 import ClubSection from '@/components/ClubSection';
 import ManifestoLong from '@/components/ManifestoLong';
 import Newsletter from '@/components/Newsletter';
@@ -17,6 +18,7 @@ export default function Home() {
         <ManifestoShort />
         <CircleSection />
         <PastEditionsSection />
+        <AthletesSection />
         <ClubSection />
         <ManifestoLong />
         <Newsletter />

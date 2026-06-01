@@ -7,11 +7,12 @@ export type Session = {
   location: string;
   dates: string;
   theme: string;
-  status: 'upcoming' | 'past';
+  status: 'upcoming' | 'past' | 'tba';   // tba = à venir, sans détails confirmés
   intro: string;
   athlete?: string;
   spotsTotal?: number;
   spotsLeft?: number;
+  imageSrc?: string;      // photo statique (fallback ou alternative à la vidéo)
   videoSrc?: string;      // si défini : preview au hover sur la card
   videoPoster?: string;
 };
@@ -29,21 +30,56 @@ export const upcomingSessions: Session[] = [
     athlete: 'À confirmer',
     spotsTotal: 10,
     spotsLeft: 8,
+    imageSrc: '/sessions/vercors_juillet_2026.jpg',
+  },
+  {
+    slug: 'tba-2026-s2',
+    number: '0007',
+    location: 'NOUVELLE SESSION',
+    dates: 'AUTOMNE 2026',
+    theme: 'THÈME À RÉVÉLER',
+    status: 'tba',
+    intro:
+      "Une troisième session prend forme. Lieu, dates et thématique seront annoncés bientôt. Inscris-toi pour être prévenu en priorité et avoir accès aux premières places.",
   },
 ];
 
+// 5 éditions passées, ordre chronologique inverse (plus récente d'abord).
+// Carrousel horizontal pour absorber les éditions à venir.
 export const pastEditions: Session[] = [
   {
     slug: 'annecy-2026-05',
     number: '0001',
     location: 'ANNECY',
-    dates: '22 — 24 MAI 2026',
+    dates: 'MAI 2026',
     theme: 'PERFORMANCE',
     status: 'past',
     intro:
       "Trois jours dans le massif des Bauges autour de la performance. Une quinzaine de dirigeants, des athlètes de trail, des sentiers exigeants au-dessus du lac d'Annecy. On a écouté ce que les élites avaient appris du long, du dur, du lent. On est repartis avec un cadre.",
     videoSrc: '/videos/Annecy26.mp4',
     videoPoster: '/videos/Annecy26-poster.jpg',
+  },
+  {
+    slug: 'annecy-2026-04',
+    number: '0000',
+    location: 'ANNECY',
+    dates: 'AVRIL 2026',
+    theme: 'PRINTEMPS',
+    status: 'past',
+    intro:
+      "Retour dans les Aravis au sortir de l'hiver. Le printemps en montagne, des dénivelés francs, et la même règle : on court, on échange, on dort tôt.",
+    videoSrc: '/videos/past/annecy_avril_2026.mp4',
+  },
+  {
+    slug: 'vercors-2026-03',
+    number: '0000',
+    location: 'VERCORS',
+    dates: 'MARS 2026',
+    theme: 'HIVER',
+    status: 'past',
+    intro:
+      "Édition hivernale sur les sentiers du Vercors. Rythme soutenu, conditions exigeantes, ascension partagée. Le froid trie ce qui compte.",
+    videoSrc: '/videos/past/vercors_mars_2026.mp4',
   },
   {
     slug: 'vercors-2025-08',
@@ -54,6 +90,7 @@ export const pastEditions: Session[] = [
     status: 'past',
     intro:
       "Une édition fondatrice. Plateaux du Vercors, dénivelé long, soirées sans téléphone, débats jusque tard. C'est de là que vient TRLBLZR.",
+    videoSrc: '/videos/past/vercors_2025.mp4',
   },
   {
     slug: 'annecy-2025-04',
@@ -64,6 +101,7 @@ export const pastEditions: Session[] = [
     status: 'past',
     intro:
       "Premier WE dans les Aravis. Une dizaine de fondateurs, une championne du monde de trail, et la confirmation qu'on tenait quelque chose.",
+    videoSrc: '/videos/past/annecy_2025.mp4',
   },
 ];
 
@@ -72,6 +110,89 @@ export type Testimonial = {
   role: string;
   quote: string;
 };
+
+export type Athlete = {
+  slug: string;
+  name: string;
+  utmb?: number;
+  itra?: number;
+  bio: string;
+  highlight?: string;        // ligne supplémentaire mise en avant (achievement)
+  links: {
+    label: string;
+    href: string;
+  }[];
+};
+
+export const athletes: Athlete[] = [
+  {
+    slug: 'clementine-geoffray',
+    name: 'Clémentine Geoffray',
+    utmb: 796,
+    itra: 812,
+    bio: "Équipe de France de trail. Championne du monde trail court (2023) et championne d'Europe (2024). Athlète Kiprun, basée à Grenoble.",
+    links: [
+      { label: 'LinkedIn', href: 'https://linkedin.com/in/cl%C3%A9mentine-geoffray-b0495b89' },
+    ],
+  },
+  {
+    slug: 'antoine-clement',
+    name: 'Antoine Clément',
+    utmb: 725,
+    itra: 4576859,
+    bio: "Fondateur AC Ultra Performance, co-fondateur Trail Running Lab. Spécialité ultras + FKTs.",
+    highlight: "FKT GR10 (Pyrénées) : 900 km / 52 000 D+ en 11 j 13 h self-supported (juillet 2025).",
+    links: [
+      { label: 'UTMB', href: 'https://utmb.world/runner/4009024.antoine.clement' },
+      { label: 'LinkedIn', href: 'https://www.linkedin.com/in/antoine-clmt' },
+    ],
+  },
+  {
+    slug: 'noa-ohms',
+    name: 'Noa Ohms',
+    utmb: 725,
+    itra: 4931727,
+    bio: "Jeune athlète élite ultra-trail (ICN Business School).",
+    highlight: "🥇 The Canyons by UTMB® 100M — 1er (avril 2026).",
+    links: [
+      { label: 'UTMB', href: 'https://utmb.world/runner/5513414.noa.ohms' },
+      { label: 'LinkedIn', href: 'https://linkedin.com/in/noa-ohms-74a531256' },
+    ],
+  },
+  {
+    slug: 'matthis-granet',
+    name: 'Matthis Granet',
+    utmb: 760,
+    itra: 1609827,
+    bio: "Basé à Annecy, club Annecy Athlétisme.",
+    highlight: "SwissPeaks Trail 660K — 4e (2024). 🥈 Alpi Trail de Pichauris (85 km, 2025), top 100 UTMB 2021 (76e).",
+    links: [
+      { label: 'UTMB', href: 'https://utmb.world/runner/1609827.matthis.granet' },
+    ],
+  },
+  {
+    slug: 'julie-lelong',
+    name: 'Julie Lelong',
+    utmb: 768,
+    bio: "Équipe de France de trail. Ingénieure, mission Petzl.",
+    links: [
+      { label: 'UTMB', href: 'https://utmb.world/runner/1251411.julie.lelong' },
+      { label: 'LinkedIn', href: 'https://fr.linkedin.com/in/lelongjulie' },
+      { label: 'Instagram', href: 'https://www.instagram.com/juulie_lelong/' },
+    ],
+  },
+  {
+    slug: 'tibere-debizet',
+    name: 'Tibère Debizet',
+    utmb: 887,
+    bio: "Team / sponsor ASICS. Développeur frontend.",
+    links: [
+      { label: 'UTMB', href: 'https://utmb.world/runner/4313114.tibere.debizet' },
+      { label: 'LinkedIn', href: 'https://fr.linkedin.com/in/tibere-debizet' },
+      { label: 'Portfolio', href: 'https://www.collective.work/profile/tibere-debizet' },
+    ],
+  },
+];
 
 export const featuredTestimonials: Testimonial[] = [
   {

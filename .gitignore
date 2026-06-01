@@ -37,3 +37,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Source videos (use -web.mp4 versions)
+public/videos/Vercors25.mp4

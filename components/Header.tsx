@@ -22,8 +22,9 @@ export default function Header() {
               .run
             </span>
           </div>
-          <span className="font-display font-semibold text-[8px] md:text-[10px] tracking-[0.25em] text-ash mt-1.5">
-            TRAIL RUNNING BUSINESS CLUB
+          {/* Sous-titre systématique — FR: "TRACE TON SENTIER" / EN: "BLAZE YOUR TRAIL" */}
+          <span className="font-display font-semibold text-[8px] md:text-[10px] tracking-[0.25em] text-ember mt-1.5">
+            TRACE TON SENTIER
           </span>
         </div>
       </Link>

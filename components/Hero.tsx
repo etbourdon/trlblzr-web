@@ -45,8 +45,9 @@ export default function Hero() {
       />
 
       <div className="flex-1 flex flex-col justify-center max-w-7xl mx-auto w-full relative z-10">
+        {/* Sous-titre systématique — FR: "TRACE TON SENTIER" / EN: "BLAZE YOUR TRAIL" */}
         <p className="font-mono text-[10px] md:text-[11px] tracking-[0.3em] text-ember mb-6">
-          TRLBLZR // 0001 — TRAIL RUNNING BUSINESS CLUB
+          TRLBLZR // 0001 — TRACE TON SENTIER
         </p>
 
         <h1 className="font-display font-bold text-[clamp(2.5rem,8vw,7rem)] leading-[0.95] tracking-tight text-paper-white uppercase">
@@ -57,9 +58,17 @@ export default function Hero() {
           ordinaire.
         </h1>
 
-        <p className="mt-8 md:mt-10 max-w-xl font-sans text-base md:text-lg text-ash leading-relaxed">
-          Des immersions de course en montagne pour dirigeants, conduites par des
-          athlètes de trail professionnels.{' '}
+        {/* Description explicite TRLBLZR — FR / EN: "Trail weekends for pioneer leaders. All running levels welcome." */}
+        <p className="mt-8 md:mt-10 max-w-2xl font-serif italic text-xl md:text-2xl text-paper-white/90 leading-snug">
+          Week-ends de trail{' '}
+          <span className="text-paper-white font-semibold not-italic font-display">
+            pour dirigeants pionniers
+          </span>
+          . Tous niveaux de course bienvenus.
+        </p>
+
+        <p className="mt-6 max-w-xl font-sans text-base md:text-lg text-ash leading-relaxed">
+          Immersions conduites par des athlètes de trail professionnels.{' '}
           <span className="text-paper-white">
             On ne pitche pas — on s&apos;aligne.
           </span>{' '}

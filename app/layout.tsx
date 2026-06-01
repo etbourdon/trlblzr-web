@@ -31,9 +31,9 @@ const sans = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'TRLBLZR · Week-End. Trail & Movement.',
+  title: 'TRLBLZR · Trace ton sentier.',
   description:
-    'Des immersions de course en montagne pour dirigeants, conduites par des athlètes de trail professionnels.',
+    "TRLBLZR — Week-ends de trail pour dirigeants pionniers. Tous niveaux de course bienvenus. Immersions de 48 heures en montagne conduites par des athlètes de trail professionnels.",
   icons: {
     icon: '/icon.png',
   },

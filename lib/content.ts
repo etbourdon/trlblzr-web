@@ -138,7 +138,7 @@ export const athletes: Athlete[] = [
     slug: 'antoine-clement',
     name: 'Antoine Clément',
     utmb: 725,
-    itra: 4576859,
+    itra: 800,
     bio: "Fondateur AC Ultra Performance, co-fondateur Trail Running Lab. Spécialité ultras + FKTs.",
     highlight: "FKT GR10 (Pyrénées) : 900 km / 52 000 D+ en 11 j 13 h self-supported (juillet 2025).",
     links: [
@@ -150,7 +150,7 @@ export const athletes: Athlete[] = [
     slug: 'noa-ohms',
     name: 'Noa Ohms',
     utmb: 725,
-    itra: 4931727,
+    itra: 818,
     bio: "Jeune athlète élite ultra-trail (ICN Business School).",
     highlight: "🥇 The Canyons by UTMB® 100M — 1er (avril 2026).",
     links: [
@@ -162,9 +162,9 @@ export const athletes: Athlete[] = [
     slug: 'matthis-granet',
     name: 'Matthis Granet',
     utmb: 760,
-    itra: 1609827,
+    itra: 776,
     bio: "Basé à Annecy, club Annecy Athlétisme.",
-    highlight: "SwissPeaks Trail 660K — 4e (2024). 🥈 Alpi Trail de Pichauris (85 km, 2025), top 100 UTMB 2021 (76e).",
+    highlight: "🏆 Record du monde de D+ en 24 h. SwissPeaks Trail 660K — 4e (2024). 🥈 Alpi Trail de Pichauris (85 km, 2025), top 100 UTMB 2021 (76e).",
     links: [
       { label: 'UTMB', href: 'https://utmb.world/runner/1609827.matthis.granet' },
     ],

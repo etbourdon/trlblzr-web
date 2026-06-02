@@ -36,7 +36,7 @@ export default function Hero() {
 
       <div className="flex-1 flex flex-col justify-center max-w-7xl mx-auto w-full relative z-10">
         <p className="font-mono text-[10px] md:text-[11px] tracking-[0.3em] text-ember mb-6">
-          {t.hero.tag} <span className="text-paper-white/70">{t.hero.label}</span>
+          {t.hero.tag} <span className="text-paper-white/70">{t.header.sublogo}</span>
         </p>
 
         <h1 className="font-display font-bold text-[clamp(2.5rem,8vw,7rem)] leading-[0.95] tracking-tight text-paper-white">

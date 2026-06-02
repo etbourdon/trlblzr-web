@@ -138,27 +138,38 @@ function TestimonialsCarousel({ testimonialsLabel }: { testimonialsLabel: string
   const { t } = useLocale();
   const items = [
     { quote: t.testimonials.aurore, author: 'Aurore Malherbes', role: 'Co-founder Padok · CTO Fairly Made' },
-    { quote: t.testimonials.florian, author: 'Florian Marin', role: 'Fondateur Le Cadre' },
+    { quote: t.testimonials.jonathan, author: 'Jonathan Cohen', role: 'Founder Acasi' },
+    { quote: t.testimonials.florian, author: 'Florian Marin', role: 'CTO Teads · Pitch in Motion' },
     { quote: t.testimonials.antoine, author: 'Antoine Clément', role: 'Co-founder Trail Running Lab · Ultra-Trailer' },
+    { quote: t.testimonials.louis, author: 'Louis Frack', role: 'Co-founder & CEO Bioburger' },
+    { quote: t.testimonials.alexandre, author: 'Alexandre Sagakian', role: 'Serial Tech Entrepreneur' },
     { quote: t.testimonials.alice, author: 'Alice Potiron', role: 'Founder Move & Win' },
+    { quote: t.testimonials.jeremie, author: 'Jérémie Charlet', role: 'Founder Conscious Paths' },
+    { quote: t.testimonials.sergio, author: 'Sergio Benavent', role: 'Senior Consumer Insights Lead, Logitech' },
+    { quote: t.testimonials.fabrice, author: 'Fabrice Bernhard', role: 'Co-founder Théodo' },
   ];
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
 
   useEffect(() => {
     if (paused) return;
-    const timer = setInterval(() => setIndex((i) => (i + 1) % items.length), 6000);
+    const timer = setInterval(() => setIndex((i) => (i + 1) % items.length), 7000);
     return () => clearInterval(timer);
   }, [paused, items.length]);
 
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-10">
-      <p className="font-mono text-[11px] tracking-[0.3em] text-ember mb-8">
+      <p className="font-mono text-[11px] tracking-[0.3em] text-ember mb-4">
         {testimonialsLabel.toUpperCase()}
       </p>
 
+      {/* Caution business — paragraphe court qui contextualise les témoignages */}
+      <p className="font-sans text-base md:text-lg text-paper-white/85 leading-relaxed max-w-3xl mb-12">
+        {t.testimonials.intro}
+      </p>
+
       <div
-        className="relative min-h-[200px] md:min-h-[180px]"
+        className="relative min-h-[280px] md:min-h-[220px]"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >

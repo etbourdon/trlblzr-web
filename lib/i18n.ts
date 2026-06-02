@@ -11,6 +11,7 @@ export const LOCALE_STORAGE_KEY = 'trlblzr-locale';
 export type Dict = {
   meta: { titleHome: string; titleApply: string; desc: string };
   nav: { sessions: string; athletes: string; club: string };
+  header: { sublogo: string };
   common: { apply: string; back: string };
   hero: {
     tag: string;
@@ -74,7 +75,19 @@ export type Dict = {
     playHint: string;
     testimonialsLabel: string;
   };
-  testimonials: { aurore: string; florian: string; antoine: string; alice: string };
+  testimonials: {
+    intro: string;
+    aurore: string;
+    jonathan: string;
+    florian: string;
+    antoine: string;
+    louis: string;
+    alexandre: string;
+    alice: string;
+    jeremie: string;
+    sergio: string;
+    fabrice: string;
+  };
   athletes: { roleUltra: string; roleTrail: string };
   club: { statLabel: string; tagline: string; item1: string; item2: string; item3: string; cta: string; ctaApply: string; ctaNetwork: string };
   final: { eyebrow: string; titleLine1: string; titleLine2Pre: string; titleLine2Highlight: string; body1: string; body2: string; cta: string };
@@ -105,6 +118,7 @@ export const dictionary: Record<Locale, Dict> = {
       desc: "Du trail running en montagne pour dirigeants, avec des athlètes professionnels. On ne pitche pas — on s'aligne.",
     },
     nav: { sessions: 'Sessions', athletes: 'Athletes', club: 'The Club' },
+    header: { sublogo: 'TRACE TON SENTIER' },
     common: { apply: 'Postuler', back: '← Retour' },
     hero: {
       tag: 'TRLBLZR // 0001',
@@ -174,10 +188,17 @@ export const dictionary: Record<Locale, Dict> = {
       testimonialsLabel: '— Témoignages',
     },
     testimonials: {
-      aurore: "On n'est pas là pour se comparer, mais pour définir son propre objectif et l'atteindre. Un très bon dosage de sport, de discussions informelles et de moments collectifs.",
-      florian: "Je suis revenu avec une énergie que je n'avais pas eue depuis des semaines. J'en suis sorti avec un plan clair : business, nutrition, perf. Motivation au max.",
-      antoine: "Un format aussi unique qu'intense : des kilomètres, du D+, des échanges profonds, une énergie collective dingue. C'est rare de pouvoir se livrer sans filtre.",
-      alice: "Dans ces moments-là, quelque chose se passe. On tombe les masques, on sort des titres, des fonctions. Et on revient à quelque chose de plus simple : le mouvement, l'effort, le collectif.",
+      intro: "Trois jours en montagne — et c'est souvent une décision business qui se débloque, un partenariat qui se noue, un cap stratégique qui se clarifie. Co-développement entre pairs, masterclasses d'élites du trail, conversations qui sortent du cadre habituel. La preuve par celles et ceux qui sont venus.",
+      aurore: "Le motto du week-end est vite posé : on n'est pas là pour se comparer, mais pour définir son propre objectif et l'atteindre. Un très bon dosage de sport, de discussions informelles et de moments collectifs.",
+      jonathan: "Une superbe expérience. J'ai apprécié la disponibilité et le partage des athlètes. Hâte de revenir pour les prochains.",
+      florian: "Je suis revenu avec une énergie que je n'avais pas eue depuis des semaines. J'en suis sorti avec un plan clair : business, nutrition au quotidien et en compétition, et ce que je veux affiner dans mes triathlons.",
+      antoine: "Un format aussi unique qu'intense : des kilomètres, du D+, des échanges profonds, des soins, et une énergie collective dingue. C'est rare de pouvoir se livrer sans filtre, entouré de gens qui partagent la même flamme pour le sport et l'entrepreneuriat.",
+      louis: "Un week-end unique : des kilomètres, du D+, et une énergie collective de dingue. C'est rare de pouvoir échanger avec des gens qui vivent les mêmes galères et la même passion du dépassement.",
+      alexandre: "Un week-end inspirant à Annecy mêlant sports d'endurance et connexions humaines profondes. Au-delà du défi physique, une vraie réflexion sur ce qu'est la performance — pas se comparer aux autres, mais pousser ses propres limites et se montrer pleinement.",
+      alice: "Dans ces moments-là, quelque chose se passe. On tombe les masques, on sort des titres, des fonctions, des attentes. Et on revient à quelque chose de plus simple : le mouvement, l'effort, le collectif.",
+      jeremie: "Fabuleux week-end, très enrichissant à la fois sur la performance sportive que sur la réflexion autour de ma startup, grâce aux co-dev. Ça a dépassé largement mes attentes.",
+      sergio: "Une superbe et surprenante intersection entre performance sportive et professionnelle. Des séances co-dev franches et bienveillantes qui apportent de la clarté sur comment avancer. Un vrai boost pour les jambes et le cerveau.",
+      fabrice: "C'est un super cadre pour connecter avec d'autres entrepreneurs. Les moments d'effort intense en pleine nature facilitent des discussions qu'on n'aurait pas eues sinon. Je repars plein d'énergie !",
     },
     athletes: {
       roleUltra: 'Ultra-Trailer · Co-founder Trail Running Lab',
@@ -260,6 +281,7 @@ export const dictionary: Record<Locale, Dict> = {
       desc: "Mountain trail running for executives, alongside professional athletes. We don't pitch — we align. The movement does the rest.",
     },
     nav: { sessions: 'Sessions', athletes: 'Athletes', club: 'The Club' },
+    header: { sublogo: 'BLAZE YOUR TRAIL' },
     common: { apply: 'Apply', back: '← Back' },
     hero: {
       tag: 'TRLBLZR // 0001',
@@ -329,10 +351,17 @@ export const dictionary: Record<Locale, Dict> = {
       testimonialsLabel: '— Testimonials',
     },
     testimonials: {
-      aurore: "We're not here to compare ourselves but to define our own goal and reach it. A great balance of sport, informal discussions and collective moments.",
-      florian: "I came back with an energy I hadn't had in weeks. I left with a clear plan: business, nutrition, performance. Motivation maxed out.",
-      antoine: "A format as unique as it is intense: kilometers, vertical gain, deep exchanges, an incredible collective energy. It's rare to be able to open up without a filter.",
-      alice: 'In those moments, something happens. The masks drop, we step out of titles and roles. And we return to something simpler: movement, effort, the collective.',
+      intro: "Three days in the mountains — and often, a business decision gets unlocked, a partnership forms, a strategic direction sharpens. Peer co-development, masterclasses from trail elites, conversations that break the usual mold. The proof comes from those who came.",
+      aurore: "The motto of the weekend was set early: we're not here to compare ourselves but to define our own goal and reach it. A great balance of sport, informal discussions and collective moments.",
+      jonathan: "A great experience. I appreciated the athletes' availability and willingness to share. Can't wait for the next one.",
+      florian: "I came back with an energy I hadn't had in weeks. I left with a clear plan: business, daily and race nutrition, and what I want to refine in my triathlons.",
+      antoine: "A format as unique as it is intense: kilometers, vertical gain, deep exchanges, recovery, and an incredible collective energy. It's rare to open up without a filter, surrounded by people who share the same flame for sport and entrepreneurship.",
+      louis: "A unique weekend: kilometers, vertical gain, and an incredible collective energy. It's rare to connect with people who live the same struggles and share the same passion for self-overcoming.",
+      alexandre: "An inspiring weekend in Annecy blending endurance sports and deep human connections. Beyond the physical challenge, a real reflection on what performance truly means — not competing with others, but pushing your own limits and showing up fully.",
+      alice: 'In those moments, something happens. The masks drop, we step out of titles, roles and expectations. And we return to something simpler: movement, effort, the collective.',
+      jeremie: "A fabulous weekend, deeply enriching both for athletic performance and for thinking through my startup, thanks to the co-dev sessions. It far exceeded my expectations.",
+      sergio: "A great and surprising intersection between athletic and professional performance. Frank and benevolent co-dev sessions that bring clarity on how to move forward. A real boost for both the legs and the brain.",
+      fabrice: "A great setting to connect with other entrepreneurs. The moments of intense effort in nature unlock conversations we wouldn't have had otherwise. I leave full of energy!",
     },
     athletes: {
       roleUltra: 'Ultra-Trailer · Co-founder Trail Running Lab',

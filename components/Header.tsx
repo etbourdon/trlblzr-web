@@ -29,7 +29,7 @@ export default function Header() {
             </span>
           </div>
           <span className="font-display font-semibold text-[8px] md:text-[10px] tracking-[0.25em] text-ember mt-1.5">
-            TRAIL RUNNING BUSINESS CLUB
+            {t.header.sublogo}
           </span>
         </div>
       </Link>

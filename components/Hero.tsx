@@ -2,9 +2,10 @@
 
 import Link from 'next/link';
 import { useLocale } from '@/lib/locale-provider';
+import { pimUrl } from '@/lib/i18n';
 
 export default function Hero() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
 
   return (
     <section className="relative min-h-screen flex flex-col justify-between px-6 md:px-10 pt-32 pb-10 overflow-hidden bg-trail-black">
@@ -47,6 +48,22 @@ export default function Hero() {
 
         <p className="mt-8 md:mt-10 max-w-2xl font-sans text-base md:text-lg text-ash leading-relaxed">
           {t.hero.lead}
+        </p>
+
+        <p className="mt-5 max-w-2xl font-mono text-[10px] md:text-[11px] tracking-[0.2em] text-ash uppercase">
+          {t.hero.poweredBy}{' '}
+          <a
+            href={pimUrl('', locale, {
+              source: 'trlblzr',
+              medium: 'hero',
+              campaign: 'powered_by',
+            })}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-ember hover:text-paper-white transition-colors"
+          >
+            {t.footer.sisterBrand} ↗
+          </a>
         </p>
 
         <div className="mt-10 md:mt-12 flex flex-wrap items-center gap-4">

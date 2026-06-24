@@ -19,6 +19,7 @@ export type Dict = {
     titleLine1: string;
     titleLine2: string;
     lead: string;
+    poweredBy: string;
     ctaPrimary: string;
     ctaSecondary: string;
     session: string;
@@ -126,6 +127,7 @@ export const dictionary: Record<Locale, Dict> = {
       titleLine1: 'Entre dans',
       titleLine2: "l'extraordinaire.",
       lead: "Du Trail Running en montagne pour dirigeants de tous les niveaux, avec des athlètes de trail professionnels. On ne pitche pas — on s'aligne. Le mouvement fait le reste.",
+      poweredBy: 'Join TRLBLZR.run powered by',
       ctaPrimary: 'Postuler',
       ctaSecondary: 'Voir les sessions →',
       session: 'Session // 0002 — Vercors · Août 2025',
@@ -289,6 +291,7 @@ export const dictionary: Record<Locale, Dict> = {
       titleLine1: 'Step into',
       titleLine2: 'the extraordinary.',
       lead: "Mountain trail running for executives at every level, run alongside pro trail athletes. We don't pitch — we align. The movement does the rest.",
+      poweredBy: 'Join TRLBLZR.run powered by',
       ctaPrimary: 'Apply',
       ctaSecondary: 'See the sessions →',
       session: 'Session // 0002 — Vercors · August 2025',

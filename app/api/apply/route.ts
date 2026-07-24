@@ -41,6 +41,7 @@ type ApplyPayload = {
   utmb?: string;
   rgpd?: boolean;
   referer?: string;
+  locale?: 'fr' | 'en'; // ← Preferred language (Batch 2)
 };
 
 function txt(content: string | undefined | null) {
@@ -82,8 +83,11 @@ export async function POST(req: NextRequest) {
     SESSION_LABELS[data.session || ''] || data.session || '— Sans session ciblée —';
   const isAthlete = data.category === 'athlete';
 
+  // Preferred language (Batch 2) — FR par défaut si non fournie ou valeur invalide
+  const preferredLang: 'FR' | 'EN' = data.locale === 'en' ? 'EN' : 'FR';
+
   // Mapping form payload → Notion properties.
-  // Les noms de propriété doivent EXACTEMENT correspondre à la base Notion "Candidatures".
+  // Les noms de propriété doivent EXACTEMENT correspondre à la base Notion "Candidates".
   const properties: Record<string, unknown> = {
     Name: { title: txt(fullName) },
     Email: { email: data.email },
@@ -92,6 +96,7 @@ export async function POST(req: NextRequest) {
     Category: { select: { name: isAthlete ? 'Athlète' : 'Dirigeant' } },
     Session: { select: { name: sessionLabel } },
     Status: { select: { name: 'Nouveau' } },
+    'Preferred language': { select: { name: preferredLang } },
     Company: { rich_text: txt(data.company) },
     ITRA: { rich_text: txt(data.itra) },
     UTMB: { rich_text: txt(data.utmb) },

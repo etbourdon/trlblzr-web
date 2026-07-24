@@ -32,7 +32,7 @@ const sans = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'TRLBLZR.RUN — Trail Running Business Club',
+  title: 'TRLBLZR.RUN — Trace ton sentier',
   description:
     "Du trail running en montagne pour dirigeants, avec des athlètes professionnels. On ne pitche pas — on s'aligne.",
   icons: {

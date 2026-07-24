@@ -4,6 +4,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect, type FormEvent } from 'react';
 import { upcomingSessions } from '@/lib/content';
+import { useLocale } from '@/lib/locale-provider';
+import LangSwitcher from '@/components/LangSwitcher';
+import type { Dict } from '@/lib/i18n';
 
 type Category = 'dirigeant' | 'athlete';
 type Step = 1 | 2 | 3;
@@ -35,6 +38,7 @@ const EMPTY_FORM: FormData = {
 };
 
 export default function ApplyPage() {
+  const { t, locale } = useLocale();
   const [step, setStep] = useState<Step>(1);
   const [category, setCategory] = useState<Category | null>(null);
   const [form, setForm] = useState<FormData>(EMPTY_FORM);
@@ -70,6 +74,7 @@ export default function ApplyPage() {
       const payload = {
         ...form,
         category,
+        locale, // ← Preferred language propagée vers Notion
         referer:
           typeof window !== 'undefined'
             ? document.referrer || '/apply'
@@ -82,22 +87,25 @@ export default function ApplyPage() {
       });
       const body = await res.json();
       if (!res.ok || !body.ok) {
-        throw new Error(body.error || 'Une erreur est survenue. Réessaie ou écris à etienne@bourdon.com.');
+        throw new Error(body.error || t.apply.errorFallback);
       }
       setReference(body.reference);
       setStep(3);
     } catch (err) {
-      setSubmitError(err instanceof Error ? err.message : 'Erreur inconnue');
+      setSubmitError(err instanceof Error ? err.message : t.apply.errorUnknown);
     } finally {
       setSubmitting(false);
     }
   };
 
+  // Link back home in the correct locale
+  const homeHref = locale === 'en' ? '/?lang=en' : '/';
+
   return (
     <div className="min-h-screen bg-trail-black text-paper-white">
       {/* Header simplifié — logo + back + lang */}
       <header className="fixed top-0 left-0 right-0 z-50 px-6 md:px-10 py-4 flex items-center justify-between bg-trail-black/85 backdrop-blur-[2px] border-b border-stone">
-        <Link href="/" className="flex items-center gap-3 group">
+        <Link href={homeHref} className="flex items-center gap-3 group">
           <Image
             src="/icon.png"
             alt="TRLBLZR"
@@ -110,25 +118,28 @@ export default function ApplyPage() {
             <span className="text-ember">.run</span>
           </span>
         </Link>
-        <Link
-          href="/"
-          className="font-mono text-[10px] md:text-[11px] tracking-[0.2em] text-paper-white/70 hover:text-ember transition-colors"
-        >
-          ← RETOUR
-        </Link>
+        <div className="flex items-center gap-5">
+          <LangSwitcher />
+          <Link
+            href={homeHref}
+            className="font-mono text-[10px] md:text-[11px] tracking-[0.2em] text-paper-white/70 hover:text-ember transition-colors"
+          >
+            {t.common.back.toUpperCase()}
+          </Link>
+        </div>
       </header>
 
       {/* Stepper */}
       <div className="pt-24 md:pt-32 px-6 md:px-10">
         <div className="max-w-4xl mx-auto">
-          <Stepper step={step} category={category} />
+          <Stepper step={step} category={category} t={t} />
         </div>
       </div>
 
       {/* Steps */}
       <main className="px-6 md:px-10 pb-32">
         <div className="max-w-4xl mx-auto">
-          {step === 1 && <StepProfile onSelect={handleCategorySelect} />}
+          {step === 1 && <StepProfile onSelect={handleCategorySelect} t={t} />}
           {step === 2 && category && (
             <StepInfos
               category={category}
@@ -138,10 +149,16 @@ export default function ApplyPage() {
               onBack={handleBackToProfile}
               submitting={submitting}
               submitError={submitError}
+              t={t}
             />
           )}
           {step === 3 && reference && (
-            <StepConfirmation reference={reference} firstname={form.firstname} />
+            <StepConfirmation
+              reference={reference}
+              firstname={form.firstname}
+              t={t}
+              homeHref={homeHref}
+            />
           )}
         </div>
       </main>
@@ -149,25 +166,30 @@ export default function ApplyPage() {
   );
 }
 
-function Stepper({ step, category }: { step: Step; category: Category | null }) {
+function Stepper({ step, category, t }: { step: Step; category: Category | null; t: Dict }) {
   return (
     <div className="font-mono text-[10px] tracking-[0.3em] text-ash flex items-center gap-6 flex-wrap mb-10">
       <span className={step === 1 ? 'text-ember' : 'text-paper-white/60'}>
-        01 PROFIL
+        01 {t.apply.step1.toUpperCase()}
       </span>
       <span className="text-ash/40">·</span>
       <span className={step === 2 ? 'text-ember' : 'text-paper-white/60'}>
-        02 INFOS
+        02 {t.apply.step2.toUpperCase()}
       </span>
       <span className="text-ash/40">·</span>
       <span className={step === 3 ? 'text-ember' : 'text-paper-white/60'}>
-        03 ENVOI
+        03 {t.apply.step3.toUpperCase()}
       </span>
       <span className="ml-auto text-ash">
-        ÉTAPE {step} / 3
+        {t.apply.stepIndicator} {step} / 3
         {category && step >= 2 && (
           <span className="ml-3">
-            · <span className="text-ember">{category === 'dirigeant' ? 'DIRIGEANT' : 'ATHLÈTE'}</span>
+            ·{' '}
+            <span className="text-ember">
+              {category === 'dirigeant'
+                ? t.apply.s1DirigeantTitleLine1.toUpperCase()
+                : t.apply.s1AthleteTitleLine1.toUpperCase()}
+            </span>
           </span>
         )}
       </span>
@@ -175,15 +197,14 @@ function Stepper({ step, category }: { step: Step; category: Category | null }) 
   );
 }
 
-function StepProfile({ onSelect }: { onSelect: (cat: Category) => void }) {
+function StepProfile({ onSelect, t }: { onSelect: (cat: Category) => void; t: Dict }) {
   return (
     <section>
       <h1 className="font-display font-bold text-4xl md:text-6xl tracking-tight leading-[0.95] text-paper-white uppercase">
-        Rejoindre le club.
+        {t.apply.s1Title} {t.apply.s1TitleHighlight}
       </h1>
       <p className="mt-6 max-w-2xl font-sans text-base md:text-lg text-ash leading-relaxed">
-        Quelques minutes pour qu&apos;on apprenne à se connaître. Sélectionne d&apos;abord ton
-        profil — les informations qu&apos;on te demandera ensuite dépendent de ce choix.
+        {t.apply.s1Lead}
       </p>
 
       <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -193,17 +214,16 @@ function StepProfile({ onSelect }: { onSelect: (cat: Category) => void }) {
           className="group bg-stone hover:border-ember border border-stone p-8 md:p-10 text-left transition-colors"
         >
           <p className="font-mono text-[10px] tracking-[0.3em] text-ember mb-4">
-            // 01 — DIRIGEANT
+            // {t.apply.s1CategoryLabelDirigeant}
           </p>
           <h3 className="font-display font-bold text-2xl md:text-3xl tracking-tight text-paper-white">
-            Entrepreneur
+            {t.apply.s1DirigeantTitleLine2}
           </h3>
           <p className="mt-3 font-sans text-sm md:text-base text-ash leading-relaxed">
-            Fondateur, CEO, investisseur, leader. Tu veux rejoindre la communauté et
-            participer à une session — quel que soit ton niveau de trail.
+            {t.apply.s1DirigeantDesc}
           </p>
           <span className="mt-6 inline-block font-mono text-[11px] tracking-[0.2em] text-paper-white group-hover:text-ember transition-colors">
-            CONTINUER ↗
+            {t.apply.s1Continue} ↗
           </span>
         </button>
 
@@ -213,23 +233,22 @@ function StepProfile({ onSelect }: { onSelect: (cat: Category) => void }) {
           className="group bg-stone hover:border-ember border border-stone p-8 md:p-10 text-left transition-colors"
         >
           <p className="font-mono text-[10px] tracking-[0.3em] text-ember mb-4">
-            // 02 — ATHLÈTE
+            // {t.apply.s1CategoryLabelAthlete}
           </p>
           <h3 className="font-display font-bold text-2xl md:text-3xl tracking-tight text-paper-white">
-            Pro / Élite
+            {t.apply.s1AthleteTitleLine2}
           </h3>
           <p className="mt-3 font-sans text-sm md:text-base text-ash leading-relaxed">
-            Trail runner pro ou semi-pro. Tu peux nous rejoindre pour partager ton
-            expérience, encadrer les sessions et bénéficier de la communauté.
+            {t.apply.s1AthleteDesc}
           </p>
           <span className="mt-6 inline-block font-mono text-[11px] tracking-[0.2em] text-paper-white group-hover:text-ember transition-colors">
-            CONTINUER ↗
+            {t.apply.s1Continue} ↗
           </span>
         </button>
       </div>
 
-      <p className="mt-12 font-mono text-[10px] tracking-[0.2em] text-ash">
-        SESSIONS TRAITÉES SOUS 48–72 H · SI ÉLIGIBLE, TU RECEVRAS UN LIEN POUR RÉSERVER UN APPEL DÉCOUVERTE DE 30 MIN AVEC ETIENNE
+      <p className="mt-12 font-mono text-[10px] tracking-[0.2em] text-ash uppercase">
+        {t.apply.s1Note}
       </p>
     </section>
   );
@@ -243,6 +262,7 @@ function StepInfos({
   onBack,
   submitting,
   submitError,
+  t,
 }: {
   category: Category;
   form: FormData;
@@ -251,17 +271,17 @@ function StepInfos({
   onBack: () => void;
   submitting: boolean;
   submitError: string | null;
+  t: Dict;
 }) {
   const isAthlete = category === 'athlete';
 
   return (
     <section>
       <h1 className="font-display font-bold text-4xl md:text-6xl tracking-tight leading-[0.95] text-paper-white uppercase">
-        Quelques infos.
+        {t.apply.s2Title}
       </h1>
       <p className="mt-6 max-w-2xl font-sans text-base md:text-lg text-ash leading-relaxed">
-        Tout ce qu&apos;il nous faut pour évaluer ta candidature. WhatsApp est notre canal
-        principal de communication pour les sessions.
+        {t.apply.s2Lead}
       </p>
 
       <form onSubmit={onSubmit} className="mt-12 space-y-8">
@@ -269,10 +289,10 @@ function StepInfos({
         <div className="flex items-center justify-between border-b border-stone pb-5">
           <div>
             <p className="font-mono text-[10px] tracking-[0.25em] text-ash mb-1">
-              PROFIL SÉLECTIONNÉ
+              {t.apply.s2ProfileLabel.toUpperCase()}
             </p>
             <p className="font-display font-bold text-xl text-paper-white">
-              {isAthlete ? 'Athlète · Pro / Élite' : 'Dirigeant · Entrepreneur'}
+              {isAthlete ? t.apply.s2ProfileValueAthlete : t.apply.s2ProfileValueDirigeant}
             </p>
           </div>
           <button
@@ -280,18 +300,18 @@ function StepInfos({
             onClick={onBack}
             className="font-mono text-[10px] tracking-[0.2em] text-paper-white/70 hover:text-ember transition-colors"
           >
-            CHANGER →
+            {t.apply.s2ChangeLink.toUpperCase()}
           </button>
         </div>
 
         {/* Session ciblée */}
-        <Field label="Session ciblée">
+        <Field label={t.apply.s2SessionLabel}>
           <select
             value={form.session}
             onChange={(e) => onChange('session', e.target.value)}
             className="w-full bg-stone border border-stone focus:border-ember text-paper-white px-4 py-3 font-mono text-sm rounded outline-none transition-colors"
           >
-            <option value="">— Sans session ciblée —</option>
+            <option value="">{t.apply.s2SessionNoTarget}</option>
             {upcomingSessions
               .filter((s) => s.status === 'upcoming')
               .map((s) => (
@@ -303,30 +323,30 @@ function StepInfos({
         </Field>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Field label="Prénom" required>
+          <Field label={t.apply.s2Firstname} required>
             <Input value={form.firstname} onChange={(v) => onChange('firstname', v)} required />
           </Field>
-          <Field label="Nom" required>
+          <Field label={t.apply.s2Lastname} required>
             <Input value={form.lastname} onChange={(v) => onChange('lastname', v)} required />
           </Field>
         </div>
 
         {!isAthlete && (
-          <Field label="Société" required>
+          <Field label={t.apply.s2Company} required>
             <Input value={form.company} onChange={(v) => onChange('company', v)} required />
           </Field>
         )}
 
         {isAthlete && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Field label="Index ITRA" hint="ou laisse vide si pas applicable">
+            <Field label={t.apply.s2Itra} hint={t.apply.s2ItraShortHint}>
               <Input
                 value={form.itra}
                 onChange={(v) => onChange('itra', v)}
                 inputMode="numeric"
               />
             </Field>
-            <Field label="Index UTMB" hint="ou laisse vide">
+            <Field label={t.apply.s2Utmb} hint={t.apply.s2UtmbShortHint}>
               <Input
                 value={form.utmb}
                 onChange={(v) => onChange('utmb', v)}
@@ -336,7 +356,7 @@ function StepInfos({
           </div>
         )}
 
-        <Field label="Email" required>
+        <Field label={t.apply.s2Email} required>
           <Input
             type="email"
             value={form.email}
@@ -345,7 +365,7 @@ function StepInfos({
           />
         </Field>
 
-        <Field label="WhatsApp" required>
+        <Field label={t.apply.s2Whatsapp} required>
           <Input
             type="tel"
             value={form.whatsapp}
@@ -355,7 +375,7 @@ function StepInfos({
           />
         </Field>
 
-        <Field label="LinkedIn" hint="optionnel">
+        <Field label={t.apply.s2Linkedin} hint={t.apply.s2LinkedinHint}>
           <Input
             type="url"
             value={form.linkedin}
@@ -364,7 +384,7 @@ function StepInfos({
           />
         </Field>
 
-        {/* RGPD */}
+        {/* RGPD — le texte i18n contient tout, on ajoute juste le lien mailto au-dessus */}
         <label className="flex items-start gap-3 font-sans text-sm text-ash leading-relaxed cursor-pointer">
           <input
             type="checkbox"
@@ -374,27 +394,24 @@ function StepInfos({
             className="mt-1 w-4 h-4 accent-ember"
           />
           <span>
-            J&apos;accepte que mes informations soient utilisées par{' '}
-            <span className="text-paper-white">TRLBLZR.RUN</span> pour traiter ma candidature
-            et me recontacter. Conformément au RGPD, je peux à tout moment demander la
-            suppression de mes données en écrivant à{' '}
+            {t.apply.s2Rgpd.split('etienne@bourdon.com')[0]}
             <a href="mailto:etienne@bourdon.com" className="text-ember hover:underline">
               etienne@bourdon.com
             </a>
-            . *
+            {t.apply.s2Rgpd.split('etienne@bourdon.com')[1] || ''} *
           </span>
         </label>
 
         {submitError && (
           <div className="font-mono text-xs text-ember border border-ember/50 px-4 py-3 rounded">
-            <p className="font-bold mb-2">⚠ Une erreur est survenue</p>
+            <p className="font-bold mb-2">⚠ {t.apply.errorTitle}</p>
             <p className="text-paper-white/80">{submitError}</p>
             <p className="mt-3 text-paper-white/60 text-[10px]">
-              Si le problème persiste, écris à{' '}
+              {t.apply.errorFooter}{' '}
               <a href="mailto:etienne@bourdon.com" className="text-ember hover:underline">
                 etienne@bourdon.com
               </a>{' '}
-              en mentionnant le message ci-dessus.
+              {t.apply.errorFooterEnd}
             </p>
           </div>
         )}
@@ -405,7 +422,9 @@ function StepInfos({
             disabled={submitting || !form.rgpd}
             className="font-mono text-xs tracking-[0.2em] bg-ember text-trail-black px-7 py-4 rounded-full hover:bg-paper-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            {submitting ? 'ENVOI EN COURS…' : 'SOUMETTRE MA CANDIDATURE ↗'}
+            {submitting
+              ? `${t.apply.s2Submitting.toUpperCase()}`
+              : `${t.apply.s2Submit.toUpperCase()} ↗`}
           </button>
         </div>
       </form>
@@ -416,51 +435,44 @@ function StepInfos({
 function StepConfirmation({
   reference,
   firstname,
+  t,
+  homeHref,
 }: {
   reference: string;
   firstname: string;
+  t: Dict;
+  homeHref: string;
 }) {
   return (
     <section>
       <h1 className="font-display font-bold text-4xl md:text-6xl tracking-tight leading-[0.95] text-paper-white uppercase">
-        Candidature reçue.
+        {t.apply.s3Title} {t.apply.s3TitleHighlight}
       </h1>
       <p className="mt-6 font-sans text-base md:text-lg text-ash leading-relaxed">
-        Merci {firstname || ''}. On revient vers toi sous 48 à 72 heures avec une réponse personnalisée.
+        {firstname ? `${firstname}, ` : ''}
+        {t.apply.s3Thanks}
       </p>
 
       <div className="mt-12 inline-flex items-center gap-3 border border-ember/40 bg-stone px-6 py-4 rounded">
         <span className="font-display font-bold text-2xl text-ember">✓</span>
         <div>
-          <p className="font-mono text-[10px] tracking-[0.25em] text-ash">RÉFÉRENCE</p>
+          <p className="font-mono text-[10px] tracking-[0.25em] text-ash">
+            {t.apply.s3Ref.toUpperCase()}
+          </p>
           <p className="font-mono text-sm tracking-[0.15em] text-paper-white">{reference}</p>
         </div>
       </div>
 
       <div className="mt-12 max-w-3xl space-y-6">
         <h2 className="font-display font-bold text-2xl md:text-3xl tracking-tight text-paper-white">
-          Voici la suite
+          {t.apply.s3Suite}
         </h2>
-        <p className="font-sans text-base text-ash leading-relaxed">
-          Etienne va personnellement étudier ta candidature. Toutes les soumissions passent
-          par une revue manuelle — c&apos;est ce qui garde le club exigeant.
-        </p>
+        <p className="font-sans text-base text-ash leading-relaxed">{t.apply.s3Body}</p>
 
         <ul className="space-y-4 font-sans text-base text-ash leading-relaxed">
-          <li className="border-l-2 border-ember pl-4">
-            <strong className="text-paper-white">Revue de ta candidature (48–72 h).</strong>{' '}
-            On évalue le profil et l&apos;alignement avec les sessions à venir.
-          </li>
-          <li className="border-l-2 border-ember pl-4">
-            <strong className="text-paper-white">Réponse par email.</strong> Si éligible,
-            tu recevras un lien direct pour réserver un appel découverte de 30 min avec
-            Etienne, qui finalise l&apos;inscription.
-          </li>
-          <li className="border-l-2 border-ember pl-4">
-            <strong className="text-paper-white">Sinon, on t&apos;écrit aussi.</strong>{' '}
-            Si la session ciblée est complète ou si le timing n&apos;est pas le bon, on revient
-            vers toi dès qu&apos;une fenêtre se libère.
-          </li>
+          <li className="border-l-2 border-ember pl-4">{t.apply.s3Step1}</li>
+          <li className="border-l-2 border-ember pl-4">{t.apply.s3Step2}</li>
+          <li className="border-l-2 border-ember pl-4">{t.apply.s3Step3}</li>
         </ul>
       </div>
 
@@ -471,19 +483,22 @@ function StepConfirmation({
           rel="noopener noreferrer"
           className="font-mono text-xs tracking-[0.2em] bg-ember text-trail-black px-7 py-4 rounded-full hover:bg-paper-white transition-colors"
         >
-          RÉSERVER UN APPEL DÉCOUVERTE ↗
+          {t.apply.s3CtaCal.toUpperCase()} ↗
         </a>
         <Link
-          href="/"
+          href={homeHref}
           className="font-mono text-xs tracking-[0.2em] text-paper-white border border-paper-white/30 px-7 py-4 rounded-full hover:border-ember hover:text-ember transition-colors"
         >
-          RETOUR À L&apos;ACCUEIL
+          {t.apply.s3CtaHome.toUpperCase()}
         </Link>
       </div>
 
       <p className="mt-12 font-mono text-[10px] tracking-[0.2em] text-ash">
-        UNE QUESTION URGENTE ? →{' '}
-        <a href="mailto:etienne@bourdon.com" className="text-paper-white hover:text-ember transition-colors">
+        {t.apply.s3Contact.toUpperCase()} →{' '}
+        <a
+          href="mailto:etienne@bourdon.com"
+          className="text-paper-white hover:text-ember transition-colors"
+        >
           ETIENNE@BOURDON.COM
         </a>
       </p>

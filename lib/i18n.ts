@@ -108,6 +108,12 @@ export type Dict = {
     s3Eyebrow: string; s3Title: string; s3TitleHighlight: string; s3Thanks: string; s3Ref: string;
     s3Suite: string; s3Body: string; s3Step1: string; s3Step2: string; s3Step3: string;
     s3CtaCal: string; s3CtaHome: string; s3Contact: string;
+    stepIndicator: string;
+    s1CategoryLabelDirigeant: string; s1CategoryLabelAthlete: string; s1Continue: string;
+    s2Title: string; s2ProfileValueDirigeant: string; s2ProfileValueAthlete: string;
+    s2SessionNoTarget: string; s2ItraShortHint: string; s2UtmbShortHint: string; s2LinkedinHint: string;
+    errorTitle: string; errorFooter: string; errorFooterEnd: string;
+    errorFallback: string; errorUnknown: string;
   };
 };
 
@@ -274,6 +280,22 @@ export const dictionary: Record<Locale, Dict> = {
       s3CtaCal: 'Réserver un appel découverte',
       s3CtaHome: "Retour à l'accueil",
       s3Contact: 'Une question urgente ? Écris-moi à',
+      stepIndicator: 'ÉTAPE',
+      s1CategoryLabelDirigeant: '01 — DIRIGEANT',
+      s1CategoryLabelAthlete: '02 — ATHLÈTE',
+      s1Continue: 'CONTINUER',
+      s2Title: 'Quelques infos.',
+      s2ProfileValueDirigeant: 'Dirigeant · Entrepreneur',
+      s2ProfileValueAthlete: 'Athlète · Pro / Élite',
+      s2SessionNoTarget: '— Sans session ciblée —',
+      s2ItraShortHint: 'ou laisse vide si pas applicable',
+      s2UtmbShortHint: 'ou laisse vide',
+      s2LinkedinHint: 'optionnel',
+      errorTitle: 'Une erreur est survenue',
+      errorFooter: 'Si le problème persiste, écris à',
+      errorFooterEnd: 'en mentionnant le message ci-dessus.',
+      errorFallback: "Une erreur est survenue. Réessaie ou écris à etienne@bourdon.com.",
+      errorUnknown: 'Erreur inconnue',
     },
   },
   en: {
@@ -438,6 +460,22 @@ export const dictionary: Record<Locale, Dict> = {
       s3CtaCal: 'Book a discovery call',
       s3CtaHome: 'Back to homepage',
       s3Contact: 'Urgent? Write to me at',
+      stepIndicator: 'STEP',
+      s1CategoryLabelDirigeant: '01 — LEADER',
+      s1CategoryLabelAthlete: '02 — ATHLETE',
+      s1Continue: 'CONTINUE',
+      s2Title: 'A few details.',
+      s2ProfileValueDirigeant: 'Leader · Entrepreneur',
+      s2ProfileValueAthlete: 'Athlete · Pro / Elite',
+      s2SessionNoTarget: '— No specific session —',
+      s2ItraShortHint: 'or leave blank if not applicable',
+      s2UtmbShortHint: 'or leave blank',
+      s2LinkedinHint: 'optional',
+      errorTitle: 'An error occurred',
+      errorFooter: 'If the issue persists, write to',
+      errorFooterEnd: 'and quote the message above.',
+      errorFallback: 'An error occurred. Try again or write to etienne@bourdon.com.',
+      errorUnknown: 'Unknown error',
     },
   },
 };

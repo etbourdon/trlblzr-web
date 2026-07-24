@@ -29,6 +29,7 @@ export const upcomingSessions: Session[] = [
     theme: 'À RÉVÉLER',
     status: 'upcoming',
     intro: 'Rentrée — bases solides et récupération.',
+    imageSrc: '/sessions/france-2026-09.jpg',
   },
   {
     slug: 'france-2026-10',
@@ -38,6 +39,7 @@ export const upcomingSessions: Session[] = [
     theme: 'À RÉVÉLER',
     status: 'upcoming',
     intro: 'Priorités et progression durable avant le Q4.',
+    imageSrc: '/sessions/france-2026-10.jpg',
   },
   {
     slug: 'grand-canyon-2026-10',
@@ -47,6 +49,7 @@ export const upcomingSessions: Session[] = [
     theme: 'RIM TO RIM TO RIM',
     status: 'upcoming',
     intro: '67 km au cœur du Grand Canyon. Aventure hors normes.',
+    imageSrc: '/sessions/grand-canyon-2026-10.jpg',
   },
   {
     slug: 'maroc-2026-11',
@@ -56,6 +59,7 @@ export const upcomingSessions: Session[] = [
     theme: 'TRAIL & BUSINESS',
     status: 'upcoming',
     intro: 'Format long — 4 jours. Effort, réflexion, connexions.',
+    imageSrc: '/sessions/maroc-2026-11.jpg',
   },
   {
     slug: 'france-2026-11',
@@ -65,6 +69,7 @@ export const upcomingSessions: Session[] = [
     theme: 'À RÉVÉLER',
     status: 'upcoming',
     intro: 'Dernier week-end de la saison — territoire à révéler.',
+    imageSrc: '/sessions/france-2026-11.jpg',
   },
 ];
 

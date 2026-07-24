@@ -66,10 +66,23 @@ export default function ApplyPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [reference, setReference] = useState<string | null>(null);
+  // SBL-18 — Tracking Source: URL param ?source=… lu au mount et injecté dans le payload
+  const [sourceParam, setSourceParam] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [step]);
+
+  // SBL-18 — Lecture du paramètre ?source= au mount (une fois, pas de cookie)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const s = params.get('source');
+    if (s) {
+      // Sanitize : keep 100 chars max, strip whitespace
+      setSourceParam(s.trim().slice(0, 100));
+    }
+  }, []);
 
   const handleCategorySelect = (cat: Category) => {
     setCategory(cat);
@@ -93,6 +106,7 @@ export default function ApplyPage() {
         ...form,
         category,
         locale,
+        source: sourceParam, // SBL-18 — priorité au ?source= explicite si présent
         referer:
           typeof window !== 'undefined' ? document.referrer || '/apply' : '/apply',
       };

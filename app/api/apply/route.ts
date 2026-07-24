@@ -48,6 +48,7 @@ type ApplyPayload = {
   rgpd?: boolean;
   referer?: string;
   locale?: 'fr' | 'en'; // ← Preferred language (Batch 2)
+  source?: string; // ← SBL-18 : tracking URL param ?source=…
   // Batch 3 — Form v2
   selfDescription?: string;
   sportLevel?: '' | '1' | '2' | '3' | '4' | '5';
@@ -134,7 +135,8 @@ export async function POST(req: NextRequest) {
     Company: { rich_text: txt(data.company) },
     ITRA: { rich_text: txt(data.itra) },
     UTMB: { rich_text: txt(data.utmb) },
-    Source: { rich_text: txt(data.referer || 'apply') },
+    // SBL-18 : priorité au ?source= explicite, puis referer, puis 'direct'
+    Source: { rich_text: txt(data.source || data.referer || 'direct') },
     // Batch 3 — Form v2 fields
     'Self-description': { rich_text: txt(data.selfDescription) },
     Motivation: { rich_text: txt(data.motivation) },

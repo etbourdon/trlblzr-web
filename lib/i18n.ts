@@ -114,6 +114,17 @@ export type Dict = {
     s2SessionNoTarget: string; s2ItraShortHint: string; s2UtmbShortHint: string; s2LinkedinHint: string;
     errorTitle: string; errorFooter: string; errorFooterEnd: string;
     errorFallback: string; errorUnknown: string;
+    // Batch 3 — Form v2
+    s2SelfDescLabelDirigeant: string; s2SelfDescLabelAthlete: string; s2SelfDescHint: string;
+    s2SportLevelLabel: string; s2SportLevelHint: string;
+    s2SportLevel1: string; s2SportLevel2: string; s2SportLevel3: string; s2SportLevel4: string; s2SportLevel5: string;
+    s2MotivationLabel: string; s2MotivationHint: string;
+    s2LookingForLabel: string; s2LookingForHint: string;
+    s2CityLabel: string; s2CityOther: string; s2CountryLabel: string; s2CountryHint: string;
+    s2ProWebsiteLabel: string; s2ProWebsiteHint: string;
+    s2StravaLabel: string; s2OtherLinkLabel: string; s2OtherLinkHint: string;
+    s2SectionAbout: string; s2SectionSport: string; s2SectionMotivation: string;
+    s2SectionLocation: string; s2SectionLinks: string; s2SectionContact: string;
   };
 };
 
@@ -247,10 +258,10 @@ export const dictionary: Record<Locale, Dict> = {
       s1Lead: "Quelques minutes pour qu'on apprenne à se connaître. Sélectionne d'abord ton profil — les informations qu'on te demandera ensuite dépendent de ce choix.",
       s1DirigeantTitleLine1: 'Dirigeant',
       s1DirigeantTitleLine2: 'Entrepreneur',
-      s1DirigeantDesc: 'Fondateur, CEO, investisseur, leader. Tu veux rejoindre la communauté et participer à une session — quel que soit ton niveau de trail.',
+      s1DirigeantDesc: 'Business leader, entrepreneur, investisseur ou executive. Tu veux rejoindre la communauté et participer à une session — quel que soit ton niveau de trail.',
       s1AthleteTitleLine1: 'Athlète',
       s1AthleteTitleLine2: 'Pro / Élite',
-      s1AthleteDesc: 'Trail runner pro ou semi-pro. Tu peux nous rejoindre pour partager ton expérience, encadrer les sessions et bénéficier de la communauté.',
+      s1AthleteDesc: 'Trail running athlete, élite ou pro runner. Tu peux nous rejoindre pour partager ton expérience, encadrer les sessions et bénéficier de la communauté.',
       s1Note: 'Sessions traitées sous 48–72 h. Si éligible, tu recevras un lien pour réserver un appel découverte de 30 min avec Etienne.',
       s2Eyebrow: 'Postuler / Étape 2 sur 3',
       s2TitleDirigeant: 'Profil dirigeant.',
@@ -296,6 +307,36 @@ export const dictionary: Record<Locale, Dict> = {
       errorFooterEnd: 'en mentionnant le message ci-dessus.',
       errorFallback: "Une erreur est survenue. Réessaie ou écris à etienne@bourdon.com.",
       errorUnknown: 'Erreur inconnue',
+      // Batch 3 — Form v2
+      s2SelfDescLabelDirigeant: 'Décris-toi en tant que dirigeant',
+      s2SelfDescLabelAthlete: 'Décris-toi en tant qu\'athlète',
+      s2SelfDescHint: 'Ton rôle, ta boîte, ce qui te fait avancer (1-3 phrases)',
+      s2SportLevelLabel: 'Niveau sportif',
+      s2SportLevelHint: 'Où te situes-tu sur le spectrum trail ?',
+      s2SportLevel1: '1 · Jog occasionnel (5-10 km, route ou parc)',
+      s2SportLevel2: '2 · Coureur régulier (10-20 km, quelques trails)',
+      s2SportLevel3: '3 · Traileur (20-50 km, avec quelques courses)',
+      s2SportLevel4: '4 · Long trail (50-100 km, ultra distances)',
+      s2SportLevel5: '5 · Ultra élite (>100 km)',
+      s2MotivationLabel: 'Pourquoi rejoindre TRLBLZR ?',
+      s2MotivationHint: '2-3 phrases sur ce qui t\'attire ici',
+      s2LookingForLabel: 'Que cherches-tu dans cette communauté ?',
+      s2LookingForHint: '2-3 phrases sur les connexions et expériences que tu recherches',
+      s2CityLabel: 'Ville',
+      s2CityOther: 'Autre',
+      s2CountryLabel: 'Pays',
+      s2CountryHint: 'Optionnel — si Autre ville, précise ici',
+      s2ProWebsiteLabel: 'Site pro',
+      s2ProWebsiteHint: 'Entreprise, portfolio, site perso',
+      s2StravaLabel: 'Profil Strava',
+      s2OtherLinkLabel: 'Autre lien',
+      s2OtherLinkHint: 'Blog, Instagram, etc.',
+      s2SectionAbout: 'À propos de toi',
+      s2SectionSport: 'Niveau trail',
+      s2SectionMotivation: 'Motivation',
+      s2SectionLocation: 'Localisation',
+      s2SectionLinks: 'Liens (optionnels)',
+      s2SectionContact: 'Contact',
     },
   },
   en: {
@@ -427,10 +468,10 @@ export const dictionary: Record<Locale, Dict> = {
       s1Lead: 'A few minutes to get to know each other. Pick your profile first — the questions we ask next depend on this choice.',
       s1DirigeantTitleLine1: 'Executive',
       s1DirigeantTitleLine2: 'Entrepreneur',
-      s1DirigeantDesc: 'Founder, CEO, investor, leader. You want to join the community and take part in a session — whatever your trail level.',
+      s1DirigeantDesc: 'Business leader, entrepreneur, investor or executive. You want to join the community and take part in a session — whatever your trail level.',
       s1AthleteTitleLine1: 'Athlete',
       s1AthleteTitleLine2: 'Pro / Elite',
-      s1AthleteDesc: 'Pro or semi-pro trail runner. Join us to share your experience, run the sessions and tap into the community.',
+      s1AthleteDesc: 'Trail running athlete, elite runner or pro runner. Join us to share your experience, run the sessions and tap into the community.',
       s1Note: "Applications processed within 48–72 h. If eligible, you'll receive a link to book a 30-min discovery call with Etienne.",
       s2Eyebrow: 'Apply / Step 2 of 3',
       s2TitleDirigeant: 'Executive profile.',
@@ -476,6 +517,36 @@ export const dictionary: Record<Locale, Dict> = {
       errorFooterEnd: 'and quote the message above.',
       errorFallback: 'An error occurred. Try again or write to etienne@bourdon.com.',
       errorUnknown: 'Unknown error',
+      // Batch 3 — Form v2
+      s2SelfDescLabelDirigeant: 'Describe yourself as a leader',
+      s2SelfDescLabelAthlete: 'Describe yourself as an athlete',
+      s2SelfDescHint: 'Your role, your company, what drives you (1-3 sentences)',
+      s2SportLevelLabel: 'Sport level',
+      s2SportLevelHint: 'Where do you fit on the trail spectrum?',
+      s2SportLevel1: '1 · Occasional jog (5-10 km, road or park)',
+      s2SportLevel2: '2 · Regular runner (10-20 km, some trails)',
+      s2SportLevel3: '3 · Trail runner (20-50 km, some races)',
+      s2SportLevel4: '4 · Long trail (50-100 km, ultra distances)',
+      s2SportLevel5: '5 · Ultra elite (>100 km)',
+      s2MotivationLabel: 'Why do you want to join TRLBLZR?',
+      s2MotivationHint: '2-3 sentences on what draws you here',
+      s2LookingForLabel: 'What are you looking for in this community?',
+      s2LookingForHint: '2-3 sentences on the connections and experiences you seek',
+      s2CityLabel: 'City',
+      s2CityOther: 'Other',
+      s2CountryLabel: 'Country',
+      s2CountryHint: 'Optional — if Other city, please specify here',
+      s2ProWebsiteLabel: 'Pro website',
+      s2ProWebsiteHint: 'Company, portfolio, personal site',
+      s2StravaLabel: 'Strava profile',
+      s2OtherLinkLabel: 'Other link',
+      s2OtherLinkHint: 'Blog, Instagram, etc.',
+      s2SectionAbout: 'About you',
+      s2SectionSport: 'Trail level',
+      s2SectionMotivation: 'Motivation',
+      s2SectionLocation: 'Location',
+      s2SectionLinks: 'Links (optional)',
+      s2SectionContact: 'Contact',
     },
   },
 };

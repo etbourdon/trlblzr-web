@@ -10,6 +10,8 @@ import type { Dict } from '@/lib/i18n';
 
 type Category = 'dirigeant' | 'athlete';
 type Step = 1 | 2 | 3;
+type SportLevel = '' | '1' | '2' | '3' | '4' | '5';
+type CityValue = '' | 'Paris' | 'Lyon' | 'Bucharest' | 'Autre';
 
 type FormData = {
   firstname: string;
@@ -21,6 +23,16 @@ type FormData = {
   itra: string;
   utmb: string;
   session: string;
+  // Batch 3 — Form v2 fields
+  selfDescription: string;
+  sportLevel: SportLevel;
+  motivation: string;
+  lookingFor: string;
+  city: CityValue;
+  country: string;
+  proWebsite: string;
+  stravaProfile: string;
+  otherLink: string;
   rgpd: boolean;
 };
 
@@ -34,6 +46,15 @@ const EMPTY_FORM: FormData = {
   itra: '',
   utmb: '',
   session: '',
+  selfDescription: '',
+  sportLevel: '',
+  motivation: '',
+  lookingFor: '',
+  city: '',
+  country: '',
+  proWebsite: '',
+  stravaProfile: '',
+  otherLink: '',
   rgpd: false,
 };
 
@@ -46,7 +67,6 @@ export default function ApplyPage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [reference, setReference] = useState<string | null>(null);
 
-  // Scroll to top on step change
   useEffect(() => {
     if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [step]);
@@ -56,9 +76,7 @@ export default function ApplyPage() {
     setStep(2);
   };
 
-  const handleBackToProfile = () => {
-    setStep(1);
-  };
+  const handleBackToProfile = () => setStep(1);
 
   const handleChange = (field: keyof FormData, value: string | boolean) => {
     setForm((f) => ({ ...f, [field]: value }));
@@ -74,11 +92,9 @@ export default function ApplyPage() {
       const payload = {
         ...form,
         category,
-        locale, // ← Preferred language propagée vers Notion
+        locale,
         referer:
-          typeof window !== 'undefined'
-            ? document.referrer || '/apply'
-            : '/apply',
+          typeof window !== 'undefined' ? document.referrer || '/apply' : '/apply',
       };
       const res = await fetch('/api/apply', {
         method: 'POST',
@@ -98,12 +114,10 @@ export default function ApplyPage() {
     }
   };
 
-  // Link back home in the correct locale
   const homeHref = locale === 'en' ? '/?lang=en' : '/';
 
   return (
     <div className="min-h-screen bg-trail-black text-paper-white">
-      {/* Header simplifié — logo + back + lang */}
       <header className="fixed top-0 left-0 right-0 z-50 px-6 md:px-10 py-4 flex items-center justify-between bg-trail-black/85 backdrop-blur-[2px] border-b border-stone">
         <Link href={homeHref} className="flex items-center gap-3 group">
           <Image
@@ -129,14 +143,12 @@ export default function ApplyPage() {
         </div>
       </header>
 
-      {/* Stepper */}
       <div className="pt-24 md:pt-32 px-6 md:px-10">
         <div className="max-w-4xl mx-auto">
           <Stepper step={step} category={category} t={t} />
         </div>
       </div>
 
-      {/* Steps */}
       <main className="px-6 md:px-10 pb-32">
         <div className="max-w-4xl mx-auto">
           {step === 1 && <StepProfile onSelect={handleCategorySelect} t={t} />}
@@ -274,6 +286,9 @@ function StepInfos({
   t: Dict;
 }) {
   const isAthlete = category === 'athlete';
+  const selfDescLabel = isAthlete
+    ? t.apply.s2SelfDescLabelAthlete
+    : t.apply.s2SelfDescLabelDirigeant;
 
   return (
     <section>
@@ -284,7 +299,7 @@ function StepInfos({
         {t.apply.s2Lead}
       </p>
 
-      <form onSubmit={onSubmit} className="mt-12 space-y-8">
+      <form onSubmit={onSubmit} className="mt-12 space-y-10">
         {/* Profil sélectionné */}
         <div className="flex items-center justify-between border-b border-stone pb-5">
           <div>
@@ -322,6 +337,7 @@ function StepInfos({
           </select>
         </Field>
 
+        {/* Identité */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Field label={t.apply.s2Firstname} required>
             <Input value={form.firstname} onChange={(v) => onChange('firstname', v)} required />
@@ -356,6 +372,91 @@ function StepInfos({
           </div>
         )}
 
+        {/* SECTION — À propos de toi (self-description) */}
+        <SectionHeader label={t.apply.s2SectionAbout} />
+        <Field label={selfDescLabel} hint={t.apply.s2SelfDescHint}>
+          <Textarea
+            value={form.selfDescription}
+            onChange={(v) => onChange('selfDescription', v)}
+            rows={3}
+          />
+        </Field>
+
+        {/* SECTION — Niveau trail (spectrum 1-5) */}
+        <SectionHeader label={t.apply.s2SectionSport} />
+        <Field label={t.apply.s2SportLevelLabel} hint={t.apply.s2SportLevelHint}>
+          <div className="space-y-2 mt-2">
+            {(['1', '2', '3', '4', '5'] as const).map((lvl) => {
+              const labelKey = `s2SportLevel${lvl}` as keyof Dict['apply'];
+              const label = t.apply[labelKey] as string;
+              return (
+                <label
+                  key={lvl}
+                  className={`flex items-start gap-3 border p-3 rounded cursor-pointer transition-colors ${
+                    form.sportLevel === lvl
+                      ? 'border-ember bg-ember/5'
+                      : 'border-stone hover:border-paper-white/40'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="sportLevel"
+                    value={lvl}
+                    checked={form.sportLevel === lvl}
+                    onChange={() => onChange('sportLevel', lvl)}
+                    className="mt-1 accent-ember"
+                  />
+                  <span className="font-sans text-sm text-paper-white leading-snug">
+                    {label}
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+        </Field>
+
+        {/* SECTION — Localisation */}
+        <SectionHeader label={t.apply.s2SectionLocation} />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Field label={t.apply.s2CityLabel}>
+            <select
+              value={form.city}
+              onChange={(e) => onChange('city', e.target.value)}
+              className="w-full bg-stone border border-stone focus:border-ember text-paper-white px-4 py-3 font-mono text-sm rounded outline-none transition-colors"
+            >
+              <option value="">—</option>
+              <option value="Paris">Paris</option>
+              <option value="Lyon">Lyon</option>
+              <option value="Bucharest">Bucharest</option>
+              <option value="Autre">{t.apply.s2CityOther}</option>
+            </select>
+          </Field>
+          <Field label={t.apply.s2CountryLabel} hint={t.apply.s2CountryHint}>
+            <Input value={form.country} onChange={(v) => onChange('country', v)} />
+          </Field>
+        </div>
+
+        {/* SECTION — Motivation */}
+        <SectionHeader label={t.apply.s2SectionMotivation} />
+        <Field label={t.apply.s2MotivationLabel} hint={t.apply.s2MotivationHint} required>
+          <Textarea
+            value={form.motivation}
+            onChange={(v) => onChange('motivation', v)}
+            rows={3}
+            required
+          />
+        </Field>
+        <Field label={t.apply.s2LookingForLabel} hint={t.apply.s2LookingForHint} required>
+          <Textarea
+            value={form.lookingFor}
+            onChange={(v) => onChange('lookingFor', v)}
+            rows={3}
+            required
+          />
+        </Field>
+
+        {/* SECTION — Contact */}
+        <SectionHeader label={t.apply.s2SectionContact} />
         <Field label={t.apply.s2Email} required>
           <Input
             type="email"
@@ -364,7 +465,6 @@ function StepInfos({
             required
           />
         </Field>
-
         <Field label={t.apply.s2Whatsapp} required>
           <Input
             type="tel"
@@ -375,6 +475,8 @@ function StepInfos({
           />
         </Field>
 
+        {/* SECTION — Liens (LinkedIn + Pro website + Strava + Other) */}
+        <SectionHeader label={t.apply.s2SectionLinks} />
         <Field label={t.apply.s2Linkedin} hint={t.apply.s2LinkedinHint}>
           <Input
             type="url"
@@ -383,8 +485,32 @@ function StepInfos({
             placeholder="https://linkedin.com/in/…"
           />
         </Field>
+        <Field label={t.apply.s2ProWebsiteLabel} hint={t.apply.s2ProWebsiteHint}>
+          <Input
+            type="url"
+            value={form.proWebsite}
+            onChange={(v) => onChange('proWebsite', v)}
+            placeholder="https://…"
+          />
+        </Field>
+        <Field label={t.apply.s2StravaLabel}>
+          <Input
+            type="url"
+            value={form.stravaProfile}
+            onChange={(v) => onChange('stravaProfile', v)}
+            placeholder="https://strava.com/athletes/…"
+          />
+        </Field>
+        <Field label={t.apply.s2OtherLinkLabel} hint={t.apply.s2OtherLinkHint}>
+          <Input
+            type="url"
+            value={form.otherLink}
+            onChange={(v) => onChange('otherLink', v)}
+            placeholder="https://…"
+          />
+        </Field>
 
-        {/* RGPD — le texte i18n contient tout, on ajoute juste le lien mailto au-dessus */}
+        {/* RGPD */}
         <label className="flex items-start gap-3 font-sans text-sm text-ash leading-relaxed cursor-pointer">
           <input
             type="checkbox"
@@ -506,6 +632,16 @@ function StepConfirmation({
   );
 }
 
+function SectionHeader({ label }: { label: string }) {
+  return (
+    <div className="pt-4 border-t border-stone">
+      <p className="font-mono text-[10px] tracking-[0.3em] text-ember">
+        // {label.toUpperCase()}
+      </p>
+    </div>
+  );
+}
+
 function Field({
   label,
   required,
@@ -553,6 +689,31 @@ function Input({
       placeholder={placeholder}
       inputMode={inputMode}
       className="w-full bg-stone border border-stone focus:border-ember text-paper-white px-4 py-3 font-mono text-sm rounded outline-none transition-colors placeholder:text-ash/60"
+    />
+  );
+}
+
+function Textarea({
+  value,
+  onChange,
+  rows = 3,
+  required = false,
+  placeholder,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  rows?: number;
+  required?: boolean;
+  placeholder?: string;
+}) {
+  return (
+    <textarea
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      required={required}
+      placeholder={placeholder}
+      rows={rows}
+      className="w-full bg-stone border border-stone focus:border-ember text-paper-white px-4 py-3 font-sans text-sm rounded outline-none transition-colors placeholder:text-ash/60 resize-y leading-relaxed"
     />
   );
 }

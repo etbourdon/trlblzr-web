@@ -42,6 +42,25 @@ type ApplyPayload = {
   rgpd?: boolean;
   referer?: string;
   locale?: 'fr' | 'en'; // ← Preferred language (Batch 2)
+  // Batch 3 — Form v2
+  selfDescription?: string;
+  sportLevel?: '' | '1' | '2' | '3' | '4' | '5';
+  motivation?: string;
+  lookingFor?: string;
+  city?: '' | 'Paris' | 'Lyon' | 'Bucharest' | 'Autre';
+  country?: string;
+  proWebsite?: string;
+  stravaProfile?: string;
+  otherLink?: string;
+};
+
+// Map numeric sport level → Notion SELECT label (matches Candidates DB "Sport level" options)
+const SPORT_LEVEL_LABELS: Record<string, string> = {
+  '1': '1 · Jog occasionnel',
+  '2': '2 · Coureur régulier',
+  '3': '3 · Traileur',
+  '4': '4 · Long trail (ultra)',
+  '5': '5 · Ultra élite (>100k)',
 };
 
 function txt(content: string | undefined | null) {
@@ -86,6 +105,15 @@ export async function POST(req: NextRequest) {
   // Preferred language (Batch 2) — FR par défaut si non fournie ou valeur invalide
   const preferredLang: 'FR' | 'EN' = data.locale === 'en' ? 'EN' : 'FR';
 
+  // Sport level (Batch 3) — numeric value → Notion SELECT label
+  const sportLevelLabel = data.sportLevel ? SPORT_LEVEL_LABELS[data.sportLevel] : null;
+
+  // City (Batch 3) — value must match a Notion SELECT option
+  const cityLabel =
+    data.city && ['Paris', 'Lyon', 'Bucharest', 'Autre'].includes(data.city)
+      ? data.city
+      : null;
+
   // Mapping form payload → Notion properties.
   // Les noms de propriété doivent EXACTEMENT correspondre à la base Notion "Candidates".
   const properties: Record<string, unknown> = {
@@ -101,7 +129,19 @@ export async function POST(req: NextRequest) {
     ITRA: { rich_text: txt(data.itra) },
     UTMB: { rich_text: txt(data.utmb) },
     Source: { rich_text: txt(data.referer || 'apply') },
+    // Batch 3 — Form v2 fields
+    'Self-description': { rich_text: txt(data.selfDescription) },
+    Motivation: { rich_text: txt(data.motivation) },
+    'Looking for': { rich_text: txt(data.lookingFor) },
+    Country: { rich_text: txt(data.country) },
+    'Pro website': { url: data.proWebsite || null },
+    'Strava profile': { url: data.stravaProfile || null },
+    'Other link': { url: data.otherLink || null },
   };
+
+  // SELECT fields — only set if value is valid
+  if (sportLevelLabel) properties['Sport level'] = { select: { name: sportLevelLabel } };
+  if (cityLabel) properties['City'] = { select: { name: cityLabel } };
 
   // Retire les rich_text vides (Notion accepte null pour email/url/phone, pas pour rich_text)
   Object.keys(properties).forEach((key) => {

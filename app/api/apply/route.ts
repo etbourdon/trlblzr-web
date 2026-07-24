@@ -17,13 +17,19 @@ const NOTION_API_URL = 'https://api.notion.com/v1/pages';
 const NOTION_VERSION = '2022-06-28';
 
 // Mapping slug → libellé Notion (doit EXACTEMENT matcher les options Select de la colonne Session).
-// On supporte les anciens slugs du site statique ET les nouveaux du Next.js.
+// Slugs actifs : saison automne 2026 (5 sessions chronologiques depuis lib/content.ts).
+// Legacy slugs conservés pour compat backwards (liens externes historiques).
 const SESSION_LABELS: Record<string, string> = {
-  // Slugs du site statique (compat backwards si liens externes pointent encore là)
-  'annecy-mai-2026': 'Annecy — Mai 2026 · Performance',
-  'vercors-juillet-2026': 'Vercors — Juillet 2026 · Longévité',
-  // Slugs du Next.js (depuis lib/content.ts)
-  'vercors-2026-07': 'Vercors — Juillet 2026 · Longévité',
+  // Saison automne 2026 (actives)
+  'france-2026-09': 'France — 11-13 septembre 2026',
+  'france-2026-10': 'France — 2-4 octobre 2026',
+  'grand-canyon-2026-10': 'Grand Canyon — 8-11 octobre 2026 · RIM to RIM to RIM',
+  'maroc-2026-11': 'Maroc — 12-15 novembre 2026 · Trail & Business',
+  'france-2026-11': 'France — 20-22 novembre 2026',
+  // Legacy — mappent tous vers "Sans session ciblée" (sessions non-existantes ou annulées)
+  'annecy-mai-2026': '— Sans session ciblée —',
+  'vercors-juillet-2026': '— Sans session ciblée —',
+  'vercors-2026-07': '— Sans session ciblée —',
   'tba-2026-s2': '— Sans session ciblée —',
   '': '— Sans session ciblée —',
 };

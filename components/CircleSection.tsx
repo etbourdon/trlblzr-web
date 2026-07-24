@@ -7,11 +7,13 @@ import { upcomingSessions } from '@/lib/content';
 export default function CircleSection() {
   const { t } = useLocale();
 
-  // Mapping slug → clés i18n
+  // Mapping slug → clés i18n. Saison automne 2026 (5 sessions chronologiques).
   const labels: Record<string, { date: string; theme: string; place: string; body: string; number: string; isTbd?: boolean }> = {
-    'annecy-2026-05': { date: t.sessions.annecyDate, theme: t.sessions.annecyTheme, place: t.sessions.annecyPlace, body: t.sessions.annecyBody, number: '0005' },
-    'vercors-2026-07': { date: t.sessions.vercorsDate, theme: t.sessions.vercorsTheme, place: t.sessions.vercorsPlace, body: t.sessions.vercorsBody, number: '0006' },
-    'tba-2026-s2': { date: t.sessions.tbdDate, theme: t.sessions.tbdTheme, place: t.sessions.tbdPlace, body: t.sessions.tbdBody, number: '0007', isTbd: true },
+    'france-2026-09': { date: t.sessions.septDate, theme: t.sessions.septTheme, place: t.sessions.septPlace, body: t.sessions.septBody, number: '0007' },
+    'france-2026-10': { date: t.sessions.octDate, theme: t.sessions.octTheme, place: t.sessions.octPlace, body: t.sessions.octBody, number: '0008' },
+    'grand-canyon-2026-10': { date: t.sessions.grandCanyonDate, theme: t.sessions.grandCanyonTheme, place: t.sessions.grandCanyonPlace, body: t.sessions.grandCanyonBody, number: '0009' },
+    'maroc-2026-11': { date: t.sessions.marocDate, theme: t.sessions.marocTheme, place: t.sessions.marocPlace, body: t.sessions.marocBody, number: '0010' },
+    'france-2026-11': { date: t.sessions.novDate, theme: t.sessions.novTheme, place: t.sessions.novPlace, body: t.sessions.novBody, number: '0011' },
   };
 
   return (
@@ -32,14 +34,12 @@ export default function CircleSection() {
           {upcomingSessions.map((session) => {
             const labelData = labels[session.slug];
             if (!labelData) return null;
-            const { date, theme, place, body, number, isTbd } = labelData;
+            const { date, theme, place, body, number } = labelData;
 
             return (
               <article
                 key={session.slug}
-                className={`group relative border transition-colors p-8 md:p-10 flex flex-col ${
-                  isTbd ? 'border-dashed border-ash/40 hover:border-ember' : 'border-stone hover:border-ember'
-                }`}
+                className="group relative border border-stone hover:border-ember transition-colors p-8 md:p-10 flex flex-col"
               >
                 <div
                   className="aspect-[16/10] w-full bg-stone mb-8 relative overflow-hidden"
@@ -52,22 +52,11 @@ export default function CircleSection() {
                   {!session.imageSrc && (
                     <div className="absolute inset-0 bg-gradient-to-br from-ember/10 via-transparent to-transparent" />
                   )}
-                  {isTbd && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                      <span className="font-mono text-[10px] tracking-[0.3em] text-ember">
-                        {t.sessions.tbdTag.toUpperCase()}
-                      </span>
-                      <span className="mt-2 font-mono text-[9px] tracking-[0.2em] text-ash">
-                        {t.sessions.tbdSub}
-                      </span>
-                    </div>
-                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-trail-black/40 via-transparent to-transparent" />
                 </div>
 
                 <div className="flex items-center justify-between font-mono text-[10px] tracking-[0.25em] text-ember mb-4">
                   <span>SESSION // {number}</span>
-                  {isTbd && <span className="text-ash">{t.sessions.tbdLabel.toUpperCase()}</span>}
                 </div>
 
                 <h3 className="font-display font-bold text-2xl md:text-3xl tracking-tight text-paper-white">
@@ -84,7 +73,7 @@ export default function CircleSection() {
                     href="/apply"
                     className="font-mono text-[11px] tracking-[0.2em] text-paper-white group-hover:text-ember transition-colors"
                   >
-                    {isTbd ? `${t.sessions.tbdCta.toUpperCase()} →` : `${t.sessions.applyShort.toUpperCase()} ↗`}
+                    {t.sessions.applyShort.toUpperCase()} ↗
                   </Link>
                 </div>
               </article>

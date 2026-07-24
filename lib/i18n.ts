@@ -38,22 +38,12 @@ export type Dict = {
     clubHeading: string;
   };
   sessions: {
-    annecyDate: string;
-    annecyTheme: string;
-    annecyPlace: string;
-    annecyBody: string;
-    vercorsDate: string;
-    vercorsTheme: string;
-    vercorsPlace: string;
-    vercorsBody: string;
-    tbdTag: string;
-    tbdSub: string;
-    tbdLabel: string;
-    tbdDate: string;
-    tbdTheme: string;
-    tbdPlace: string;
-    tbdBody: string;
-    tbdCta: string;
+    // Saison automne 2026 — 5 sessions chronologiques
+    septDate: string; septPlace: string; septTheme: string; septBody: string;
+    octDate: string; octPlace: string; octTheme: string; octBody: string;
+    grandCanyonDate: string; grandCanyonPlace: string; grandCanyonTheme: string; grandCanyonBody: string;
+    marocDate: string; marocPlace: string; marocTheme: string; marocBody: string;
+    novDate: string; novPlace: string; novTheme: string; novBody: string;
     applyShort: string;
   };
   past: {
@@ -168,22 +158,27 @@ export const dictionary: Record<Locale, Dict> = {
       clubHeading: 'La communauté',
     },
     sessions: {
-      annecyDate: '22 — 24 Mai 2026',
-      annecyTheme: 'Performance',
-      annecyPlace: 'Massif des Bauges',
-      annecyBody: "Trois jours dans la région d'Annecy autour d'un thème : la performance. Tu cours sur les sentiers du massif des Bauges, tu écoutes ce que les élites du trail ont appris du long, du dur, du lent. Tu repars avec un cadre, pas une recette.",
-      vercorsDate: '03 — 05 Juillet 2026',
-      vercorsTheme: 'Longévité',
-      vercorsPlace: 'Hauts plateaux du Vercors',
-      vercorsBody: "Trois jours sur les hauts plateaux du Vercors, autour d'un thème qui change tout : la longévité. Comment durer, comment se réparer, comment construire un corps qui tient sur la durée. Le sentier devient laboratoire.",
-      tbdTag: 'À venir',
-      tbdSub: 'Date et lieu à annoncer',
-      tbdLabel: 'Bientôt',
-      tbdDate: 'Automne 2026',
-      tbdTheme: 'Nouvelle session',
-      tbdPlace: 'Thème à révéler',
-      tbdBody: "Une troisième session prend forme. Lieu, dates et thématique seront annoncés bientôt. Inscris-toi pour être prévenu en priorité et avoir accès aux premières places.",
-      tbdCta: 'Rester informé',
+      // Saison automne 2026
+      septDate: '11 — 13 septembre 2026',
+      septPlace: 'France (lieu en cours de validation)',
+      septTheme: 'Thème à révéler',
+      septBody: "La rentrée est le meilleur moment pour repartir sur des bases solides. Pendant trois jours, nous explorerons comment construire un corps durable, mieux récupérer et poser les fondations d'une saison qui dure. Un week-end pour préparer vos prochains défis, sur les sentiers comme dans vos projets.",
+      octDate: '2 — 4 octobre 2026',
+      octPlace: 'France (lieu en cours de validation)',
+      octTheme: 'Thème à révéler',
+      octBody: "Début octobre, l'élan de la rentrée laisse place à un moment plus stratégique : clarifier ses priorités avant le dernier trimestre. Pendant trois jours, nous explorerons comment transformer l'énergie de l'automne en progression durable, sur les sentiers comme dans le business. Un week-end pour prendre du recul, reconnecter au terrain et avancer avec intention.",
+      grandCanyonDate: '8 — 11 octobre 2026',
+      grandCanyonPlace: 'Grand Canyon, États-Unis',
+      grandCanyonTheme: 'RIM to RIM to RIM',
+      grandCanyonBody: "Une traversée mythique au cœur du Grand Canyon. 67 km d'aventure, des milliers de mètres de dénivelé, des paysages parmi les plus impressionnants au monde et une expérience qui demande autant de préparation physique que mentale. Trois jours pour sortir du cadre, repousser ses limites et partager une aventure hors normes avec d'autres entrepreneurs et dirigeants.",
+      marocDate: '12 — 15 novembre 2026',
+      marocPlace: 'Maroc',
+      marocTheme: 'Trail & Business',
+      marocBody: "Quatre jours pour prendre le temps. Plus de kilomètres, plus d'échanges, plus de profondeur. Entre les sentiers marocains, le soleil de novembre et des temps dédiés au business, ce format long permet d'alterner effort, réflexion et rencontres. Une parenthèse pour avancer sur ses projets tout en profitant de conditions idéales pour courir.",
+      novDate: '20 — 22 novembre 2026',
+      novPlace: 'France (lieu en cours de validation)',
+      novTheme: 'Thème à révéler',
+      novBody: "Le dernier week-end de la saison reste encore à écrire. Un nouveau territoire, un nouveau thème et toujours la même ambition : utiliser le trail comme terrain d'exploration pour progresser, prendre du recul et créer des connexions fortes. Les détails seront dévoilés prochainement.",
       applyShort: 'Postuler',
     },
     past: {
@@ -378,22 +373,27 @@ export const dictionary: Record<Locale, Dict> = {
       clubHeading: 'The community',
     },
     sessions: {
-      annecyDate: 'May 22 — 24, 2026',
-      annecyTheme: 'Performance',
-      annecyPlace: 'Massif des Bauges',
-      annecyBody: 'Three days in the Annecy region around one theme: performance. You run the Bauges trails. You listen to what trail elites have learned from the long, the hard, the slow. You leave with a framework, not a recipe.',
-      vercorsDate: 'July 3 — 5, 2026',
-      vercorsTheme: 'Longevity',
-      vercorsPlace: 'Vercors Plateaus',
-      vercorsBody: 'Three days on the Vercors high plateaus, around a theme that changes everything: longevity. How to last, how to recover, how to build a body that holds up over time. The trail becomes a lab.',
-      tbdTag: 'Coming up',
-      tbdSub: 'Date and place to be announced',
-      tbdLabel: 'Soon',
-      tbdDate: 'Fall 2026',
-      tbdTheme: 'New session',
-      tbdPlace: 'Theme to be revealed',
-      tbdBody: 'A third session is taking shape. Location, dates and theme will be announced soon. Sign up to get notified first and access early spots.',
-      tbdCta: 'Stay informed',
+      // Fall 2026 season
+      septDate: 'September 11 — 13, 2026',
+      septPlace: 'France (location to be confirmed)',
+      septTheme: 'Theme to be revealed',
+      septBody: "Back-to-school is the best time to build solid foundations. Over three days, we'll explore how to build a durable body, recover better and lay the groundwork for a lasting season. A weekend to prepare for your next challenges, on the trails and in your projects.",
+      octDate: 'October 2 — 4, 2026',
+      octPlace: 'France (location to be confirmed)',
+      octTheme: 'Theme to be revealed',
+      octBody: "Early October, the back-to-school momentum gives way to a more strategic moment: clarifying priorities before the last quarter. Over three days, we'll explore how to turn autumn energy into sustainable progress, on the trails and in business. A weekend to step back, reconnect with the terrain and move forward with intention.",
+      grandCanyonDate: 'October 8 — 11, 2026',
+      grandCanyonPlace: 'Grand Canyon, USA',
+      grandCanyonTheme: 'RIM to RIM to RIM',
+      grandCanyonBody: "A legendary crossing through the heart of the Grand Canyon. 67 km of adventure, thousands of meters of elevation, some of the most breathtaking landscapes in the world and an experience demanding as much physical as mental preparation. Three days to step out of the frame, push your limits and share an extraordinary adventure with fellow entrepreneurs and leaders.",
+      marocDate: 'November 12 — 15, 2026',
+      marocPlace: 'Morocco',
+      marocTheme: 'Trail & Business',
+      marocBody: "Four days to take your time. More kilometers, more exchanges, more depth. Between Moroccan trails, November sunshine and dedicated business time, this long format allows you to alternate effort, reflection and connections. A break to move your projects forward while enjoying ideal running conditions.",
+      novDate: 'November 20 — 22, 2026',
+      novPlace: 'France (location to be confirmed)',
+      novTheme: 'Theme to be revealed',
+      novBody: "The final weekend of the season is yet to be written. A new territory, a new theme and the same ambition: using trail running as a ground for exploration to progress, step back and build strong connections. Details will be revealed soon.",
       applyShort: 'Apply',
     },
     past: {

@@ -17,30 +17,54 @@ export type Session = {
   videoPoster?: string;
 };
 
+// Saison automne 2026 — 5 sessions.
+// Les strings ci-dessous sont des placeholders internes ; le vrai contenu affiché vient
+// de lib/i18n.ts (bilingue FR/EN) via components/CircleSection.tsx qui mappe slug → clés i18n.
 export const upcomingSessions: Session[] = [
   {
-    slug: 'vercors-2026-07',
-    number: '0002',
-    location: 'VERCORS',
-    dates: '03 — 05 JUILLET 2026',
-    theme: 'LONGÉVITÉ',
+    slug: 'france-2026-09',
+    number: '0007',
+    location: 'FRANCE',
+    dates: '11 — 13 SEPTEMBRE 2026',
+    theme: 'À RÉVÉLER',
     status: 'upcoming',
-    intro:
-      "Trois jours sur les hauts plateaux du Vercors, autour d'un thème qui change tout : la longévité. Comment durer, comment se réparer, comment construire un corps qui tient sur la durée. Le sentier devient laboratoire.",
-    athlete: 'À confirmer',
-    spotsTotal: 10,
-    spotsLeft: 8,
-    imageSrc: '/sessions/vercors_juillet_2026.jpg',
+    intro: 'Rentrée — bases solides et récupération.',
   },
   {
-    slug: 'tba-2026-s2',
-    number: '0007',
-    location: 'NOUVELLE SESSION',
-    dates: 'AUTOMNE 2026',
-    theme: 'THÈME À RÉVÉLER',
-    status: 'tba',
-    intro:
-      "Une troisième session prend forme. Lieu, dates et thématique seront annoncés bientôt. Inscris-toi pour être prévenu en priorité et avoir accès aux premières places.",
+    slug: 'france-2026-10',
+    number: '0008',
+    location: 'FRANCE',
+    dates: '02 — 04 OCTOBRE 2026',
+    theme: 'À RÉVÉLER',
+    status: 'upcoming',
+    intro: 'Priorités et progression durable avant le Q4.',
+  },
+  {
+    slug: 'grand-canyon-2026-10',
+    number: '0009',
+    location: 'GRAND CANYON',
+    dates: '08 — 11 OCTOBRE 2026',
+    theme: 'RIM TO RIM TO RIM',
+    status: 'upcoming',
+    intro: '67 km au cœur du Grand Canyon. Aventure hors normes.',
+  },
+  {
+    slug: 'maroc-2026-11',
+    number: '0010',
+    location: 'MAROC',
+    dates: '12 — 15 NOVEMBRE 2026',
+    theme: 'TRAIL & BUSINESS',
+    status: 'upcoming',
+    intro: 'Format long — 4 jours. Effort, réflexion, connexions.',
+  },
+  {
+    slug: 'france-2026-11',
+    number: '0011',
+    location: 'FRANCE',
+    dates: '20 — 22 NOVEMBRE 2026',
+    theme: 'À RÉVÉLER',
+    status: 'upcoming',
+    intro: 'Dernier week-end de la saison — territoire à révéler.',
   },
 ];
 

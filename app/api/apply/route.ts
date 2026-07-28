@@ -12,9 +12,37 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { buildNotificationEmail } from '@/lib/apply-notification';
 
 const NOTION_API_URL = 'https://api.notion.com/v1/pages';
 const NOTION_VERSION = '2022-06-28';
+const RESEND_API_URL = 'https://api.resend.com/emails';
+
+// Batch 4 — best-effort: la candidature est déjà sauvegardée dans Notion à ce stade,
+// donc un échec d'envoi d'email ne doit jamais faire échouer la réponse au candidat.
+async function sendApplyNotification(subject: string, html: string) {
+  const { RESEND_API_KEY, RESEND_FROM_EMAIL, NOTIFICATION_EMAIL } = process.env;
+  if (!RESEND_API_KEY) {
+    console.warn('RESEND_API_KEY absent — notification email ignorée');
+    return;
+  }
+  const res = await fetch(RESEND_API_URL, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: RESEND_FROM_EMAIL || 'TRLBLZR.run <onboarding@resend.dev>',
+      to: [NOTIFICATION_EMAIL || 'etienne@bourdon.com'],
+      subject,
+      html,
+    }),
+  });
+  if (!res.ok) {
+    console.error('Resend error', res.status, await res.text());
+  }
+}
 
 // Mapping slug → libellé Notion (doit EXACTEMENT matcher les options Select de la colonne Session).
 // Slugs actifs : saison automne 2026 (5 sessions chronologiques depuis lib/content.ts).
@@ -183,6 +211,37 @@ export async function POST(req: NextRequest) {
         { error: `Notion: ${detail}` },
         { status: 502 },
       );
+    }
+
+    // Batch 4 — email récap à Etienne (résumé candidat + templates FR/EN welcome + WhatsApp)
+    try {
+      const { subject, html } = buildNotificationEmail({
+        fullName,
+        firstname: data.firstname!,
+        email: data.email!,
+        whatsapp: data.whatsapp,
+        linkedin: data.linkedin,
+        isAthlete,
+        company: data.company,
+        itra: data.itra,
+        utmb: data.utmb,
+        sessionLabel,
+        preferredLang,
+        sportLevelLabel,
+        cityLabel,
+        country: data.country,
+        selfDescription: data.selfDescription,
+        motivation: data.motivation,
+        lookingFor: data.lookingFor,
+        proWebsite: data.proWebsite,
+        stravaProfile: data.stravaProfile,
+        otherLink: data.otherLink,
+        source: data.source || data.referer,
+        notionUrl: notionBody.url,
+      });
+      await sendApplyNotification(subject, html);
+    } catch (err) {
+      console.error('Échec envoi email notification (candidature déjà enregistrée)', err);
     }
 
     return NextResponse.json({

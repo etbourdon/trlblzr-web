@@ -155,6 +155,34 @@ Cette étape est optionnelle au début — au lancement, gestion manuelle suffit
 
 ---
 
+## Batch 4 — Reception email + welcome manuel
+
+Depuis Batch 4, chaque candidature déclenche un email récap automatique vers `NOTIFICATION_EMAIL`
+(Etienne), envoyé via **Resend**. L'email contient :
+
+- Le résumé complet du candidat (catégorie, session, contact, niveau trail, motivation…) + lien Notion
+- Un template email de bienvenue **FR** et **EN**, pré-rempli avec `{Name}`, `{Company}`, la session
+  ciblée — prêt à copier-coller (celui dans la langue préférée du candidat est surligné)
+- Un message WhatsApp pré-rempli, avec un lien `wa.me/<numéro du candidat>?text=…` cliquable qui
+  ouvre directement la conversation avec le message prêt à envoyer
+
+**Rien n'est envoyé automatiquement au candidat** — Etienne copie-colle et envoie manuellement
+(~2 min/candidat). L'automatisation complète (V2) est décrite dans `07-decisions-et-impacts.md`.
+
+### Setup Resend
+
+1. Créer un compte sur https://resend.com (gratuit jusqu'à 3000 emails/mois)
+2. **Domains** → ajouter `trlblzr.run` → suivre les instructions DNS (TXT/CNAME chez le registrar)
+   pour vérifier le domaine. Tant que le domaine n'est pas vérifié, utiliser l'expéditeur de test
+   `onboarding@resend.dev` (valeur par défaut si `RESEND_FROM_EMAIL` n'est pas défini)
+3. **API Keys** → créer une clé → c'est ton `RESEND_API_KEY`
+4. Variables d'environnement Vercel (Production + Preview + Development) :
+   - `RESEND_API_KEY` = la clé de l'étape 3
+   - `RESEND_FROM_EMAIL` = ex. `TRLBLZR.run <apply@trlblzr.run>` (une fois le domaine vérifié)
+   - `NOTIFICATION_EMAIL` = `etienne@bourdon.com` (déjà listé dans le README)
+5. Si `RESEND_API_KEY` est absent, la route `/api/apply` continue de fonctionner normalement
+   (candidature enregistrée dans Notion) — elle log juste un warning et n'envoie pas d'email.
+
 ## Test local sans déploiement
 
 Si tu veux développer/tester en local :

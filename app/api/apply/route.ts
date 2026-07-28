@@ -78,6 +78,7 @@ type ApplyPayload = {
   category?: 'dirigeant' | 'athlete';
   sessions?: string[];
   company?: string;
+  role?: string;
   itra?: string;
   utmb?: string;
   rgpd?: boolean;
@@ -177,6 +178,7 @@ export async function POST(req: NextRequest) {
     Status: { select: { name: 'Nouveau' } },
     'Preferred language': { select: { name: preferredLang } },
     Company: { rich_text: txt(data.company) },
+    'Role / Title': { rich_text: txt(data.role) },
     ITRA: { rich_text: txt(data.itra) },
     UTMB: { rich_text: txt(data.utmb) },
     // SBL-18 : priorité au ?source= explicite, puis referer, puis 'direct'
@@ -239,6 +241,7 @@ export async function POST(req: NextRequest) {
         linkedin: data.linkedin,
         isAthlete,
         company: data.company,
+        role: data.role,
         itra: data.itra,
         utmb: data.utmb,
         sessionLabels,

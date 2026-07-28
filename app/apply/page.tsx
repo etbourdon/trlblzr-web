@@ -17,6 +17,7 @@ type FormData = {
   firstname: string;
   lastname: string;
   company: string;
+  role: string;
   email: string;
   whatsapp: string;
   linkedin: string;
@@ -40,6 +41,7 @@ const EMPTY_FORM: FormData = {
   firstname: '',
   lastname: '',
   company: '',
+  role: '',
   email: '',
   whatsapp: '',
   linkedin: '',
@@ -384,8 +386,19 @@ function StepInfos({
         </div>
 
         {!isAthlete && (
-          <Field label={t.apply.s2Company} required>
-            <Input value={form.company} onChange={(v) => onChange('company', v)} required />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Field label={t.apply.s2Company} required>
+              <Input value={form.company} onChange={(v) => onChange('company', v)} required />
+            </Field>
+            <Field label={t.apply.s2Role} hint={t.apply.s2RoleHint} required>
+              <Input value={form.role} onChange={(v) => onChange('role', v)} required />
+            </Field>
+          </div>
+        )}
+
+        {isAthlete && (
+          <Field label={t.apply.s2Role} hint={t.apply.s2RoleHint}>
+            <Input value={form.role} onChange={(v) => onChange('role', v)} />
           </Field>
         )}
 

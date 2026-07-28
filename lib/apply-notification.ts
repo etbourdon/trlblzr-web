@@ -78,6 +78,7 @@ export type NotificationInput = {
   linkedin?: string | null;
   isAthlete: boolean;
   company?: string | null;
+  role?: string | null;
   itra?: string | null;
   utmb?: string | null;
   sessionLabels: string[];
@@ -97,7 +98,7 @@ export type NotificationInput = {
 
 export function buildNotificationEmail(input: NotificationInput): { subject: string; html: string } {
   const {
-    fullName, firstname, email, whatsapp, linkedin, isAthlete, company, itra, utmb,
+    fullName, firstname, email, whatsapp, linkedin, isAthlete, company, role, itra, utmb,
     sessionLabels, preferredLang, sportLevelLabel, cityLabel, country,
     selfDescription, motivation, lookingFor, proWebsite, stravaProfile, otherLink,
     source, notionUrl,
@@ -110,6 +111,7 @@ export function buildNotificationEmail(input: NotificationInput): { subject: str
   const rows: [string, string | null | undefined][] = [
     ['Catégorie', isAthlete ? 'Athlète' : 'Dirigeant'],
     ['Session(s) ciblée(s)', sessionLabels.join(' · ')],
+    ['Poste / Titre', role],
     ['Email', email],
     ['WhatsApp', whatsapp],
     ['LinkedIn', linkedin],

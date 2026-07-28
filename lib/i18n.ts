@@ -91,7 +91,7 @@ export type Dict = {
     s1Note: string;
     s2Eyebrow: string; s2TitleDirigeant: string; s2TitleAthlete: string; s2Lead: string;
     s2ProfileLabel: string; s2ChangeLink: string; s2SessionLabel: string; s2SessionHint: string;
-    s2Firstname: string; s2Lastname: string; s2Company: string;
+    s2Firstname: string; s2Lastname: string; s2Company: string; s2Role: string; s2RoleHint: string;
     s2Itra: string; s2ItraHint: string; s2Utmb: string; s2UtmbHint: string;
     s2Email: string; s2Whatsapp: string; s2Linkedin: string; s2LinkedinOptional: string;
     s2Rgpd: string; s2Submit: string; s2Submitting: string;
@@ -267,6 +267,7 @@ export const dictionary: Record<Locale, Dict> = {
       s2SessionLabel: 'Sessions qui t\'intéressent',
       s2SessionHint: 'plusieurs choix possibles',
       s2Firstname: 'Prénom', s2Lastname: 'Nom', s2Company: 'Société',
+      s2Role: 'Poste / Titre', s2RoleHint: 'ex. CEO, Fondatrice, VP Sales',
       s2Itra: 'Index ITRA', s2ItraHint: 'Index ITRA (ou laisse vide si pas applicable)',
       s2Utmb: 'Index UTMB', s2UtmbHint: 'Index UTMB (ou laisse vide)',
       s2Email: 'Email', s2Whatsapp: 'WhatsApp', s2Linkedin: 'LinkedIn',
@@ -483,6 +484,7 @@ export const dictionary: Record<Locale, Dict> = {
       s2SessionLabel: 'Sessions you\'re interested in',
       s2SessionHint: 'multiple choices possible',
       s2Firstname: 'First name', s2Lastname: 'Last name', s2Company: 'Company',
+      s2Role: 'Role / Title', s2RoleHint: 'e.g. CEO, Founder, VP Sales',
       s2Itra: 'ITRA index', s2ItraHint: 'ITRA index (or leave blank if not applicable)',
       s2Utmb: 'UTMB index', s2UtmbHint: 'UTMB index (or leave blank)',
       s2Email: 'Email', s2Whatsapp: 'WhatsApp', s2Linkedin: 'LinkedIn',

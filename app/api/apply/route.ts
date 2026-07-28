@@ -26,6 +26,13 @@ async function sendApplyNotification(subject: string, html: string) {
     console.warn('RESEND_API_KEY absent — notification email ignorée');
     return;
   }
+  // NOTIFICATION_EMAIL peut contenir plusieurs adresses séparées par des virgules
+  // (ex. "etienne@bourdon.com, autre@domaine.com") pour notifier plusieurs personnes.
+  const recipients = (NOTIFICATION_EMAIL || 'etienne@bourdon.com')
+    .split(',')
+    .map((addr) => addr.trim())
+    .filter(Boolean);
+
   const res = await fetch(RESEND_API_URL, {
     method: 'POST',
     headers: {
@@ -34,7 +41,7 @@ async function sendApplyNotification(subject: string, html: string) {
     },
     body: JSON.stringify({
       from: RESEND_FROM_EMAIL || 'TRLBLZR.run <onboarding@resend.dev>',
-      to: [NOTIFICATION_EMAIL || 'etienne@bourdon.com'],
+      to: recipients,
       subject,
       html,
     }),

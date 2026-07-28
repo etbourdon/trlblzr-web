@@ -48,7 +48,7 @@ NOTION_API_KEY=
 NOTION_DB_PEOPLE_PIM=
 NOTION_DB_EVENT_OUTREACH=
 RESEND_API_KEY=
-NOTIFICATION_EMAIL=etienne@bourdon.com
+NOTIFICATION_EMAIL=etienne@bourdon.com   # plusieurs adresses : séparées par des virgules
 WHATSAPP_NUMBER=
 ```
 

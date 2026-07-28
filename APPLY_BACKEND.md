@@ -193,7 +193,8 @@ Depuis Batch 4, chaque candidature déclenche un email récap automatique vers `
 4. Variables d'environnement Vercel (Production + Preview + Development) :
    - `RESEND_API_KEY` = la clé de l'étape 3
    - `RESEND_FROM_EMAIL` = ex. `TRLBLZR.run <apply@trlblzr.run>` (une fois le domaine vérifié)
-   - `NOTIFICATION_EMAIL` = `etienne@bourdon.com` (déjà listé dans le README)
+   - `NOTIFICATION_EMAIL` = `etienne@bourdon.com` (déjà listé dans le README). Plusieurs destinataires
+     possibles : séparer les adresses par une virgule, ex. `etienne@bourdon.com, autre@domaine.com`
 5. Si `RESEND_API_KEY` est absent, la route `/api/apply` continue de fonctionner normalement
    (candidature enregistrée dans Notion) — elle log juste un warning et n'envoie pas d'email.
 

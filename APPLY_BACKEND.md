@@ -29,7 +29,7 @@ Dans Notion, créer une nouvelle base de données (Table view) avec **exactement
 | **WhatsApp** | Phone | — |
 | **LinkedIn** | URL | — |
 | **Category** | Select | `Dirigeant`, `Athlète` |
-| **Session** | Select | `Annecy — Mai 2026 · Performance`, `Vercors — Juillet 2026 · Longévité`, `— Sans session ciblée —` (la function créera automatiquement les nouvelles valeurs si tu ajoutes des sessions) |
+| **Session** | **Multi-select** | Une session par option (ex. `France — 11-13 septembre 2026`), + `— Sans session ciblée —`. Un candidat peut cocher plusieurs sessions à la fois — voir "Multi-sélection des sessions" plus bas. |
 | **Status** | Select | `Nouveau`, `En revue`, `Éligible`, `Standby`, `Refusé`, `RDV pris` |
 | **Company** | Text | — |
 | **ITRA** | Text | — |
@@ -89,7 +89,7 @@ En cas d'erreur, ouvrir la console réseau du navigateur (onglet Network), regar
 | `whatsapp` | `WhatsApp` | Notion type Phone |
 | `linkedin` | `LinkedIn` | URL |
 | `category` (dirigeant/athlete) | `Category` | Mappé en `Dirigeant` / `Athlète` |
-| `session` (slug) | `Session` | Mappé en libellé lisible |
+| `sessions` (slugs, tableau) | `Session` | Multi-select — chaque slug coché est mappé vers son libellé lisible |
 | `company` (dirigeant) | `Company` | Vide si athlète |
 | `itra` (athlète) | `ITRA` | Vide si dirigeant |
 | `utmb` (athlète) | `UTMB` | Vide si dirigeant |
@@ -154,6 +154,20 @@ Cette étape est optionnelle au début — au lancement, gestion manuelle suffit
 **Total : 0 €/mois** pour 100+ candidatures/mois.
 
 ---
+
+## Multi-sélection des sessions
+
+Le champ Session du formulaire `/apply` est passé de sélection unique à **multi-choix** (checkboxes) —
+un candidat peut déclarer son intérêt pour plusieurs weekends à la fois. En conséquence :
+
+- Notion : la colonne `Session` de la base Candidates est une propriété **Multi-select** (convertie
+  depuis Select — les valeurs existantes ont été préservées comme listes à un seul élément).
+- Front (`app/apply/page.tsx`) : `form.sessions` est un tableau de slugs, coché via des checkboxes.
+- API (`app/api/apply/route.ts`) : le payload envoie `sessions: string[]` ; la route mappe chaque slug
+  vers son libellé Notion et écrit `Session: { multi_select: [...] }`. Si aucune session n'est cochée,
+  on retombe sur `— Sans session ciblée —`.
+- Email de notification (Batch 4 ci-dessous) : les templates de bienvenue et le message WhatsApp
+  s'adaptent automatiquement au singulier/pluriel selon le nombre de sessions cochées.
 
 ## Batch 4 — Reception email + welcome manuel
 

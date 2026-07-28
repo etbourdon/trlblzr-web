@@ -22,7 +22,7 @@ type FormData = {
   linkedin: string;
   itra: string;
   utmb: string;
-  session: string;
+  sessions: string[];
   // Batch 3 — Form v2 fields
   selfDescription: string;
   sportLevel: SportLevel;
@@ -45,7 +45,7 @@ const EMPTY_FORM: FormData = {
   linkedin: '',
   itra: '',
   utmb: '',
-  session: '',
+  sessions: [],
   selfDescription: '',
   sportLevel: '',
   motivation: '',
@@ -93,6 +93,15 @@ export default function ApplyPage() {
 
   const handleChange = (field: keyof FormData, value: string | boolean) => {
     setForm((f) => ({ ...f, [field]: value }));
+  };
+
+  const toggleSession = (slug: string) => {
+    setForm((f) => ({
+      ...f,
+      sessions: f.sessions.includes(slug)
+        ? f.sessions.filter((s) => s !== slug)
+        : [...f.sessions, slug],
+    }));
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -171,6 +180,7 @@ export default function ApplyPage() {
               category={category}
               form={form}
               onChange={handleChange}
+              onToggleSession={toggleSession}
               onSubmit={handleSubmit}
               onBack={handleBackToProfile}
               submitting={submitting}
@@ -284,6 +294,7 @@ function StepInfos({
   category,
   form,
   onChange,
+  onToggleSession,
   onSubmit,
   onBack,
   submitting,
@@ -293,6 +304,7 @@ function StepInfos({
   category: Category;
   form: FormData;
   onChange: (field: keyof FormData, value: string | boolean) => void;
+  onToggleSession: (slug: string) => void;
   onSubmit: (e: FormEvent) => void;
   onBack: () => void;
   submitting: boolean;
@@ -333,22 +345,32 @@ function StepInfos({
           </button>
         </div>
 
-        {/* Session ciblée */}
-        <Field label={t.apply.s2SessionLabel}>
-          <select
-            value={form.session}
-            onChange={(e) => onChange('session', e.target.value)}
-            className="w-full bg-stone border border-stone focus:border-ember text-paper-white px-4 py-3 font-mono text-sm rounded outline-none transition-colors"
-          >
-            <option value="">{t.apply.s2SessionNoTarget}</option>
+        {/* Sessions qui t'intéressent (multi-choix) */}
+        <Field label={t.apply.s2SessionLabel} hint={t.apply.s2SessionHint}>
+          <div className="space-y-2 mt-2">
             {upcomingSessions
               .filter((s) => s.status === 'upcoming')
               .map((s) => (
-                <option key={s.slug} value={s.slug}>
-                  {s.location} — {s.dates} · {s.theme}
-                </option>
+                <label
+                  key={s.slug}
+                  className={`flex items-start gap-3 border p-3 rounded cursor-pointer transition-colors ${
+                    form.sessions.includes(s.slug)
+                      ? 'border-ember bg-ember/5'
+                      : 'border-stone hover:border-paper-white/40'
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={form.sessions.includes(s.slug)}
+                    onChange={() => onToggleSession(s.slug)}
+                    className="mt-1 accent-ember"
+                  />
+                  <span className="font-sans text-sm text-paper-white leading-snug">
+                    {s.location} — {s.dates} · {s.theme}
+                  </span>
+                </label>
               ))}
-          </select>
+          </div>
         </Field>
 
         {/* Identité */}

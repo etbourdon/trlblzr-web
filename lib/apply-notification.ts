@@ -3,7 +3,7 @@
 // Quand une candidature arrive dans /api/apply, on envoie un email récap à Etienne
 // (via Resend) qui contient : le résumé du candidat + des templates FR/EN prêts à
 // copier-coller (email de bienvenue + message WhatsApp) pré-remplis avec le nom, la
-// société et la session ciblée. Etienne envoie ensuite manuellement (2 min/candidat) —
+// société et la ou les session(s) ciblée(s). Etienne envoie ensuite manuellement (2 min/candidat) —
 // rien n'est auto-envoyé au candidat ici, cf. APPLY_BACKEND.md.
 
 function esc(s: string | null | undefined): string {
@@ -22,19 +22,29 @@ function waLink(phone: string | null | undefined, message: string): string | nul
   return `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
 }
 
+// "A" / "A et B" / "A, B et C" (FR) — "A" / "A and B" / "A, B and C" (EN)
+function joinLabels(items: string[], conjunction: 'et' | 'and'): string {
+  if (items.length <= 1) return items[0] || '';
+  if (items.length === 2) return `${items[0]} ${conjunction} ${items[1]}`;
+  return `${items.slice(0, -1).join(', ')} ${conjunction} ${items[items.length - 1]}`;
+}
+
 export function buildWelcomeTemplates(input: {
   firstname: string;
   company?: string | null;
-  sessionLabel: string;
+  sessionLabels: string[];
 }) {
-  const { firstname, company, sessionLabel } = input;
+  const { firstname, company, sessionLabels } = input;
   const companyPart = company ? ` (${company})` : '';
+  const multi = sessionLabels.length > 1;
+  const labelsFr = joinLabels(sessionLabels, 'et');
+  const labelsEn = joinLabels(sessionLabels, 'and');
 
   const fr = {
     subject: `TRLBLZR.run — Bienvenue ${firstname} 🏔️`,
     body: `Salut ${firstname},
 
-Merci pour ta candidature${companyPart} pour la session ${sessionLabel} sur TRLBLZR.run. On a bien reçu ton dossier et on revient vers toi très vite avec les prochaines étapes.
+Merci pour ta candidature${companyPart} pour ${multi ? 'les sessions' : 'la session'} ${labelsFr} sur TRLBLZR.run. On a bien reçu ton dossier et on revient vers toi très vite avec les prochaines étapes.
 
 En attendant, n'hésite pas si tu as des questions.
 
@@ -46,7 +56,7 @@ Etienne — TRLBLZR.run`,
     subject: `TRLBLZR.run — Welcome ${firstname} 🏔️`,
     body: `Hey ${firstname},
 
-Thanks for applying${companyPart} to the ${sessionLabel} session on TRLBLZR.run. We've received your application and will get back to you very soon with next steps.
+Thanks for applying${companyPart} to the ${labelsEn} session${multi ? 's' : ''} on TRLBLZR.run. We've received your application and will get back to you very soon with next steps.
 
 Feel free to reach out in the meantime if you have any questions.
 
@@ -54,8 +64,8 @@ Talk soon,
 Etienne — TRLBLZR.run`,
   };
 
-  const waFr = `Salut ${firstname} 👋 Merci pour ta candidature à la session ${sessionLabel} sur TRLBLZR.run ! On revient vers toi très vite avec les prochaines étapes. À très vite 🏔️`;
-  const waEn = `Hey ${firstname} 👋 Thanks for applying to the ${sessionLabel} session on TRLBLZR.run! We'll get back to you very soon with next steps. Talk soon 🏔️`;
+  const waFr = `Salut ${firstname} 👋 Merci pour ta candidature ${multi ? 'aux sessions' : 'à la session'} ${labelsFr} sur TRLBLZR.run ! On revient vers toi très vite avec les prochaines étapes. À très vite 🏔️`;
+  const waEn = `Hey ${firstname} 👋 Thanks for applying to the ${labelsEn} session${multi ? 's' : ''} on TRLBLZR.run! We'll get back to you very soon with next steps. Talk soon 🏔️`;
 
   return { fr, en, waFr, waEn };
 }
@@ -70,7 +80,7 @@ export type NotificationInput = {
   company?: string | null;
   itra?: string | null;
   utmb?: string | null;
-  sessionLabel: string;
+  sessionLabels: string[];
   preferredLang: 'FR' | 'EN';
   sportLevelLabel?: string | null;
   cityLabel?: string | null;
@@ -88,18 +98,18 @@ export type NotificationInput = {
 export function buildNotificationEmail(input: NotificationInput): { subject: string; html: string } {
   const {
     fullName, firstname, email, whatsapp, linkedin, isAthlete, company, itra, utmb,
-    sessionLabel, preferredLang, sportLevelLabel, cityLabel, country,
+    sessionLabels, preferredLang, sportLevelLabel, cityLabel, country,
     selfDescription, motivation, lookingFor, proWebsite, stravaProfile, otherLink,
     source, notionUrl,
   } = input;
 
-  const templates = buildWelcomeTemplates({ firstname, company, sessionLabel });
+  const templates = buildWelcomeTemplates({ firstname, company, sessionLabels });
   const waMessage = preferredLang === 'EN' ? templates.waEn : templates.waFr;
   const waHref = waLink(whatsapp, waMessage);
 
   const rows: [string, string | null | undefined][] = [
     ['Catégorie', isAthlete ? 'Athlète' : 'Dirigeant'],
-    ['Session ciblée', sessionLabel],
+    ['Session(s) ciblée(s)', sessionLabels.join(' · ')],
     ['Email', email],
     ['WhatsApp', whatsapp],
     ['LinkedIn', linkedin],
@@ -170,7 +180,7 @@ export function buildNotificationEmail(input: NotificationInput): { subject: str
 </div>`.trim();
 
   return {
-    subject: `Nouvelle candidature TRLBLZR — ${fullName} · ${sessionLabel}`,
+    subject: `Nouvelle candidature TRLBLZR — ${fullName} · ${sessionLabels.join(', ')}`,
     html,
   };
 }

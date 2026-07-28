@@ -69,7 +69,7 @@ type ApplyPayload = {
   whatsapp?: string;
   linkedin?: string;
   category?: 'dirigeant' | 'athlete';
-  session?: string;
+  sessions?: string[];
   company?: string;
   itra?: string;
   utmb?: string;
@@ -133,8 +133,17 @@ export async function POST(req: NextRequest) {
   }
 
   const fullName = `${data.firstname} ${data.lastname}`.trim();
-  const sessionLabel =
-    SESSION_LABELS[data.session || ''] || data.session || '— Sans session ciblée —';
+
+  // Multi-select : une ou plusieurs sessions ciblées. On mappe chaque slug vers son libellé Notion,
+  // on déduplique (plusieurs slugs legacy mappent tous vers "Sans session ciblée"), et on retombe
+  // sur "Sans session ciblée" si le candidat n'en a coché aucune.
+  const sessionLabels = Array.from(
+    new Set(
+      (data.sessions && data.sessions.length > 0 ? data.sessions : [''])
+        .map((slug) => SESSION_LABELS[slug] || slug || '— Sans session ciblée —')
+        .filter(Boolean),
+    ),
+  );
   const isAthlete = data.category === 'athlete';
 
   // Preferred language (Batch 2) — FR par défaut si non fournie ou valeur invalide
@@ -157,7 +166,7 @@ export async function POST(req: NextRequest) {
     WhatsApp: { phone_number: data.whatsapp || null },
     LinkedIn: { url: data.linkedin || null },
     Category: { select: { name: isAthlete ? 'Athlète' : 'Dirigeant' } },
-    Session: { select: { name: sessionLabel } },
+    Session: { multi_select: sessionLabels.map((name) => ({ name })) },
     Status: { select: { name: 'Nouveau' } },
     'Preferred language': { select: { name: preferredLang } },
     Company: { rich_text: txt(data.company) },
@@ -225,7 +234,7 @@ export async function POST(req: NextRequest) {
         company: data.company,
         itra: data.itra,
         utmb: data.utmb,
-        sessionLabel,
+        sessionLabels,
         preferredLang,
         sportLevelLabel,
         cityLabel,

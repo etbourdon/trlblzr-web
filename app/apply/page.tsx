@@ -1,11 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { useState, useEffect, type FormEvent } from 'react';
 import { upcomingSessions } from '@/lib/content';
 import { useLocale } from '@/lib/locale-provider';
-import LangSwitcher from '@/components/LangSwitcher';
+import FlowHeader from '@/components/FlowHeader';
+import { Field, Input, Textarea, SectionHeader } from '@/components/FormFields';
 import type { Dict } from '@/lib/i18n';
 
 type Category = 'dirigeant' | 'athlete';
@@ -143,30 +143,7 @@ export default function ApplyPage() {
 
   return (
     <div className="min-h-screen bg-trail-black text-paper-white">
-      <header className="fixed top-0 left-0 right-0 z-50 px-6 md:px-10 py-4 flex items-center justify-between bg-trail-black/85 backdrop-blur-[2px] border-b border-stone">
-        <Link href={homeHref} className="flex items-center gap-3 group">
-          <Image
-            src="/icon.png"
-            alt="TRLBLZR"
-            width={44}
-            height={44}
-            className="w-9 h-9 transition-transform group-hover:scale-105"
-          />
-          <span className="font-display font-bold text-base md:text-lg tracking-tight text-paper-white">
-            TRLBLZR
-            <span className="text-ember">.run</span>
-          </span>
-        </Link>
-        <div className="flex items-center gap-5">
-          <LangSwitcher />
-          <Link
-            href={homeHref}
-            className="font-mono text-[10px] md:text-[11px] tracking-[0.2em] text-paper-white/70 hover:text-ember transition-colors"
-          >
-            {t.common.back.toUpperCase()}
-          </Link>
-        </div>
-      </header>
+      <FlowHeader homeHref={homeHref} backLabel={t.common.back} />
 
       <div className="pt-24 md:pt-32 px-6 md:px-10">
         <div className="max-w-4xl mx-auto">
@@ -681,88 +658,3 @@ function StepConfirmation({
   );
 }
 
-function SectionHeader({ label }: { label: string }) {
-  return (
-    <div className="pt-4 border-t border-stone">
-      <p className="font-mono text-[10px] tracking-[0.3em] text-ember">
-        // {label.toUpperCase()}
-      </p>
-    </div>
-  );
-}
-
-function Field({
-  label,
-  required,
-  hint,
-  children,
-}: {
-  label: string;
-  required?: boolean;
-  hint?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <label className="block">
-      <span className="block font-mono text-[10px] tracking-[0.25em] text-paper-white/80 mb-2">
-        {label.toUpperCase()}
-        {required && <span className="text-ember ml-1">*</span>}
-        {hint && <span className="text-ash ml-2 normal-case tracking-normal">— {hint}</span>}
-      </span>
-      {children}
-    </label>
-  );
-}
-
-function Input({
-  value,
-  onChange,
-  type = 'text',
-  required = false,
-  placeholder,
-  inputMode,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-  type?: string;
-  required?: boolean;
-  placeholder?: string;
-  inputMode?: 'text' | 'numeric' | 'tel' | 'email' | 'url';
-}) {
-  return (
-    <input
-      type={type}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      required={required}
-      placeholder={placeholder}
-      inputMode={inputMode}
-      className="w-full bg-stone border border-stone focus:border-ember text-paper-white px-4 py-3 font-mono text-sm rounded outline-none transition-colors placeholder:text-ash/60"
-    />
-  );
-}
-
-function Textarea({
-  value,
-  onChange,
-  rows = 3,
-  required = false,
-  placeholder,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-  rows?: number;
-  required?: boolean;
-  placeholder?: string;
-}) {
-  return (
-    <textarea
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      required={required}
-      placeholder={placeholder}
-      rows={rows}
-      className="w-full bg-stone border border-stone focus:border-ember text-paper-white px-4 py-3 font-sans text-sm rounded outline-none transition-colors placeholder:text-ash/60 resize-y leading-relaxed"
-    />
-  );
-}

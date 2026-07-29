@@ -116,6 +116,15 @@ export type Dict = {
     s2SectionAbout: string; s2SectionSport: string; s2SectionMotivation: string;
     s2SectionLocation: string; s2SectionLinks: string; s2SectionContact: string;
   };
+  login: {
+    title: string; lead: string; emailLabel: string; submit: string; submitting: string;
+    checkTitle: string; checkBody: string; errorExpired: string; backHome: string;
+  };
+  profile: {
+    title: string; lead: string; selfDescLabel: string; pictureLabel: string;
+    saveLabel: string; savingLabel: string; savedMessage: string; logoutLabel: string;
+    loadErrorMessage: string; notLoggedInMessage: string;
+  };
 };
 
 export const dictionary: Record<Locale, Dict> = {
@@ -335,6 +344,29 @@ export const dictionary: Record<Locale, Dict> = {
       s2SectionLinks: 'Liens (optionnels)',
       s2SectionContact: 'Contact',
     },
+    login: {
+      title: 'Connexion.',
+      lead: "Entre l'email de ta candidature — on t'envoie un lien pour te reconnecter, sans mot de passe.",
+      emailLabel: 'Email',
+      submit: 'Recevoir mon lien',
+      submitting: 'Envoi en cours…',
+      checkTitle: 'Vérifie ta boîte mail.',
+      checkBody: "Si cet email correspond à une candidature, un lien de connexion vient d'être envoyé. Il expire dans 20 minutes.",
+      errorExpired: 'Ce lien a expiré ou est invalide. Demandes-en un nouveau ci-dessous.',
+      backHome: "Retour à l'accueil",
+    },
+    profile: {
+      title: 'Ton profil.',
+      lead: 'Mets à jour tes informations à tout moment.',
+      selfDescLabel: 'Décris-toi',
+      pictureLabel: 'Photo (URL)',
+      saveLabel: 'Enregistrer',
+      savingLabel: 'Enregistrement…',
+      savedMessage: 'Profil mis à jour.',
+      logoutLabel: 'Se déconnecter',
+      loadErrorMessage: 'Impossible de charger ton profil. Réessaie ou reconnecte-toi.',
+      notLoggedInMessage: 'Tu dois te connecter pour voir cette page.',
+    },
   },
   en: {
     meta: {
@@ -551,6 +583,29 @@ export const dictionary: Record<Locale, Dict> = {
       s2SectionLocation: 'Location',
       s2SectionLinks: 'Links (optional)',
       s2SectionContact: 'Contact',
+    },
+    login: {
+      title: 'Log in.',
+      lead: "Enter the email from your application — we'll send you a link to log back in, no password needed.",
+      emailLabel: 'Email',
+      submit: 'Send my link',
+      submitting: 'Sending…',
+      checkTitle: 'Check your inbox.',
+      checkBody: "If that email matches an application, a login link was just sent. It expires in 20 minutes.",
+      errorExpired: 'That link has expired or is invalid. Request a new one below.',
+      backHome: 'Back to homepage',
+    },
+    profile: {
+      title: 'Your profile.',
+      lead: 'Update your details anytime.',
+      selfDescLabel: 'Describe yourself',
+      pictureLabel: 'Photo (URL)',
+      saveLabel: 'Save',
+      savingLabel: 'Saving…',
+      savedMessage: 'Profile updated.',
+      logoutLabel: 'Log out',
+      loadErrorMessage: "Couldn't load your profile. Try again or log back in.",
+      notLoggedInMessage: 'You need to log in to see this page.',
     },
   },
 };

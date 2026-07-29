@@ -48,8 +48,10 @@ NOTION_API_KEY=
 NOTION_DB_PEOPLE_PIM=
 NOTION_DB_EVENT_OUTREACH=
 RESEND_API_KEY=
+RESEND_FROM_EMAIL=
 NOTIFICATION_EMAIL=etienne@bourdon.com   # plusieurs adresses : séparées par des virgules
 WHATSAPP_NUMBER=
+AUTH_SECRET=   # Batch 5.1 — secret de signature des liens magiques (voir APPLY_BACKEND.md)
 ```
 
 ## Structure du projet

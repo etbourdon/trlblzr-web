@@ -13,42 +13,39 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { buildNotificationEmail } from '@/lib/apply-notification';
-
-const NOTION_API_URL = 'https://api.notion.com/v1/pages';
-const NOTION_VERSION = '2022-06-28';
-const RESEND_API_URL = 'https://api.resend.com/emails';
+import { buildVerifyEmail } from '@/lib/verify-notification';
+import { sendEmail } from '@/lib/resend';
+import { createCandidatePage, txt } from '@/lib/notion-candidates';
+import { createToken, VERIFY_LINK_TTL_SECONDS } from '@/lib/auth';
+import { SPORT_LEVEL_LABELS, CITY_OPTIONS } from '@/lib/field-options';
 
 // Batch 4 — best-effort: la candidature est déjà sauvegardée dans Notion à ce stade,
 // donc un échec d'envoi d'email ne doit jamais faire échouer la réponse au candidat.
 async function sendApplyNotification(subject: string, html: string) {
-  const { RESEND_API_KEY, RESEND_FROM_EMAIL, NOTIFICATION_EMAIL } = process.env;
-  if (!RESEND_API_KEY) {
-    console.warn('RESEND_API_KEY absent — notification email ignorée');
-    return;
-  }
+  const { NOTIFICATION_EMAIL } = process.env;
   // NOTIFICATION_EMAIL peut contenir plusieurs adresses séparées par des virgules
   // (ex. "etienne@bourdon.com, autre@domaine.com") pour notifier plusieurs personnes.
   const recipients = (NOTIFICATION_EMAIL || 'etienne@bourdon.com')
     .split(',')
     .map((addr) => addr.trim())
     .filter(Boolean);
+  await sendEmail({ to: recipients, subject, html });
+}
 
-  const res = await fetch(RESEND_API_URL, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${RESEND_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      from: RESEND_FROM_EMAIL || 'TRLBLZR.run <onboarding@resend.dev>',
-      to: recipients,
-      subject,
-      html,
-    }),
-  });
-  if (!res.ok) {
-    console.error('Resend error', res.status, await res.text());
-  }
+// Batch 5.1 — email de vérification envoyé au candidat lui-même (distinct de la notification
+// Batch 4 ci-dessus qui va à Etienne). Best-effort : ne doit jamais faire échouer la candidature.
+async function sendVerificationEmail(params: {
+  candidateId: string;
+  email: string;
+  firstname: string;
+  preferredLang: 'FR' | 'EN';
+  origin: string;
+}) {
+  const { candidateId, email, firstname, preferredLang, origin } = params;
+  const token = createToken({ candidateId, email, purpose: 'verify' }, VERIFY_LINK_TTL_SECONDS);
+  const verifyUrl = `${origin}/api/auth/verify?token=${encodeURIComponent(token)}`;
+  const { subject, html } = buildVerifyEmail({ firstname, verifyUrl, locale: preferredLang });
+  await sendEmail({ to: email, subject, html });
 }
 
 // Mapping slug → libellé Notion (doit EXACTEMENT matcher les options Select de la colonne Session).
@@ -96,20 +93,6 @@ type ApplyPayload = {
   stravaProfile?: string;
   otherLink?: string;
 };
-
-// Map numeric sport level → Notion SELECT label (matches Candidates DB "Sport level" options)
-const SPORT_LEVEL_LABELS: Record<string, string> = {
-  '1': '1 · Jog occasionnel',
-  '2': '2 · Coureur régulier',
-  '3': '3 · Traileur',
-  '4': '4 · Long trail (ultra)',
-  '5': '5 · Ultra élite (>100k)',
-};
-
-function txt(content: string | undefined | null) {
-  if (!content) return [];
-  return [{ type: 'text', text: { content: String(content).slice(0, 2000) } }];
-}
 
 export async function OPTIONS() {
   return new NextResponse(null, {
@@ -162,9 +145,7 @@ export async function POST(req: NextRequest) {
 
   // City (Batch 3) — value must match a Notion SELECT option
   const cityLabel =
-    data.city && ['Paris', 'Lyon', 'Bucharest', 'Autre'].includes(data.city)
-      ? data.city
-      : null;
+    data.city && (CITY_OPTIONS as readonly string[]).includes(data.city) ? data.city : null;
 
   // Mapping form payload → Notion properties.
   // Les noms de propriété doivent EXACTEMENT correspondre à la base Notion "Candidates".
@@ -204,31 +185,24 @@ export async function POST(req: NextRequest) {
   });
 
   try {
-    const notionRes = await fetch(NOTION_API_URL, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${NOTION_TOKEN}`,
-        'Notion-Version': NOTION_VERSION,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        parent: { database_id: NOTION_DATABASE_ID },
-        properties,
-      }),
-    });
+    const created = await createCandidatePage(properties);
+    if ('error' in created) {
+      console.error('Notion API error', created.error);
+      return NextResponse.json({ error: `Notion: ${created.error}` }, { status: 502 });
+    }
+    const notionBody = created;
 
-    const notionBody = await notionRes.json();
-    if (!notionRes.ok) {
-      console.error('Notion API error', notionRes.status, notionBody);
-      // On expose le message + le code Notion pour aider au debug
-      const detail =
-        notionBody.message ||
-        (notionBody.code ? `code: ${notionBody.code}` : null) ||
-        `HTTP ${notionRes.status}`;
-      return NextResponse.json(
-        { error: `Notion: ${detail}` },
-        { status: 502 },
-      );
+    // Batch 5.1 — email de vérification au candidat (best-effort, distinct de la notification Etienne)
+    try {
+      await sendVerificationEmail({
+        candidateId: notionBody.id,
+        email: data.email!,
+        firstname: data.firstname!,
+        preferredLang,
+        origin: req.nextUrl.origin,
+      });
+    } catch (err) {
+      console.error('Échec envoi email de vérification (candidature déjà enregistrée)', err);
     }
 
     // Batch 4 — email récap à Etienne (résumé candidat + templates FR/EN welcome + WhatsApp)

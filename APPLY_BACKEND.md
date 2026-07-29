@@ -198,6 +198,44 @@ Depuis Batch 4, chaque candidature déclenche un email récap automatique vers `
 5. Si `RESEND_API_KEY` est absent, la route `/api/apply` continue de fonctionner normalement
    (candidature enregistrée dans Notion) — elle log juste un warning et n'envoie pas d'email.
 
+## Batch 5.1 — Auth email magic link + profil éditable
+
+Scope livré (self-contained, ne dépend pas de 5.2/5.3) :
+
+- **Vérification email** : chaque candidature déclenche l'envoi d'un email "confirme ton email"
+  au candidat (distinct de la notification Etienne du Batch 4). Le clic marque
+  `Email verified` (checkbox) + `Email verified at` (date) dans Candidates DB, et connecte
+  automatiquement le candidat (redirection vers `/profile`).
+- **`/login`** : page où n'importe quel candidat entre son email pour recevoir un nouveau lien
+  de connexion (valable 20 min). Réponse toujours générique ("vérifie ta boîte mail"), qu'un
+  email corresponde ou non à une candidature — pour ne jamais révéler qui est dans la base.
+- **`/profile`** (protégée par cookie de session) : édition directe des champs Candidates DB
+  (self-description, Role / Title, Company, LinkedIn, Strava, Pro website, Other link, City,
+  Country, Sport level, Looking for, Motivation, Profile picture URL). Pas de champ "Card
+  status" — ça, c'est le rôle de Batch 5.2/5.3, pas encore construit.
+
+### Mécanisme d'auth (pas de Clerk, pas d'Auth.js, pas de nouvelle base de données)
+
+Liens signés HMAC-SHA256 maison (`lib/auth.ts`) : `base64url(payload).base64url(signature)`,
+vérifiés par recalcul de la signature (comparaison à temps constant) + contrôle d'expiration.
+Payload = `{ candidateId, email, purpose: 'verify'|'login'|'session', exp }`.
+
+- Lien de vérification / connexion : 20 minutes de validité.
+- Cookie de session (`trlblzr_session`, httpOnly, secure, sameSite=lax) : 30 jours.
+
+**Limite connue** : les liens ne sont pas strictement à usage unique (pas de store côté serveur
+pour marquer "déjà utilisé" — ça demanderait une base de données, ce que cette conception évite
+délibérément). La courte durée de vie est la mitigation. Suffisant pour un outil communautaire à
+faible volume ; à revisiter si ça change un jour.
+
+### Variable d'environnement requise
+
+- `AUTH_SECRET` : chaîne aléatoire longue, utilisée pour signer tous les liens/cookies. À générer
+  une fois et ajouter dans Vercel (Production + Preview + Development) — **jamais commitée dans
+  le repo**. Exemple de génération : `node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"`.
+  Si absent, les routes `/api/auth/*` et `/api/profile` échouent (candidature elle-même toujours
+  sauvegardée normalement dans Notion, seule la partie auth est affectée).
+
 ## Test local sans déploiement
 
 Si tu veux développer/tester en local :

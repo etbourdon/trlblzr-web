@@ -4,8 +4,10 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale } from '@/lib/locale-provider';
 import FlowHeader from '@/components/FlowHeader';
+import SessionPicker from '@/components/SessionPicker';
 import { Field, Input, Textarea, SectionHeader } from '@/components/FormFields';
 import { SPORT_LEVEL_LABELS, CITY_OPTIONS } from '@/lib/field-options';
+import { mapLabelsToSlugs } from '@/lib/session-mapping';
 import type { Dict } from '@/lib/i18n';
 
 const CODE_BY_SPORT_LABEL: Record<string, string> = Object.fromEntries(
@@ -28,6 +30,7 @@ type FormState = {
   lookingFor: string;
   motivation: string;
   profilePictureUrl: string;
+  sessions: string[];
 };
 
 const EMPTY_FORM: FormState = {
@@ -44,6 +47,7 @@ const EMPTY_FORM: FormState = {
   lookingFor: '',
   motivation: '',
   profilePictureUrl: '',
+  sessions: [],
 };
 
 export default function ProfilePage() {
@@ -86,6 +90,7 @@ export default function ProfilePage() {
           lookingFor: c.lookingFor || '',
           motivation: c.motivation || '',
           profilePictureUrl: c.profilePictureUrl || '',
+          sessions: mapLabelsToSlugs(c.sessionLabels),
         });
       } catch {
         if (!cancelled) setLoadError(true);
@@ -100,6 +105,16 @@ export default function ProfilePage() {
 
   const handleChange = (field: keyof FormState, value: string) => {
     setForm((f) => ({ ...f, [field]: value }));
+    setSaved(false);
+  };
+
+  const toggleSession = (slug: string) => {
+    setForm((f) => ({
+      ...f,
+      sessions: f.sessions.includes(slug)
+        ? f.sessions.filter((s) => s !== slug)
+        : [...f.sessions, slug],
+    }));
     setSaved(false);
   };
 
@@ -170,6 +185,11 @@ export default function ProfilePage() {
                     <Input value={form.company} onChange={(v) => handleChange('company', v)} />
                   </Field>
                 </div>
+
+                <SectionHeader label={t.apply.s2SessionLabel} />
+                <Field label={t.apply.s2SessionLabel} hint={t.apply.s2SessionHint}>
+                  <SessionPicker selected={form.sessions} onToggle={toggleSession} />
+                </Field>
 
                 <SectionHeader label={t.apply.s2SectionSport} />
                 <Field label={t.apply.s2SportLevelLabel} hint={t.apply.s2SportLevelHint}>

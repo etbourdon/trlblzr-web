@@ -82,7 +82,7 @@ export type Dict = {
   athletes: { roleUltra: string; roleTrail: string };
   club: { statLabel: string; tagline: string; item1: string; item2: string; item3: string; cta: string; ctaApply: string; ctaNetwork: string };
   final: { eyebrow: string; titleLine1: string; titleLine2Pre: string; titleLine2Highlight: string; body1: string; body2: string; cta: string };
-  footer: { descr: string; explore: string; follow: string; copyright: string; tagline: string; sisterBrand: string };
+  footer: { descr: string; explore: string; follow: string; copyright: string; tagline: string; sisterBrand: string; memberLogin: string };
   apply: {
     step1: string; step2: string; step3: string;
     s1Eyebrow: string; s1Title: string; s1TitleHighlight: string; s1Lead: string;
@@ -253,6 +253,7 @@ export const dictionary: Record<Locale, Dict> = {
       copyright: '© 2026 TRLBLZR · Tous droits réservés',
       tagline: 'Courir — Échanger — Se perfectionner — Recommencer',
       sisterBrand: 'Pitch in Motion',
+      memberLogin: 'Déjà membre ? Se connecter',
     },
     apply: {
       step1: 'Profil', step2: 'Informations', step3: 'Envoi',
@@ -493,6 +494,7 @@ export const dictionary: Record<Locale, Dict> = {
       copyright: '© 2026 TRLBLZR · All rights reserved',
       tagline: 'Run — Talk — Sharpen — Repeat',
       sisterBrand: 'Pitch in Motion',
+      memberLogin: 'Already a member? Log in',
     },
     apply: {
       step1: 'Profile', step2: 'Info', step3: 'Send',

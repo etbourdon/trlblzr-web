@@ -18,6 +18,7 @@ import { sendEmail } from '@/lib/resend';
 import { createCandidatePage, txt } from '@/lib/notion-candidates';
 import { createToken, VERIFY_LINK_TTL_SECONDS } from '@/lib/auth';
 import { SPORT_LEVEL_LABELS, CITY_OPTIONS } from '@/lib/field-options';
+import { mapSlugsToSessionLabels } from '@/lib/session-mapping';
 
 // Batch 4 — best-effort: la candidature est déjà sauvegardée dans Notion à ce stade,
 // donc un échec d'envoi d'email ne doit jamais faire échouer la réponse au candidat.
@@ -47,24 +48,6 @@ async function sendVerificationEmail(params: {
   const { subject, html } = buildVerifyEmail({ firstname, verifyUrl, locale: preferredLang });
   await sendEmail({ to: email, subject, html });
 }
-
-// Mapping slug → libellé Notion (doit EXACTEMENT matcher les options Select de la colonne Session).
-// Slugs actifs : saison automne 2026 (5 sessions chronologiques depuis lib/content.ts).
-// Legacy slugs conservés pour compat backwards (liens externes historiques).
-const SESSION_LABELS: Record<string, string> = {
-  // Saison automne 2026 (actives)
-  'france-2026-09': 'France — 11-13 septembre 2026',
-  'france-2026-10': 'France — 2-4 octobre 2026',
-  'grand-canyon-2026-10': 'Grand Canyon — 8-11 octobre 2026 · RIM to RIM to RIM',
-  'maroc-2026-11': 'Maroc — 12-15 novembre 2026 · Trail & Business',
-  'france-2026-11': 'France — 20-22 novembre 2026',
-  // Legacy — mappent tous vers "Sans session ciblée" (sessions non-existantes ou annulées)
-  'annecy-mai-2026': '— Sans session ciblée —',
-  'vercors-juillet-2026': '— Sans session ciblée —',
-  'vercors-2026-07': '— Sans session ciblée —',
-  'tba-2026-s2': '— Sans session ciblée —',
-  '': '— Sans session ciblée —',
-};
 
 type ApplyPayload = {
   firstname?: string;
@@ -125,16 +108,7 @@ export async function POST(req: NextRequest) {
 
   const fullName = `${data.firstname} ${data.lastname}`.trim();
 
-  // Multi-select : une ou plusieurs sessions ciblées. On mappe chaque slug vers son libellé Notion,
-  // on déduplique (plusieurs slugs legacy mappent tous vers "Sans session ciblée"), et on retombe
-  // sur "Sans session ciblée" si le candidat n'en a coché aucune.
-  const sessionLabels = Array.from(
-    new Set(
-      (data.sessions && data.sessions.length > 0 ? data.sessions : [''])
-        .map((slug) => SESSION_LABELS[slug] || slug || '— Sans session ciblée —')
-        .filter(Boolean),
-    ),
-  );
+  const sessionLabels = mapSlugsToSessionLabels(data.sessions);
   const isAthlete = data.category === 'athlete';
 
   // Preferred language (Batch 2) — FR par défaut si non fournie ou valeur invalide

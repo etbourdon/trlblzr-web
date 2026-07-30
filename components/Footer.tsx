@@ -44,6 +44,11 @@ export default function Footer() {
                 {t.common.apply} ↗
               </Link>
             </li>
+            <li className="pt-2 mt-2 border-t border-stone/60">
+              <Link href="/login" className="hover:text-ember transition-colors">
+                {t.footer.memberLogin}
+              </Link>
+            </li>
           </ul>
         </div>
 

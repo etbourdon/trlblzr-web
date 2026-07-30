@@ -44,6 +44,7 @@ export type CandidateRecord = {
   lookingFor: string | null;
   profilePictureUrl: string | null;
   preferredLanguage: 'FR' | 'EN' | null;
+  sessionLabels: string[];
 };
 
 // Minimal shape of what we read out of a Notion property value — avoids pulling in Notion's SDK.
@@ -52,6 +53,7 @@ type NotionProperty = {
   title?: { plain_text: string }[];
   rich_text?: { plain_text: string }[];
   select?: { name: string } | null;
+  multi_select?: { name: string }[];
   url?: string | null;
   email?: string | null;
 };
@@ -72,6 +74,9 @@ function urlValue(prop?: NotionProperty): string | null {
 }
 function emailValue(prop?: NotionProperty): string | null {
   return prop?.email ?? null;
+}
+function multiSelectNames(prop?: NotionProperty): string[] {
+  return prop?.multi_select?.map((o) => o.name) ?? [];
 }
 
 function toCandidateRecord(page: { id: string; properties: Record<string, NotionProperty> }): CandidateRecord {
@@ -95,6 +100,7 @@ function toCandidateRecord(page: { id: string; properties: Record<string, Notion
     lookingFor: richText(p['Looking for']),
     profilePictureUrl: urlValue(p['Profile picture URL']),
     preferredLanguage: (selectName(p['Preferred language']) as 'FR' | 'EN' | null) ?? null,
+    sessionLabels: multiSelectNames(p['Session']),
   };
 }
 

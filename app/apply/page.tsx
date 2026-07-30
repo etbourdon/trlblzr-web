@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 import { useState, useEffect, type FormEvent } from 'react';
-import { upcomingSessions } from '@/lib/content';
 import { useLocale } from '@/lib/locale-provider';
 import FlowHeader from '@/components/FlowHeader';
+import SessionPicker from '@/components/SessionPicker';
 import { Field, Input, Textarea, SectionHeader } from '@/components/FormFields';
 import type { Dict } from '@/lib/i18n';
 
@@ -326,30 +326,7 @@ function StepInfos({
 
         {/* Sessions qui t'intéressent (multi-choix) */}
         <Field label={t.apply.s2SessionLabel} hint={t.apply.s2SessionHint}>
-          <div className="space-y-2 mt-2">
-            {upcomingSessions
-              .filter((s) => s.status === 'upcoming')
-              .map((s) => (
-                <label
-                  key={s.slug}
-                  className={`flex items-start gap-3 border p-3 rounded cursor-pointer transition-colors ${
-                    form.sessions.includes(s.slug)
-                      ? 'border-ember bg-ember/5'
-                      : 'border-stone hover:border-paper-white/40'
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={form.sessions.includes(s.slug)}
-                    onChange={() => onToggleSession(s.slug)}
-                    className="mt-1 accent-ember"
-                  />
-                  <span className="font-sans text-sm text-paper-white leading-snug">
-                    {s.location} — {s.dates} · {s.theme}
-                  </span>
-                </label>
-              ))}
-          </div>
+          <SessionPicker selected={form.sessions} onToggle={onToggleSession} />
         </Field>
 
         {/* Identité */}

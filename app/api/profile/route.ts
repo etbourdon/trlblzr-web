@@ -14,6 +14,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken, SESSION_COOKIE_NAME, type TokenPayload } from '@/lib/auth';
 import { getCandidateById, updateCandidateProperties, txt } from '@/lib/notion-candidates';
 import { SPORT_LEVEL_LABELS, CITY_OPTIONS } from '@/lib/field-options';
+import { mapSlugsToSessionLabels } from '@/lib/session-mapping';
 
 function getSession(req: NextRequest): TokenPayload | null {
   const token = req.cookies.get(SESSION_COOKIE_NAME)?.value;
@@ -49,6 +50,7 @@ type ProfilePayload = {
   lookingFor?: string;
   motivation?: string;
   profilePictureUrl?: string;
+  sessions?: string[];
 };
 
 export async function PATCH(req: NextRequest) {
@@ -82,6 +84,7 @@ export async function PATCH(req: NextRequest) {
       data.sportLevel && SPORT_LEVEL_LABELS[data.sportLevel]
         ? { select: { name: SPORT_LEVEL_LABELS[data.sportLevel] } }
         : { select: null },
+    Session: { multi_select: mapSlugsToSessionLabels(data.sessions).map((name) => ({ name })) },
   };
 
   try {

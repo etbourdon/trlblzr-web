@@ -6,6 +6,7 @@ import { useLocale } from '@/lib/locale-provider';
 import FlowHeader from '@/components/FlowHeader';
 import SessionPicker from '@/components/SessionPicker';
 import CityCountryFields from '@/components/CityCountryFields';
+import MemberCard from '@/components/MemberCard';
 import { Field, Input, Textarea, SectionHeader } from '@/components/FormFields';
 import { SPORT_LEVEL_LABELS } from '@/lib/field-options';
 import { mapLabelsToSlugs } from '@/lib/session-mapping';
@@ -87,6 +88,20 @@ export default function ProfilePage() {
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
+  // Batch 5.2 — Member Card
+  const [category, setCategory] = useState('');
+  const [itra, setItra] = useState('');
+  const [whatsapp, setWhatsapp] = useState('');
+  const [cardBio, setCardBio] = useState('');
+  const [cardLookingFor, setCardLookingFor] = useState('');
+  const [cardConsent, setCardConsent] = useState(false);
+  const [cardStatus, setCardStatus] = useState<'draft' | 'submitted' | null>(null);
+  const [memberNo, setMemberNo] = useState<number | null>(null);
+  const [generating, setGenerating] = useState(false);
+  const [generateError, setGenerateError] = useState<string | null>(null);
+  const [submittingCard, setSubmittingCard] = useState(false);
+  const [cardSubmitError, setCardSubmitError] = useState<string | null>(null);
+
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -119,6 +134,14 @@ export default function ProfilePage() {
           sessions: mapLabelsToSlugs(c.sessionLabels),
           preferredLanguage: c.preferredLanguage === 'EN' ? 'EN' : 'FR',
         });
+        setCategory(c.category || '');
+        setItra(c.itra || '');
+        setWhatsapp(c.whatsapp || '');
+        setCardBio(c.cardBio || '');
+        setCardLookingFor(c.cardLookingFor || '');
+        setCardConsent(Boolean(c.cardConsent));
+        setCardStatus(c.cardStatus || null);
+        setMemberNo(typeof c.memberNo === 'number' ? c.memberNo : null);
       } catch {
         if (!cancelled) setLoadError(true);
       } finally {
@@ -196,6 +219,74 @@ export default function ProfilePage() {
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
     router.replace(homeHref);
+  };
+
+  const isAthlete = category === 'Athlète';
+  const cityDisplay = form.city === 'Autre' ? form.otherCity : form.city;
+  const metaLine = [
+    [form.role, form.company].filter(Boolean).join(' @ '),
+    [cityDisplay, form.country].filter(Boolean).join(', '),
+  ]
+    .filter(Boolean)
+    .join(' · ');
+  const sportLevelNumber = form.sportLevel ? parseInt(form.sportLevel, 10) : null;
+
+  const handleGenerateCard = async () => {
+    setGenerating(true);
+    setGenerateError(null);
+    try {
+      const res = await fetch('/api/profile/card/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstname: name.split(' ')[0] || '',
+          isAthlete,
+          role: form.role,
+          company: form.company,
+          selfDescription: form.selfDescription,
+          motivation: form.motivation,
+          lookingFor: form.lookingFor,
+          sportLevel: form.sportLevel,
+          preferredLang: form.preferredLanguage,
+        }),
+      });
+      if (res.status === 401) {
+        router.replace('/login');
+        return;
+      }
+      const result = await res.json();
+      if (!res.ok || !result.ok) throw new Error(result.error || 'Generation failed');
+      setCardBio(result.bio);
+      setCardLookingFor(result.lookingFor);
+    } catch {
+      setGenerateError(t.card.generateErrorMessage);
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  const handleSubmitCard = async () => {
+    setSubmittingCard(true);
+    setCardSubmitError(null);
+    try {
+      const res = await fetch('/api/profile/card/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bio: cardBio, lookingFor: cardLookingFor, consent: cardConsent }),
+      });
+      if (res.status === 401) {
+        router.replace('/login');
+        return;
+      }
+      const result = await res.json();
+      if (!res.ok || !result.ok) throw new Error(result.error || 'Submit failed');
+      setCardStatus('submitted');
+      setMemberNo(result.memberNo ?? memberNo);
+    } catch {
+      setCardSubmitError(t.card.submitErrorMessage);
+    } finally {
+      setSubmittingCard(false);
+    }
   };
 
   return (
@@ -410,6 +501,102 @@ export default function ProfilePage() {
                   )}
                 </div>
               </form>
+
+              <div className="mt-16 pt-10 border-t border-stone">
+                <h2 className="font-display font-bold text-2xl tracking-tight text-paper-white uppercase mb-6">
+                  {t.card.sectionLabel}
+                </h2>
+
+                <div className="flex flex-col md:flex-row gap-8 items-start">
+                  <MemberCard
+                    photoUrl={form.profilePictureUrl}
+                    memberNo={memberNo}
+                    name={name || '—'}
+                    metaLine={metaLine}
+                    bio={cardBio}
+                    lookingFor={cardLookingFor}
+                    sportLevel={sportLevelNumber}
+                    itra={itra}
+                    linkedin={form.linkedin}
+                    stravaProfile={form.stravaProfile}
+                    proWebsite={form.proWebsite}
+                    whatsapp={whatsapp}
+                  />
+
+                  <div className="flex-1 w-full space-y-6">
+                    <button
+                      type="button"
+                      onClick={handleGenerateCard}
+                      disabled={generating}
+                      className="font-mono text-xs tracking-[0.2em] bg-ember text-trail-black px-7 py-4 rounded-full hover:bg-paper-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                      {generating
+                        ? t.card.generatingLabel.toUpperCase()
+                        : (cardBio ? t.card.regenerateLabel : t.card.generateLabel).toUpperCase()}
+                    </button>
+                    {generateError && (
+                      <p className="font-mono text-xs text-ember">{generateError}</p>
+                    )}
+
+                    {(cardBio || cardLookingFor) && (
+                      <>
+                        <Field label={t.card.bioFieldLabel}>
+                          <Textarea
+                            value={cardBio}
+                            onChange={(v) => {
+                              setCardBio(v);
+                              setCardStatus(null);
+                            }}
+                            rows={2}
+                          />
+                        </Field>
+                        <Field label={t.card.lookingForFieldLabel}>
+                          <Textarea
+                            value={cardLookingFor}
+                            onChange={(v) => {
+                              setCardLookingFor(v);
+                              setCardStatus(null);
+                            }}
+                            rows={2}
+                          />
+                        </Field>
+                      </>
+                    )}
+
+                    <label className="flex items-start gap-3 font-sans text-sm text-ash leading-relaxed cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={cardConsent}
+                        onChange={(e) => setCardConsent(e.target.checked)}
+                        className="mt-1 w-4 h-4 accent-ember"
+                      />
+                      <span>{t.card.consentLabel}</span>
+                    </label>
+
+                    <div className="flex items-center gap-4">
+                      <button
+                        type="button"
+                        onClick={handleSubmitCard}
+                        disabled={submittingCard || !cardBio || !cardLookingFor || !cardConsent}
+                        className="font-mono text-xs tracking-[0.2em] text-paper-white border border-paper-white/30 px-7 py-4 rounded-full hover:border-ember hover:text-ember transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                      >
+                        {submittingCard
+                          ? t.card.submittingLabel.toUpperCase()
+                          : t.card.submitLabel.toUpperCase()}
+                      </button>
+                    </div>
+                    {!cardBio && !cardLookingFor && (
+                      <p className="font-mono text-xs text-ash">{t.card.needsGenerationMessage}</p>
+                    )}
+                    {cardSubmitError && (
+                      <p className="font-mono text-xs text-ember">{cardSubmitError}</p>
+                    )}
+                    {cardStatus === 'submitted' && (
+                      <p className="font-mono text-xs text-ember">{t.card.submittedMessage}</p>
+                    )}
+                  </div>
+                </div>
+              </div>
             </>
           )}
         </div>

@@ -276,6 +276,50 @@ Blob store doit être connecté à **ce projet-là**, pas à `trlblzr-web`.
    Vercel Blob configured?") — le reste du profil continue de fonctionner normalement.
 6. Limite actuelle : upload d'images uniquement, 5 Mo max par fichier (`app/api/profile/upload/route.ts`).
 
+## Batch 5.2 — Member Card (génération + preview + itération)
+
+Template visuel approuvé le 30/07 (voir `components/MemberCard.tsx`) : logo TRLBLZR.run et numéro
+de membre en overlay sur une photo N&B dominante, puis nom / rôle @ société / ville, bio courte,
+"looking for", jauge de niveau trail (toujours affichée), index ITRA (ligne indépendante, disparaît
+proprement si absent), et une rangée d'icônes (LinkedIn, Strava, site perso, WhatsApp) répartie
+en `justify-between`.
+
+**Ce que Claude génère réellement** : uniquement `bio` (1-2 phrases) et `lookingFor` (1 phrase),
+à partir des champs texte bruts du profil (self-description, motivation, looking-for, role,
+company, niveau trail). Tout le reste de la card (nom, rôle, société, ville, photo, liens, niveau
+trail, ITRA) est un passthrough direct de champs déjà structurés — pas de génération là-dessus.
+`lib/card-generation.ts` appelle l'API Anthropic directement (pas de SDK), modèle
+`claude-haiku-4-5-20251001` (économique).
+
+### Flow
+
+1. `/profile` affiche un aperçu live de la card avec les valeurs actuelles du formulaire (même
+   non sauvegardées) via `components/MemberCard.tsx`.
+2. Bouton "Générer ma card" → `POST /api/profile/card/generate` (session requise) → Claude
+   renvoie `{bio, lookingFor}` → affichés dans des champs modifiables. Ne touche pas Notion.
+3. L'utilisateur peut éditer le texte généré à la main et/ou cliquer "Régénérer" en boucle.
+4. Case de consentement RGPD obligatoire ("mon profil est visible publiquement...").
+5. Bouton "Envoyer pour validation" → `POST /api/profile/card/validate` (session requise) →
+   sauvegarde `Card bio` / `Card looking for` dans Notion, `Card status` passe à `submitted`,
+   `Card consent` = true. Assigne `Member No` (voir plus bas) si pas déjà fait. **Rien d'autre
+   ne se passe automatiquement après ça** — la validation admin + publication est le Batch 5.3,
+   pas encore construit. Auto-contenu comme 5.1 : utilisable même sans 5.3.
+
+### Numéro de membre
+
+Notion ne permet pas de créer une propriété `auto_increment_id` via l'API (uniquement en lecture
+sur des propriétés système existantes). `Member No` est donc une propriété `Number` classique,
+assignée par le code (`getNextMemberNumber()` dans `lib/notion-candidates.ts` : max existant + 1),
+une seule fois, au premier envoi de la card. Ne change jamais ensuite, même en cas de ré-envoi
+après édition.
+
+### Variable d'environnement requise
+
+- `ANTHROPIC_API_KEY` : clé API Anthropic (console.anthropic.com) à ajouter dans Vercel
+  (Production + Preview + Development). Sans elle, `/api/profile/card/generate` répond une
+  erreur claire ("Generation failed — is ANTHROPIC_API_KEY configured?") — le reste du profil
+  continue de fonctionner normalement.
+
 ## Test local sans déploiement
 
 Si tu veux développer/tester en local :

@@ -46,6 +46,14 @@ export type CandidateRecord = {
   profilePictureUrl: string | null;
   preferredLanguage: 'FR' | 'EN' | null;
   sessionLabels: string[];
+  itra: string | null;
+  utmb: string | null;
+  cardBio: string | null;
+  cardLookingFor: string | null;
+  cardStatus: 'draft' | 'submitted' | null;
+  cardConsent: boolean;
+  memberNo: number | null;
+  whatsapp: string | null;
 };
 
 // Minimal shape of what we read out of a Notion property value — avoids pulling in Notion's SDK.
@@ -57,6 +65,9 @@ type NotionProperty = {
   multi_select?: { name: string }[];
   url?: string | null;
   email?: string | null;
+  checkbox?: boolean;
+  number?: number | null;
+  phone_number?: string | null;
 };
 
 function richText(prop?: NotionProperty): string | null {
@@ -78,6 +89,15 @@ function emailValue(prop?: NotionProperty): string | null {
 }
 function multiSelectNames(prop?: NotionProperty): string[] {
   return prop?.multi_select?.map((o) => o.name) ?? [];
+}
+function checkboxValue(prop?: NotionProperty): boolean {
+  return prop?.checkbox ?? false;
+}
+function numberValue(prop?: NotionProperty): number | null {
+  return typeof prop?.number === 'number' ? prop.number : null;
+}
+function phoneValue(prop?: NotionProperty): string | null {
+  return prop?.phone_number ?? null;
 }
 
 function toCandidateRecord(page: { id: string; properties: Record<string, NotionProperty> }): CandidateRecord {
@@ -103,6 +123,14 @@ function toCandidateRecord(page: { id: string; properties: Record<string, Notion
     profilePictureUrl: urlValue(p['Profile picture URL']),
     preferredLanguage: (selectName(p['Preferred language']) as 'FR' | 'EN' | null) ?? null,
     sessionLabels: multiSelectNames(p['Session']),
+    itra: richText(p['ITRA']),
+    utmb: richText(p['UTMB']),
+    cardBio: richText(p['Card bio']),
+    cardLookingFor: richText(p['Card looking for']),
+    cardStatus: (selectName(p['Card status']) as 'draft' | 'submitted' | null) ?? null,
+    cardConsent: checkboxValue(p['Card consent']),
+    memberNo: numberValue(p['Member No']),
+    whatsapp: phoneValue(p['WhatsApp']),
   };
 }
 
@@ -170,6 +198,28 @@ export async function createCandidatePage(
     return { error: detail };
   }
   return { id: body.id, url: body.url };
+}
+
+// Batch 5.2 — "Member No" isn't a native Notion auto-increment property (that type can't
+// be created via the API), so we assign it ourselves: highest existing value + 1, set once
+// when a card is first submitted. Stable afterward — never recalculated for existing members.
+export async function getNextMemberNumber(): Promise<number> {
+  const res = await fetch(`${NOTION_API_URL}/databases/${databaseId()}/query`, {
+    method: 'POST',
+    headers: authHeaders(),
+    body: JSON.stringify({
+      filter: { property: 'Member No', number: { is_not_empty: true } },
+      sorts: [{ property: 'Member No', direction: 'descending' }],
+      page_size: 1,
+    }),
+  });
+  if (!res.ok) {
+    console.error('Notion query error (getNextMemberNumber)', res.status, await res.text());
+    return 1;
+  }
+  const body = await res.json();
+  const current = body.results?.[0]?.properties?.['Member No']?.number;
+  return (typeof current === 'number' ? current : 0) + 1;
 }
 
 export async function markEmailVerified(id: string): Promise<boolean> {

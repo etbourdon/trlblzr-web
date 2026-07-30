@@ -43,7 +43,7 @@ Le site est accessible sur [http://localhost:3000](http://localhost:3000).
 À ajouter dans Vercel (Settings → Environment Variables) au moment où le flux de candidature IA sera codé (sprint 3) :
 
 ```
-ANTHROPIC_API_KEY=
+ANTHROPIC_API_KEY=   # Batch 5.2 — génération du texte de la Member Card (voir APPLY_BACKEND.md)
 NOTION_API_KEY=
 NOTION_DB_PEOPLE_PIM=
 NOTION_DB_EVENT_OUTREACH=

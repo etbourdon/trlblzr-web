@@ -126,6 +126,12 @@ export type Dict = {
     loadErrorMessage: string; notLoggedInMessage: string; languageLabel: string;
     completionLabel: string;
   };
+  card: {
+    sectionLabel: string; generateLabel: string; regenerateLabel: string; generatingLabel: string;
+    generateErrorMessage: string; bioFieldLabel: string; lookingForFieldLabel: string;
+    consentLabel: string; submitLabel: string; submittingLabel: string; submitErrorMessage: string;
+    submittedMessage: string; needsGenerationMessage: string;
+  };
 };
 
 export const dictionary: Record<Locale, Dict> = {
@@ -372,6 +378,21 @@ export const dictionary: Record<Locale, Dict> = {
       languageLabel: 'Langue préférée (emails et messages)',
       completionLabel: 'Profil complété',
     },
+    card: {
+      sectionLabel: 'Ta Member Card',
+      generateLabel: 'Générer ma card',
+      regenerateLabel: 'Régénérer',
+      generatingLabel: 'Génération…',
+      generateErrorMessage: "Échec de la génération. Réessaie dans un instant.",
+      bioFieldLabel: 'Bio (modifiable)',
+      lookingForFieldLabel: 'Recherche (modifiable)',
+      consentLabel: "J'accepte que ma Member Card soit visible publiquement dans la communauté TRLBLZR.",
+      submitLabel: 'Envoyer pour validation',
+      submittingLabel: 'Envoi…',
+      submitErrorMessage: "Échec de l'envoi. Réessaie dans un instant.",
+      submittedMessage: 'Card envoyée — en attente de validation.',
+      needsGenerationMessage: "Génère ta card avant de l'envoyer.",
+    },
   },
   en: {
     meta: {
@@ -615,6 +636,21 @@ export const dictionary: Record<Locale, Dict> = {
       notLoggedInMessage: 'You need to log in to see this page.',
       languageLabel: 'Preferred language (emails and messages)',
       completionLabel: 'Profile completeness',
+    },
+    card: {
+      sectionLabel: 'Your Member Card',
+      generateLabel: 'Generate my card',
+      regenerateLabel: 'Regenerate',
+      generatingLabel: 'Generating…',
+      generateErrorMessage: 'Generation failed. Try again in a moment.',
+      bioFieldLabel: 'Bio (editable)',
+      lookingForFieldLabel: 'Looking for (editable)',
+      consentLabel: 'I agree that my Member Card is visible publicly in the TRLBLZR community.',
+      submitLabel: 'Submit for review',
+      submittingLabel: 'Submitting…',
+      submitErrorMessage: 'Submission failed. Try again in a moment.',
+      submittedMessage: 'Card submitted — awaiting review.',
+      needsGenerationMessage: 'Generate your card before submitting it.',
     },
   },
 };

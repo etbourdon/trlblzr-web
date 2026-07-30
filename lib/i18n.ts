@@ -110,7 +110,7 @@ export type Dict = {
     s2SportLevel1: string; s2SportLevel2: string; s2SportLevel3: string; s2SportLevel4: string; s2SportLevel5: string;
     s2MotivationLabel: string; s2MotivationHint: string;
     s2LookingForLabel: string; s2LookingForHint: string;
-    s2CityLabel: string; s2CityOther: string; s2CountryLabel: string; s2CountryHint: string;
+    s2CityLabel: string; s2CityOther: string; s2OtherCityLabel: string; s2CountryLabel: string; s2CountryHint: string;
     s2ProWebsiteLabel: string; s2ProWebsiteHint: string;
     s2StravaLabel: string; s2OtherLinkLabel: string; s2OtherLinkHint: string;
     s2SectionAbout: string; s2SectionSport: string; s2SectionMotivation: string;
@@ -123,7 +123,8 @@ export type Dict = {
   profile: {
     title: string; lead: string; selfDescLabel: string; pictureLabel: string;
     saveLabel: string; savingLabel: string; savedMessage: string; logoutLabel: string;
-    loadErrorMessage: string; notLoggedInMessage: string;
+    loadErrorMessage: string; notLoggedInMessage: string; languageLabel: string;
+    completionLabel: string;
   };
 };
 
@@ -331,8 +332,9 @@ export const dictionary: Record<Locale, Dict> = {
       s2LookingForHint: '2-3 phrases sur les connexions et expériences que tu recherches',
       s2CityLabel: 'Ville',
       s2CityOther: 'Autre',
+      s2OtherCityLabel: 'Quelle ville ?',
       s2CountryLabel: 'Pays',
-      s2CountryHint: 'Optionnel — si Autre ville, précise ici',
+      s2CountryHint: 'Optionnel',
       s2ProWebsiteLabel: 'Site pro',
       s2ProWebsiteHint: 'Entreprise, portfolio, site perso',
       s2StravaLabel: 'Profil Strava',
@@ -367,6 +369,8 @@ export const dictionary: Record<Locale, Dict> = {
       logoutLabel: 'Se déconnecter',
       loadErrorMessage: 'Impossible de charger ton profil. Réessaie ou reconnecte-toi.',
       notLoggedInMessage: 'Tu dois te connecter pour voir cette page.',
+      languageLabel: 'Langue préférée (emails et messages)',
+      completionLabel: 'Profil complété',
     },
   },
   en: {
@@ -572,8 +576,9 @@ export const dictionary: Record<Locale, Dict> = {
       s2LookingForHint: '2-3 sentences on the connections and experiences you seek',
       s2CityLabel: 'City',
       s2CityOther: 'Other',
+      s2OtherCityLabel: 'Which city?',
       s2CountryLabel: 'Country',
-      s2CountryHint: 'Optional — if Other city, please specify here',
+      s2CountryHint: 'Optional',
       s2ProWebsiteLabel: 'Pro website',
       s2ProWebsiteHint: 'Company, portfolio, personal site',
       s2StravaLabel: 'Strava profile',
@@ -608,6 +613,8 @@ export const dictionary: Record<Locale, Dict> = {
       logoutLabel: 'Log out',
       loadErrorMessage: "Couldn't load your profile. Try again or log back in.",
       notLoggedInMessage: 'You need to log in to see this page.',
+      languageLabel: 'Preferred language (emails and messages)',
+      completionLabel: 'Profile completeness',
     },
   },
 };

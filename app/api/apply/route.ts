@@ -71,6 +71,7 @@ type ApplyPayload = {
   motivation?: string;
   lookingFor?: string;
   city?: '' | 'Paris' | 'Lyon' | 'Bucharest' | 'Autre';
+  otherCity?: string;
   country?: string;
   proWebsite?: string;
   stravaProfile?: string;
@@ -143,6 +144,7 @@ export async function POST(req: NextRequest) {
     Motivation: { rich_text: txt(data.motivation) },
     'Looking for': { rich_text: txt(data.lookingFor) },
     Country: { rich_text: txt(data.country) },
+    'Other city': { rich_text: txt(data.otherCity) },
     'Pro website': { url: data.proWebsite || null },
     'Strava profile': { url: data.stravaProfile || null },
     'Other link': { url: data.otherLink || null },

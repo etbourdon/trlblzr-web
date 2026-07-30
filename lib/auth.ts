@@ -9,6 +9,7 @@
 // tool; revisit if that ever stops being true.
 
 import crypto from 'crypto';
+import type { NextRequest } from 'next/server';
 
 export type TokenPurpose = 'verify' | 'login' | 'session';
 
@@ -69,4 +70,11 @@ export function verifyToken(token: string | undefined | null): TokenPayload | nu
   } catch {
     return null;
   }
+}
+
+// Shared by every session-gated route (/api/profile, /api/profile/upload, ...).
+export function getSessionFromRequest(req: NextRequest): TokenPayload | null {
+  const token = req.cookies.get(SESSION_COOKIE_NAME)?.value;
+  const payload = verifyToken(token);
+  return payload && payload.purpose === 'session' ? payload : null;
 }

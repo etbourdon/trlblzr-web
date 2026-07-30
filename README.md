@@ -52,6 +52,7 @@ RESEND_FROM_EMAIL=
 NOTIFICATION_EMAIL=etienne@bourdon.com   # plusieurs adresses : séparées par des virgules
 WHATSAPP_NUMBER=
 AUTH_SECRET=   # Batch 5.1 — secret de signature des liens magiques (voir APPLY_BACKEND.md)
+BLOB_READ_WRITE_TOKEN=   # Batch 5.1 — upload photo de profil, auto-injecté par Vercel Storage
 ```
 
 ## Structure du projet

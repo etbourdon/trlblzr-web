@@ -5,6 +5,7 @@ import { useState, useEffect, type FormEvent } from 'react';
 import { useLocale } from '@/lib/locale-provider';
 import FlowHeader from '@/components/FlowHeader';
 import SessionPicker from '@/components/SessionPicker';
+import CityCountryFields from '@/components/CityCountryFields';
 import { Field, Input, Textarea, SectionHeader } from '@/components/FormFields';
 import type { Dict } from '@/lib/i18n';
 
@@ -30,6 +31,7 @@ type FormData = {
   motivation: string;
   lookingFor: string;
   city: CityValue;
+  otherCity: string;
   country: string;
   proWebsite: string;
   stravaProfile: string;
@@ -53,6 +55,7 @@ const EMPTY_FORM: FormData = {
   motivation: '',
   lookingFor: '',
   city: '',
+  otherCity: '',
   country: '',
   proWebsite: '',
   stravaProfile: '',
@@ -420,24 +423,15 @@ function StepInfos({
 
         {/* SECTION — Localisation */}
         <SectionHeader label={t.apply.s2SectionLocation} />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Field label={t.apply.s2CityLabel}>
-            <select
-              value={form.city}
-              onChange={(e) => onChange('city', e.target.value)}
-              className="w-full bg-stone border border-stone focus:border-ember text-paper-white px-4 py-3 font-mono text-sm rounded outline-none transition-colors"
-            >
-              <option value="">—</option>
-              <option value="Paris">Paris</option>
-              <option value="Lyon">Lyon</option>
-              <option value="Bucharest">Bucharest</option>
-              <option value="Autre">{t.apply.s2CityOther}</option>
-            </select>
-          </Field>
-          <Field label={t.apply.s2CountryLabel} hint={t.apply.s2CountryHint}>
-            <Input value={form.country} onChange={(v) => onChange('country', v)} />
-          </Field>
-        </div>
+        <CityCountryFields
+          city={form.city}
+          otherCity={form.otherCity}
+          country={form.country}
+          onCityChange={(v) => onChange('city', v)}
+          onOtherCityChange={(v) => onChange('otherCity', v)}
+          onCountryChange={(v) => onChange('country', v)}
+          t={t}
+        />
 
         {/* SECTION — Motivation */}
         <SectionHeader label={t.apply.s2SectionMotivation} />

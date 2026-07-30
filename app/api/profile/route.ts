@@ -11,19 +11,13 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyToken, SESSION_COOKIE_NAME, type TokenPayload } from '@/lib/auth';
+import { getSessionFromRequest } from '@/lib/auth';
 import { getCandidateById, updateCandidateProperties, txt } from '@/lib/notion-candidates';
 import { SPORT_LEVEL_LABELS, CITY_OPTIONS } from '@/lib/field-options';
 import { mapSlugsToSessionLabels } from '@/lib/session-mapping';
 
-function getSession(req: NextRequest): TokenPayload | null {
-  const token = req.cookies.get(SESSION_COOKIE_NAME)?.value;
-  const payload = verifyToken(token);
-  return payload && payload.purpose === 'session' ? payload : null;
-}
-
 export async function GET(req: NextRequest) {
-  const session = getSession(req);
+  const session = getSessionFromRequest(req);
   if (!session) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
 
   try {
@@ -45,16 +39,18 @@ type ProfilePayload = {
   proWebsite?: string;
   otherLink?: string;
   city?: string;
+  otherCity?: string;
   country?: string;
   sportLevel?: '' | '1' | '2' | '3' | '4' | '5';
   lookingFor?: string;
   motivation?: string;
   profilePictureUrl?: string;
   sessions?: string[];
+  preferredLanguage?: 'FR' | 'EN';
 };
 
 export async function PATCH(req: NextRequest) {
-  const session = getSession(req);
+  const session = getSessionFromRequest(req);
   if (!session) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
 
   let data: ProfilePayload;
@@ -69,6 +65,7 @@ export async function PATCH(req: NextRequest) {
     'Role / Title': { rich_text: txt(data.role) },
     Company: { rich_text: txt(data.company) },
     Country: { rich_text: txt(data.country) },
+    'Other city': { rich_text: txt(data.otherCity) },
     Motivation: { rich_text: txt(data.motivation) },
     'Looking for': { rich_text: txt(data.lookingFor) },
     LinkedIn: { url: data.linkedin || null },
@@ -85,10 +82,15 @@ export async function PATCH(req: NextRequest) {
         ? { select: { name: SPORT_LEVEL_LABELS[data.sportLevel] } }
         : { select: null },
     Session: { multi_select: mapSlugsToSessionLabels(data.sessions).map((name) => ({ name })) },
+    'Preferred language': {
+      select: { name: data.preferredLanguage === 'EN' ? 'EN' : 'FR' },
+    },
   };
 
   try {
-    const ok = await updateCandidateProperties(session.candidateId, properties);
+    const ok = await updateCandidateProperties(session.candidateId, properties, {
+      coverImageUrl: data.profilePictureUrl,
+    });
     if (!ok) return NextResponse.json({ error: 'Failed to update profile' }, { status: 502 });
     return NextResponse.json({ ok: true });
   } catch (err) {

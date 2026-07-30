@@ -236,6 +236,35 @@ faible volume ; à revisiter si ça change un jour.
   Si absent, les routes `/api/auth/*` et `/api/profile` échouent (candidature elle-même toujours
   sauvegardée normalement dans Notion, seule la partie auth est affectée).
 
+## Batch 5.1 (suite) — Photo de profil, ville/pays, langue, complétion
+
+Quatre ajustements suite au premier retour de test en prod (29-30/07) :
+
+- **Session (WE) éditable** + **lien "Se connecter" dans le footer** du site (déjà en place).
+- **Ville/Pays** : sélectionner Paris ou Lyon pré-remplit Pays = France, Bucharest pré-remplit
+  Pays = Romania (toujours modifiable). Choisir "Autre" fait apparaître un champ "Quelle ville ?"
+  dédié (nouvelle propriété Notion `Other city`) — avant, ce cas écrasait le champ Pays, qui ne
+  contenait plus alors ni le pays ni la ville proprement.
+- **Langue préférée** : bascule FR/EN explicite dans `/profile`, indépendante de la langue
+  d'affichage du site à l'instant présent (pas de changement silencieux surprise).
+- **Photo de profil — upload réel** via **Vercel Blob** (pas un nouveau vendor : partie de la
+  même plateforme Vercel déjà utilisée). L'image uploadée devient aussi la **cover** de la page
+  Notion du candidat, donc Etienne la voit directement dans Notion, pas juste un lien.
+- **Jauge de complétion** du profil (barre de progression, calcul 100% côté client, aucun impact
+  backend).
+
+### Setup Vercel Blob
+
+1. Dashboard Vercel → projet `trlblzr-web` → onglet **Storage** → **Create Database** → **Blob**
+2. Connecter le store créé à ce projet (Vercel propose généralement de le faire automatiquement)
+3. Vercel injecte alors `BLOB_READ_WRITE_TOKEN` tout seul dans les variables d'environnement du
+   projet (Production + Preview + Development) — pas de token à copier-coller manuellement dans
+   la plupart des cas. Si besoin, vérifier dans Settings → Environment Variables que la variable
+   est bien présente pour les trois environnements.
+4. Sans cette variable, `/api/profile/upload` répond une erreur claire ("Upload failed — is
+   Vercel Blob configured?") — le reste du profil continue de fonctionner normalement.
+5. Limite actuelle : upload d'images uniquement, 5 Mo max par fichier (`app/api/profile/upload/route.ts`).
+
 ## Test local sans déploiement
 
 Si tu veux développer/tester en local :

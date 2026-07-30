@@ -37,6 +37,7 @@ export type CandidateRecord = {
   proWebsite: string | null;
   otherLink: string | null;
   city: string | null;
+  otherCity: string | null;
   country: string | null;
   sportLevel: string | null;
   selfDescription: string | null;
@@ -93,6 +94,7 @@ function toCandidateRecord(page: { id: string; properties: Record<string, Notion
     proWebsite: urlValue(p['Pro website']),
     otherLink: urlValue(p['Other link']),
     city: selectName(p['City']),
+    otherCity: richText(p['Other city']),
     country: richText(p['Country']),
     sportLevel: selectName(p['Sport level']),
     selfDescription: richText(p['Self-description']),
@@ -133,11 +135,18 @@ export async function getCandidateById(id: string): Promise<CandidateRecord | nu
 export async function updateCandidateProperties(
   id: string,
   properties: Record<string, unknown>,
+  options?: { coverImageUrl?: string | null },
 ): Promise<boolean> {
+  const body: Record<string, unknown> = { properties };
+  // Batch 5.1 follow-up: also set the page cover so Etienne sees the member's photo directly
+  // in Notion, not just as a link buried in a property.
+  if (options?.coverImageUrl) {
+    body.cover = { type: 'external', external: { url: options.coverImageUrl } };
+  }
   const res = await fetch(`${NOTION_API_URL}/pages/${id}`, {
     method: 'PATCH',
     headers: authHeaders(),
-    body: JSON.stringify({ properties }),
+    body: JSON.stringify(body),
   });
   if (!res.ok) {
     console.error('Notion update error', res.status, await res.text());

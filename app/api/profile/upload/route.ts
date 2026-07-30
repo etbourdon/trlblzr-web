@@ -6,8 +6,12 @@
  * into the profile form like any other field (via PATCH /api/profile) — this route only
  * handles the upload itself, it doesn't touch Notion.
  *
- * Requires BLOB_READ_WRITE_TOKEN (see APPLY_BACKEND.md) — a Vercel Blob store connected
- * to this project. Without it, uploads fail with a clear error; nothing else breaks.
+ * Requires a Vercel Blob store connected to this project (see APPLY_BACKEND.md). Note:
+ * Vercel prefixes the injected token env var with the store's name (e.g. a store named
+ * "BlobPublic" gives BLOBPublic_READ_WRITE_TOKEN, not the plain BLOB_READ_WRITE_TOKEN) —
+ * findBlobToken() below checks the plain name first, then falls back to scanning for any
+ * *_READ_WRITE_TOKEN var so this keeps working regardless of the store's name. Without a
+ * token, uploads fail with a clear error; nothing else breaks.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -15,6 +19,12 @@ import { put } from '@vercel/blob';
 import { getSessionFromRequest } from '@/lib/auth';
 
 const MAX_BYTES = 5 * 1024 * 1024; // 5 MB
+
+function findBlobToken(): string | undefined {
+  if (process.env.BLOB_READ_WRITE_TOKEN) return process.env.BLOB_READ_WRITE_TOKEN;
+  const key = Object.keys(process.env).find((k) => k.endsWith('_READ_WRITE_TOKEN'));
+  return key ? process.env[key] : undefined;
+}
 
 export async function POST(req: NextRequest) {
   const session = getSessionFromRequest(req);
@@ -36,11 +46,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Image too large (max 5MB)' }, { status: 400 });
   }
 
+  const token = findBlobToken();
+  if (!token) {
+    console.error('No *_READ_WRITE_TOKEN env var found for Vercel Blob');
+    return NextResponse.json({ error: 'Upload failed — is Vercel Blob configured?' }, { status: 500 });
+  }
+
   try {
     const ext = file.type.split('/')[1] || 'jpg';
     const blob = await put(`profile-photos/${session.candidateId}.${ext}`, file, {
       access: 'public',
       addRandomSuffix: true,
+      token,
     });
     return NextResponse.json({ ok: true, url: blob.url });
   } catch (err) {

@@ -255,15 +255,26 @@ Quatre ajustements suite au premier retour de test en prod (29-30/07) :
 
 ### Setup Vercel Blob
 
-1. Dashboard Vercel → projet `trlblzr-web` → onglet **Storage** → **Create Database** → **Blob**
-2. Connecter le store créé à ce projet (Vercel propose généralement de le faire automatiquement)
-3. Vercel injecte alors `BLOB_READ_WRITE_TOKEN` tout seul dans les variables d'environnement du
-   projet (Production + Preview + Development) — pas de token à copier-coller manuellement dans
-   la plupart des cas. Si besoin, vérifier dans Settings → Environment Variables que la variable
-   est bien présente pour les trois environnements.
-4. Sans cette variable, `/api/profile/upload` répond une erreur claire ("Upload failed — is
+**Important** : deux projets Vercel existent pour ce repo (`trlblzr-web` et `trlblzr-next`) — c'est
+**`trlblzr-next`** qui sert réellement `trlblzr.run` (confirmé via son alias de déploiement). Le
+Blob store doit être connecté à **ce projet-là**, pas à `trlblzr-web`.
+
+1. Dashboard Vercel → projet **`trlblzr-next`** → onglet **Storage** → **Create Database** → **Blob**
+2. Choisir explicitement l'accès **Public** à la création (pas Private — les stores créés sans
+   préciser peuvent être Private par défaut, et une image de profil doit être lisible sans token,
+   à la fois par le `<img>` du site et par le fetch de cover Notion). Erreur si mauvais choix :
+   `Cannot use public access on a private store`.
+3. Connecter le store à `trlblzr-next` puis **redéployer** (les variables d'environnement ne
+   s'appliquent qu'aux déploiements créés après leur ajout).
+4. **Piège de nommage** : Vercel préfixe la variable injectée avec le **nom du store**, pas
+   `BLOB_READ_WRITE_TOKEN` tel quel. Un store nommé `BlobPublic` donne `BLOBPublic_READ_WRITE_TOKEN`.
+   `app/api/profile/upload/route.ts` gère ça automatiquement (`findBlobToken()` cherche
+   `BLOB_READ_WRITE_TOKEN` puis, à défaut, n'importe quelle variable finissant par
+   `_READ_WRITE_TOKEN`) — donc peu importe le nom donné au store, pas besoin de renommer quoi
+   que ce soit à la main.
+5. Sans token trouvable, `/api/profile/upload` répond une erreur claire ("Upload failed — is
    Vercel Blob configured?") — le reste du profil continue de fonctionner normalement.
-5. Limite actuelle : upload d'images uniquement, 5 Mo max par fichier (`app/api/profile/upload/route.ts`).
+6. Limite actuelle : upload d'images uniquement, 5 Mo max par fichier (`app/api/profile/upload/route.ts`).
 
 ## Test local sans déploiement
 

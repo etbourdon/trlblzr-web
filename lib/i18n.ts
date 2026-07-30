@@ -131,6 +131,10 @@ export type Dict = {
     generateErrorMessage: string; bioFieldLabel: string; lookingForFieldLabel: string;
     consentLabel: string; submitLabel: string; submittingLabel: string; submitErrorMessage: string;
     submittedMessage: string; needsGenerationMessage: string;
+    downloadLabel: string; downloadingLabel: string; validatedMessage: string;
+    suspendLabel: string; suspendingLabel: string; suspendConfirm: string; suspendErrorMessage: string;
+    suspendedMessage: string; reactivateLabel: string; reactivatingLabel: string;
+    reactivateErrorMessage: string;
   };
 };
 
@@ -392,6 +396,17 @@ export const dictionary: Record<Locale, Dict> = {
       submitErrorMessage: "Échec de l'envoi. Réessaie dans un instant.",
       submittedMessage: 'Card envoyée — en attente de validation.',
       needsGenerationMessage: "Génère ta card avant de l'envoyer.",
+      downloadLabel: 'Télécharger ma card',
+      downloadingLabel: 'Téléchargement…',
+      validatedMessage: 'Card validée — prête à être partagée sur WhatsApp par l\'équipe TRLBLZR.',
+      suspendLabel: 'Retirer ma card',
+      suspendingLabel: 'Retrait…',
+      suspendConfirm: 'Retirer ta Member Card ? Elle ne sera plus partagée. Tu pourras la réactiver pendant 90 jours.',
+      suspendErrorMessage: 'Échec du retrait. Réessaie dans un instant.',
+      suspendedMessage: "Card retirée. Réactivable jusqu'au {date}, après quoi elle sera supprimée définitivement.",
+      reactivateLabel: 'Réactiver ma card',
+      reactivatingLabel: 'Réactivation…',
+      reactivateErrorMessage: 'Échec de la réactivation. Réessaie dans un instant.',
     },
   },
   en: {
@@ -651,6 +666,17 @@ export const dictionary: Record<Locale, Dict> = {
       submitErrorMessage: 'Submission failed. Try again in a moment.',
       submittedMessage: 'Card submitted — awaiting review.',
       needsGenerationMessage: 'Generate your card before submitting it.',
+      downloadLabel: 'Download my card',
+      downloadingLabel: 'Downloading…',
+      validatedMessage: 'Card validated — ready to be shared on WhatsApp by the TRLBLZR team.',
+      suspendLabel: 'Remove my card',
+      suspendingLabel: 'Removing…',
+      suspendConfirm: 'Remove your Member Card? It will no longer be shared. You can reactivate it for 90 days.',
+      suspendErrorMessage: 'Removal failed. Try again in a moment.',
+      suspendedMessage: 'Card removed. Reactivate it until {date}, after which it will be permanently deleted.',
+      reactivateLabel: 'Reactivate my card',
+      reactivatingLabel: 'Reactivating…',
+      reactivateErrorMessage: 'Reactivation failed. Try again in a moment.',
     },
   },
 };

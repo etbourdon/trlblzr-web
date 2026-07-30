@@ -1,10 +1,13 @@
 /**
- * Batch 5.2 — POST /api/profile/card/validate
+ * Batch 5.2/5.3 — POST /api/profile/card/validate
  *
- * Session-gated. Saves the (possibly hand-edited) generated bio/lookingFor, requires
- * explicit consent, and sets Card status -> "submitted" (awaiting admin review — Batch 5.3
- * isn't built yet, so nothing further happens automatically after this). Assigns the
- * member's permanent "Member No" the first time they submit; never reassigned afterward.
+ * Session-gated. Saves the (possibly hand-edited) generated bio/lookingFor + the
+ * client-rasterized card image URL, requires explicit consent, and sets Card status ->
+ * "submitted" (awaiting admin review — done directly in Notion by flipping this same
+ * property to "validated", no separate admin UI). Assigns the member's permanent
+ * "Member No" the first time they submit; never reassigned afterward. Also clears any
+ * prior suspension dates — re-submitting an edited card always goes back through review,
+ * even if it was previously suspended.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -20,6 +23,7 @@ type ValidateBody = {
   bio?: string;
   lookingFor?: string;
   consent?: boolean;
+  cardImageUrl?: string;
 };
 
 export async function POST(req: NextRequest) {
@@ -49,7 +53,12 @@ export async function POST(req: NextRequest) {
       'Card looking for': { rich_text: txt(data.lookingFor) },
       'Card status': { select: { name: 'submitted' } },
       'Card consent': { checkbox: true },
+      'Card suspended at': { date: null },
+      'Card delete after': { date: null },
     };
+    if (data.cardImageUrl) {
+      properties['Card image URL'] = { url: data.cardImageUrl };
+    }
 
     let memberNo = candidate.memberNo;
     if (memberNo == null) {

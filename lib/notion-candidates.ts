@@ -50,10 +50,13 @@ export type CandidateRecord = {
   utmb: string | null;
   cardBio: string | null;
   cardLookingFor: string | null;
-  cardStatus: 'draft' | 'submitted' | null;
+  cardStatus: 'draft' | 'submitted' | 'validated' | 'suspended' | null;
   cardConsent: boolean;
   memberNo: number | null;
   whatsapp: string | null;
+  cardImageUrl: string | null;
+  cardSuspendedAt: string | null;
+  cardDeleteAfter: string | null;
 };
 
 // Minimal shape of what we read out of a Notion property value — avoids pulling in Notion's SDK.
@@ -68,6 +71,7 @@ type NotionProperty = {
   checkbox?: boolean;
   number?: number | null;
   phone_number?: string | null;
+  date?: { start: string; end?: string | null } | null;
 };
 
 function richText(prop?: NotionProperty): string | null {
@@ -99,6 +103,9 @@ function numberValue(prop?: NotionProperty): number | null {
 function phoneValue(prop?: NotionProperty): string | null {
   return prop?.phone_number ?? null;
 }
+function dateValue(prop?: NotionProperty): string | null {
+  return prop?.date?.start ?? null;
+}
 
 function toCandidateRecord(page: { id: string; properties: Record<string, NotionProperty> }): CandidateRecord {
   const p = page.properties;
@@ -127,10 +134,15 @@ function toCandidateRecord(page: { id: string; properties: Record<string, Notion
     utmb: richText(p['UTMB']),
     cardBio: richText(p['Card bio']),
     cardLookingFor: richText(p['Card looking for']),
-    cardStatus: (selectName(p['Card status']) as 'draft' | 'submitted' | null) ?? null,
+    cardStatus:
+      (selectName(p['Card status']) as 'draft' | 'submitted' | 'validated' | 'suspended' | null) ??
+      null,
     cardConsent: checkboxValue(p['Card consent']),
     memberNo: numberValue(p['Member No']),
     whatsapp: phoneValue(p['WhatsApp']),
+    cardImageUrl: urlValue(p['Card image URL']),
+    cardSuspendedAt: dateValue(p['Card suspended at']),
+    cardDeleteAfter: dateValue(p['Card delete after']),
   };
 }
 

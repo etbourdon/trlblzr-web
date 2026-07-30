@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import { toBlob } from 'html-to-image';
 import { useRouter } from 'next/navigation';
 import { useLocale } from '@/lib/locale-provider';
 import FlowHeader from '@/components/FlowHeader';
@@ -95,12 +96,19 @@ export default function ProfilePage() {
   const [cardBio, setCardBio] = useState('');
   const [cardLookingFor, setCardLookingFor] = useState('');
   const [cardConsent, setCardConsent] = useState(false);
-  const [cardStatus, setCardStatus] = useState<'draft' | 'submitted' | null>(null);
+  const [cardStatus, setCardStatus] = useState<
+    'draft' | 'submitted' | 'validated' | 'suspended' | null
+  >(null);
+  const [cardDeleteAfter, setCardDeleteAfter] = useState<string | null>(null);
   const [memberNo, setMemberNo] = useState<number | null>(null);
   const [generating, setGenerating] = useState(false);
   const [generateError, setGenerateError] = useState<string | null>(null);
   const [submittingCard, setSubmittingCard] = useState(false);
   const [cardSubmitError, setCardSubmitError] = useState<string | null>(null);
+  const [downloadingCard, setDownloadingCard] = useState(false);
+  const [suspending, setSuspending] = useState(false);
+  const [suspendError, setSuspendError] = useState<string | null>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -141,6 +149,7 @@ export default function ProfilePage() {
         setCardLookingFor(c.cardLookingFor || '');
         setCardConsent(Boolean(c.cardConsent));
         setCardStatus(c.cardStatus || null);
+        setCardDeleteAfter(c.cardDeleteAfter || null);
         setMemberNo(typeof c.memberNo === 'number' ? c.memberNo : null);
       } catch {
         if (!cancelled) setLoadError(true);
@@ -265,14 +274,57 @@ export default function ProfilePage() {
     }
   };
 
+  const captureCardBlob = async (): Promise<Blob | null> => {
+    if (!cardRef.current) return null;
+    return toBlob(cardRef.current, { pixelRatio: 2 });
+  };
+
+  const handleDownloadCard = async () => {
+    setDownloadingCard(true);
+    try {
+      const blob = await captureCardBlob();
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `trlblzr-member-card-${memberNo ? String(memberNo).padStart(4, '0') : 'preview'}.png`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setDownloadingCard(false);
+    }
+  };
+
   const handleSubmitCard = async () => {
     setSubmittingCard(true);
     setCardSubmitError(null);
     try {
+      let cardImageUrl: string | undefined;
+      const blob = await captureCardBlob();
+      if (blob) {
+        const uploadBody = new FormData();
+        uploadBody.append('file', blob, 'card.png');
+        const uploadRes = await fetch('/api/profile/card/upload-image', {
+          method: 'POST',
+          body: uploadBody,
+        });
+        if (uploadRes.status === 401) {
+          router.replace('/login');
+          return;
+        }
+        const uploadResult = await uploadRes.json();
+        if (uploadRes.ok && uploadResult.ok) cardImageUrl = uploadResult.url;
+      }
+
       const res = await fetch('/api/profile/card/validate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ bio: cardBio, lookingFor: cardLookingFor, consent: cardConsent }),
+        body: JSON.stringify({
+          bio: cardBio,
+          lookingFor: cardLookingFor,
+          consent: cardConsent,
+          cardImageUrl,
+        }),
       });
       if (res.status === 401) {
         router.replace('/login');
@@ -281,11 +333,53 @@ export default function ProfilePage() {
       const result = await res.json();
       if (!res.ok || !result.ok) throw new Error(result.error || 'Submit failed');
       setCardStatus('submitted');
+      setCardDeleteAfter(null);
       setMemberNo(result.memberNo ?? memberNo);
     } catch {
       setCardSubmitError(t.card.submitErrorMessage);
     } finally {
       setSubmittingCard(false);
+    }
+  };
+
+  const handleSuspendCard = async () => {
+    if (!window.confirm(t.card.suspendConfirm)) return;
+    setSuspending(true);
+    setSuspendError(null);
+    try {
+      const res = await fetch('/api/profile/card/suspend', { method: 'POST' });
+      if (res.status === 401) {
+        router.replace('/login');
+        return;
+      }
+      const result = await res.json();
+      if (!res.ok || !result.ok) throw new Error(result.error || 'Suspend failed');
+      setCardStatus('suspended');
+      setCardDeleteAfter(result.deleteAfter || null);
+    } catch {
+      setSuspendError(t.card.suspendErrorMessage);
+    } finally {
+      setSuspending(false);
+    }
+  };
+
+  const handleReactivateCard = async () => {
+    setSuspending(true);
+    setSuspendError(null);
+    try {
+      const res = await fetch('/api/profile/card/reactivate', { method: 'POST' });
+      if (res.status === 401) {
+        router.replace('/login');
+        return;
+      }
+      const result = await res.json();
+      if (!res.ok || !result.ok) throw new Error(result.error || 'Reactivate failed');
+      setCardStatus('validated');
+      setCardDeleteAfter(null);
+    } catch {
+      setSuspendError(t.card.reactivateErrorMessage);
+    } finally {
+      setSuspending(false);
     }
   };
 
@@ -508,32 +602,48 @@ export default function ProfilePage() {
                 </h2>
 
                 <div className="flex flex-col md:flex-row gap-8 items-start">
-                  <MemberCard
-                    photoUrl={form.profilePictureUrl}
-                    memberNo={memberNo}
-                    name={name || '—'}
-                    metaLine={metaLine}
-                    bio={cardBio}
-                    lookingFor={cardLookingFor}
-                    sportLevel={sportLevelNumber}
-                    itra={itra}
-                    linkedin={form.linkedin}
-                    stravaProfile={form.stravaProfile}
-                    proWebsite={form.proWebsite}
-                    whatsapp={whatsapp}
-                  />
+                  <div ref={cardRef}>
+                    <MemberCard
+                      photoUrl={form.profilePictureUrl}
+                      memberNo={memberNo}
+                      name={name || '—'}
+                      metaLine={metaLine}
+                      bio={cardBio}
+                      lookingFor={cardLookingFor}
+                      sportLevel={sportLevelNumber}
+                      itra={itra}
+                      linkedin={form.linkedin}
+                      stravaProfile={form.stravaProfile}
+                      proWebsite={form.proWebsite}
+                      whatsapp={whatsapp}
+                    />
+                  </div>
 
                   <div className="flex-1 w-full space-y-6">
-                    <button
-                      type="button"
-                      onClick={handleGenerateCard}
-                      disabled={generating}
-                      className="font-mono text-xs tracking-[0.2em] bg-ember text-trail-black px-7 py-4 rounded-full hover:bg-paper-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                    >
-                      {generating
-                        ? t.card.generatingLabel.toUpperCase()
-                        : (cardBio ? t.card.regenerateLabel : t.card.generateLabel).toUpperCase()}
-                    </button>
+                    <div className="flex flex-wrap items-center gap-4">
+                      <button
+                        type="button"
+                        onClick={handleGenerateCard}
+                        disabled={generating}
+                        className="font-mono text-xs tracking-[0.2em] bg-ember text-trail-black px-7 py-4 rounded-full hover:bg-paper-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                      >
+                        {generating
+                          ? t.card.generatingLabel.toUpperCase()
+                          : (cardBio ? t.card.regenerateLabel : t.card.generateLabel).toUpperCase()}
+                      </button>
+                      {(cardBio || cardLookingFor) && (
+                        <button
+                          type="button"
+                          onClick={handleDownloadCard}
+                          disabled={downloadingCard}
+                          className="font-mono text-xs tracking-[0.2em] text-paper-white border border-paper-white/30 px-7 py-4 rounded-full hover:border-ember hover:text-ember transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                        >
+                          {downloadingCard
+                            ? t.card.downloadingLabel.toUpperCase()
+                            : t.card.downloadLabel.toUpperCase()}
+                        </button>
+                      )}
+                    </div>
                     {generateError && (
                       <p className="font-mono text-xs text-ember">{generateError}</p>
                     )}
@@ -573,18 +683,20 @@ export default function ProfilePage() {
                       <span>{t.card.consentLabel}</span>
                     </label>
 
-                    <div className="flex items-center gap-4">
-                      <button
-                        type="button"
-                        onClick={handleSubmitCard}
-                        disabled={submittingCard || !cardBio || !cardLookingFor || !cardConsent}
-                        className="font-mono text-xs tracking-[0.2em] text-paper-white border border-paper-white/30 px-7 py-4 rounded-full hover:border-ember hover:text-ember transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                      >
-                        {submittingCard
-                          ? t.card.submittingLabel.toUpperCase()
-                          : t.card.submitLabel.toUpperCase()}
-                      </button>
-                    </div>
+                    {cardStatus !== 'suspended' && (
+                      <div className="flex items-center gap-4">
+                        <button
+                          type="button"
+                          onClick={handleSubmitCard}
+                          disabled={submittingCard || !cardBio || !cardLookingFor || !cardConsent}
+                          className="font-mono text-xs tracking-[0.2em] text-paper-white border border-paper-white/30 px-7 py-4 rounded-full hover:border-ember hover:text-ember transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                        >
+                          {submittingCard
+                            ? t.card.submittingLabel.toUpperCase()
+                            : t.card.submitLabel.toUpperCase()}
+                        </button>
+                      </div>
+                    )}
                     {!cardBio && !cardLookingFor && (
                       <p className="font-mono text-xs text-ash">{t.card.needsGenerationMessage}</p>
                     )}
@@ -594,6 +706,45 @@ export default function ProfilePage() {
                     {cardStatus === 'submitted' && (
                       <p className="font-mono text-xs text-ember">{t.card.submittedMessage}</p>
                     )}
+                    {cardStatus === 'validated' && (
+                      <p className="font-mono text-xs text-ember">{t.card.validatedMessage}</p>
+                    )}
+
+                    {(cardStatus === 'submitted' || cardStatus === 'validated') && (
+                      <div className="pt-6 border-t border-stone/50">
+                        <button
+                          type="button"
+                          onClick={handleSuspendCard}
+                          disabled={suspending}
+                          className="font-mono text-xs tracking-[0.2em] text-ash border border-ash/30 px-7 py-4 rounded-full hover:border-ember hover:text-ember transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                        >
+                          {suspending
+                            ? t.card.suspendingLabel.toUpperCase()
+                            : t.card.suspendLabel.toUpperCase()}
+                        </button>
+                      </div>
+                    )}
+
+                    {cardStatus === 'suspended' && (
+                      <div className="pt-6 border-t border-stone/50 space-y-4">
+                        <p className="font-mono text-xs text-ash">
+                          {cardDeleteAfter
+                            ? t.card.suspendedMessage.replace('{date}', cardDeleteAfter)
+                            : t.card.suspendedMessage.replace('{date}', '—')}
+                        </p>
+                        <button
+                          type="button"
+                          onClick={handleReactivateCard}
+                          disabled={suspending}
+                          className="font-mono text-xs tracking-[0.2em] bg-ember text-trail-black px-7 py-4 rounded-full hover:bg-paper-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                        >
+                          {suspending
+                            ? t.card.reactivatingLabel.toUpperCase()
+                            : t.card.reactivateLabel.toUpperCase()}
+                        </button>
+                      </div>
+                    )}
+                    {suspendError && <p className="font-mono text-xs text-ember">{suspendError}</p>}
                   </div>
                 </div>
               </div>

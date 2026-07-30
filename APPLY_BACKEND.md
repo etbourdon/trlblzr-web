@@ -320,6 +320,50 @@ après édition.
   erreur claire ("Generation failed — is ANTHROPIC_API_KEY configured?") — le reste du profil
   continue de fonctionner normalement.
 
+## Batch 5.3 — Publication, suspension, suppression de la card
+
+Publication = partage sur WhatsApp uniquement, pas de galerie publique sur le site. Validation
+admin = directement dans Notion (pas de nouvelle interface d'admin). Suppression après suspension
+= manuelle pour l'instant (pas de job automatisé).
+
+### Ce qui a changé côté membre (`/profile`)
+
+- **Télécharger ma card** : capture la card affichée telle quelle (via `html-to-image`,
+  `toBlob` sur le conteneur `cardRef`) et déclenche un téléchargement PNG local, sans rien
+  envoyer à Notion. Disponible dès qu'un texte a été généré, indépendamment du statut.
+- **Envoyer pour validation** : en plus de sauvegarder `bio`/`lookingFor` (Batch 5.2), capture
+  maintenant aussi l'image de la card, l'upload vers Vercel Blob via
+  `POST /api/profile/card/upload-image` (route dédiée, chemin `member-cards/{candidateId}.png`,
+  distincte de l'upload de photo de profil — ne touche pas la cover Notion), et enregistre l'URL
+  résultante dans la propriété Notion `Card image URL`. C'est cette image, prête à l'emploi,
+  qu'Etienne récupère directement depuis la fiche Notion pour la poster sur WhatsApp.
+- **Retirer ma card** : `POST /api/profile/card/suspend` — passe `Card status` à `suspended`,
+  stampe `Card suspended at` (aujourd'hui) et calcule `Card delete after` (+90 jours). Le membre
+  garde un droit à l'oubli auto-service sans que ce soit une suppression brutale immédiate.
+- **Réactiver ma card** : visible uniquement si `Card status = suspended` et qu'on est encore
+  avant `Card delete after`. `POST /api/profile/card/reactivate` restaure directement à
+  `validated` (le contenu n'a pas changé, pas besoin de repasser par une revue) et efface les
+  dates de suspension.
+
+### Workflow admin (entièrement dans Notion, aucune UI dédiée)
+
+1. Vue **"Cards — Pending review"** (filtre `Card status = submitted`) : ouvrir la fiche, relire
+   `Card bio` / `Card looking for`, ouvrir `Card image URL` pour voir/télécharger l'image prête à
+   poster, puis flipper `Card status` sur `validated` pour approuver.
+2. Poster l'image récupérée sur le groupe WhatsApp — geste manuel, hors du site.
+3. Vue **"Cards — Suspended (check delete-after)"** (filtre `Card status = suspended`, triée par
+   `Card delete after` croissant) : passage régulier pour repérer les fiches dont la date est
+   dépassée et purger manuellement (`Card bio`, `Card looking for`, `Card image URL`, `Card
+   status` → vider/remettre à blanc) — pas de job planifié pour l'instant, décision volontaire
+   pour garder le système simple tant que le volume reste faible.
+
+### Statuts possibles de `Card status`
+
+`draft` (jamais envoyée) → `submitted` (en attente) → `validated` (publiable) → `suspended`
+(retirée par le membre, en sursis 90 jours) → suppression manuelle. Toute ré-édition après
+suspension repasse automatiquement par `submitted` (voir `/api/profile/card/validate`), même si
+la card avait déjà été validée avant.
+
 ## Test local sans déploiement
 
 Si tu veux développer/tester en local :

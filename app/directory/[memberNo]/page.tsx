@@ -1,8 +1,8 @@
-// Batch 7 — individual gated card page. Any logged-in candidate can view any single validated
-// card (only the aggregate Alumni *list* is alumni-restricted, not this). This is what the admin
-// notification email links to per member, so a WhatsApp post's icons become actually clickable
-// once someone follows the link and logs in — the flattened PNG image alone can't do that.
-// First dynamic route in this app: Next 15 requires `params`/`searchParams` to be awaited.
+// Batch 7/8 — individual gated card page. Any *active member* can view any single validated
+// card, alumni or not (only the aggregate Alumni *list* is alumni-restricted). This is what the
+// admin notification email links to per member, so a WhatsApp post's icons become actually
+// clickable once someone follows the link and logs in — the flattened PNG image alone can't do
+// that. First dynamic route in this app: Next 15 requires `params`/`searchParams` to be awaited.
 
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -10,9 +10,9 @@ import FlowHeader from '@/components/FlowHeader';
 import DirectoryTeaser from '@/components/DirectoryTeaser';
 import MemberCard from '@/components/MemberCard';
 import { getSessionFromCookies } from '@/lib/auth';
-import { findCandidateByMemberNo } from '@/lib/notion-candidates';
+import { findCandidateByMemberNo, getCandidateById } from '@/lib/notion-candidates';
 import { dictionary, resolveLocaleParam } from '@/lib/i18n';
-import { deriveCardMeta } from '@/lib/card-display';
+import { deriveCardMeta, isActiveMembership } from '@/lib/card-display';
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
@@ -40,6 +40,16 @@ export default async function MemberCardPage({
           variant="loggedOut"
           loginHref={`/login?next=${encodeURIComponent(`/directory/${memberNoStr}`)}`}
         />
+      </div>
+    );
+  }
+
+  const viewer = await getCandidateById(session.candidateId);
+  if (!viewer || viewer.cardStatus !== 'validated' || !isActiveMembership(viewer)) {
+    return (
+      <div className="min-h-screen bg-trail-black text-paper-white">
+        <FlowHeader homeHref={homeHref} backLabel={t.common.back} />
+        <DirectoryTeaser t={t.directory} variant="membershipRequired" />
       </div>
     );
   }

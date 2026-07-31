@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
     SESSION_TTL_SECONDS,
   );
 
-  const res = NextResponse.redirect(`${origin}${next || '/profile'}`);
+  const res = NextResponse.redirect(`${origin}${next || '/refuge'}`);
   res.cookies.set(SESSION_COOKIE_NAME, sessionToken, {
     httpOnly: true,
     secure: true,

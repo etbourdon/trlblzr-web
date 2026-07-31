@@ -145,9 +145,19 @@ export type Dict = {
     title: string;
     teaserLoggedOut: { body: string };
     teaserAlumni: { body: string };
+    teaserMembershipRequired: { body: string };
     ctaLogin: string;
     ctaApply: string;
     ctaBackToDirectory: string;
+    ctaGoToRefuge: string;
+  };
+  refuge: {
+    lead: string;
+    noCardYet: string;
+    goToProfile: string;
+    goToDirectory: string;
+    goToAlumniDirectory: string;
+    membershipRequiredNote: string;
   };
 };
 
@@ -448,9 +458,22 @@ export const dictionary: Record<Locale, Dict> = {
       teaserAlumni: {
         body: 'Cette liste est réservée aux membres Alumni.',
       },
+      teaserMembershipRequired: {
+        body: "L'accès à cet annuaire nécessite une adhésion active. Rends-toi sur ton Refuge pour voir ton statut, ou écris-nous pour la renouveler.",
+      },
       ctaLogin: 'Se connecter',
       ctaApply: 'Postuler',
       ctaBackToDirectory: "Voir l'annuaire",
+      ctaGoToRefuge: 'Aller à mon Refuge',
+    },
+    refuge: {
+      lead: 'Ton espace membre — retrouve ta card, ton profil et les annuaires accessibles.',
+      noCardYet: "Tu n'as pas encore créé ta Member Card.",
+      goToProfile: 'Mon profil',
+      goToDirectory: "Annuaire des membres",
+      goToAlumniDirectory: 'Annuaire Alumni',
+      membershipRequiredNote:
+        "L'accès aux annuaires nécessite une adhésion active. Écris-nous si tu penses que c'est une erreur.",
     },
   },
   en: {
@@ -749,9 +772,22 @@ export const dictionary: Record<Locale, Dict> = {
       teaserAlumni: {
         body: 'This list is reserved for Alumni members.',
       },
+      teaserMembershipRequired: {
+        body: 'Accessing this directory requires an active membership. Go to your Refuge to see your status, or write to us to renew.',
+      },
       ctaLogin: 'Log in',
       ctaApply: 'Apply for membership',
       ctaBackToDirectory: 'View the directory',
+      ctaGoToRefuge: 'Go to my Refuge',
+    },
+    refuge: {
+      lead: 'Your member space — your card, your profile, and the directories you can access.',
+      noCardYet: "You haven't created your Member Card yet.",
+      goToProfile: 'My profile',
+      goToDirectory: 'Member directory',
+      goToAlumniDirectory: 'Alumni directory',
+      membershipRequiredNote:
+        'Directory access requires an active membership. Write to us if you think this is a mistake.',
     },
   },
 };

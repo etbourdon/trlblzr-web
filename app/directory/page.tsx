@@ -1,15 +1,16 @@
-// Batch 7 — the "All Members" directory. Any logged-in candidate can view it; it lists every
-// candidate with Card status = validated. Server Component (no 'use client'): session is read
-// via getSessionFromCookies (next/headers), data comes straight from Notion, no API round trip.
+// Batch 7/8 — the "All Members" directory. Requires the viewer to have their own card validated
+// AND an active membership (Batch 8) — it lists every candidate meeting the same bar. Server
+// Component (no 'use client'): session is read via getSessionFromCookies (next/headers), data
+// comes straight from Notion, no API round trip.
 
 import type { Metadata } from 'next';
 import FlowHeader from '@/components/FlowHeader';
 import DirectoryTeaser from '@/components/DirectoryTeaser';
 import MemberCard from '@/components/MemberCard';
 import { getSessionFromCookies } from '@/lib/auth';
-import { listValidatedCandidates } from '@/lib/notion-candidates';
+import { getCandidateById, listValidatedCandidates } from '@/lib/notion-candidates';
 import { dictionary, resolveLocaleParam } from '@/lib/i18n';
-import { deriveCardMeta } from '@/lib/card-display';
+import { deriveCardMeta, isActiveMembership } from '@/lib/card-display';
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
@@ -25,18 +26,28 @@ export default async function DirectoryPage({
 
   const session = await getSessionFromCookies();
 
+  let body: React.ReactNode;
+  if (!session) {
+    body = (
+      <DirectoryTeaser
+        t={t.directory}
+        variant="loggedOut"
+        loginHref={`/login?next=${encodeURIComponent('/directory')}`}
+      />
+    );
+  } else {
+    const viewer = await getCandidateById(session.candidateId);
+    if (!viewer || viewer.cardStatus !== 'validated' || !isActiveMembership(viewer)) {
+      body = <DirectoryTeaser t={t.directory} variant="membershipRequired" />;
+    } else {
+      body = <DirectoryList title={t.directory.title} />;
+    }
+  }
+
   return (
     <div className="min-h-screen bg-trail-black text-paper-white">
       <FlowHeader homeHref={homeHref} backLabel={t.common.back} />
-      {!session ? (
-        <DirectoryTeaser
-          t={t.directory}
-          variant="loggedOut"
-          loginHref={`/login?next=${encodeURIComponent('/directory')}`}
-        />
-      ) : (
-        <DirectoryList title={t.directory.title} />
-      )}
+      {body}
     </div>
   );
 }

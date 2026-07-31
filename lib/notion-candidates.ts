@@ -58,6 +58,7 @@ export type CandidateRecord = {
   cardSuspendedAt: string | null;
   cardDeleteAfter: string | null;
   weParticipation: string[];
+  membershipValidUntil: string | null;
 };
 
 // Minimal shape of what we read out of a Notion property value — avoids pulling in Notion's SDK.
@@ -145,6 +146,7 @@ function toCandidateRecord(page: { id: string; properties: Record<string, Notion
     cardSuspendedAt: dateValue(p['Card suspended at']),
     cardDeleteAfter: dateValue(p['Card delete after']),
     weParticipation: multiSelectNames(p['WE Participation']),
+    membershipValidUntil: dateValue(p['Membership valid until']),
   };
 }
 
@@ -322,12 +324,23 @@ export async function findCandidateByMemberNo(memberNo: number): Promise<Candida
 // acceptable for a small club today, revisit if membership grows past ~100 validated cards.
 // alumniOnly is expressed as "WE Participation is not empty" rather than any specific option
 // name, so it stays correct as those options get renamed/completed later.
+// Batch 8 — the general (non-alumni) list also excludes lapsed memberships (a past
+// "Membership valid until"); alumni are exempt from that timer entirely, per the "no
+// restriction in time" rule, so the alumni branch below is unchanged.
 export async function listValidatedCandidates(
   { alumniOnly = false }: { alumniOnly?: boolean } = {},
 ): Promise<CandidateRecord[]> {
   const conditions: unknown[] = [{ property: 'Card status', select: { equals: 'validated' } }];
   if (alumniOnly) {
     conditions.push({ property: 'WE Participation', multi_select: { is_not_empty: true } });
+  } else {
+    const today = new Date().toISOString().slice(0, 10);
+    conditions.push({
+      or: [
+        { property: 'Membership valid until', date: { is_empty: true } },
+        { property: 'Membership valid until', date: { on_or_after: today } },
+      ],
+    });
   }
   const res = await fetch(`${NOTION_API_URL}/databases/${databaseId()}/query`, {
     method: 'POST',

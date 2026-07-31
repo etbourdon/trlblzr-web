@@ -26,3 +26,13 @@ export function deriveCardMeta(
 export function isAlumni(candidate: Pick<CandidateRecord, 'weParticipation'>): boolean {
   return candidate.weParticipation.length >= 1;
 }
+
+// Batch 8 — "active member" gate for the general directory + individual card pages. Empty date
+// = always active (explicit rule) — only a date in the past counts as lapsed. Set by hand in
+// Notion for now, no automation computing a default.
+export function isActiveMembership(
+  candidate: Pick<CandidateRecord, 'membershipValidUntil'>,
+): boolean {
+  if (!candidate.membershipValidUntil) return true;
+  return candidate.membershipValidUntil >= new Date().toISOString().slice(0, 10);
+}

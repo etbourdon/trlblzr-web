@@ -508,6 +508,49 @@ comme avant.
 
 Aucune nouvelle.
 
+## Batch 8 — "Refuge" (hub membre) + adhésion active à durée limitée
+
+### Ce qui change dans le modèle d'accès
+
+Batch 7 laissait `/directory` accessible à n'importe quel candidat connecté, sans vraie
+condition. Batch 8 introduit une notion d'**adhésion active** :
+
+- Nouvelle propriété Notion `Membership valid until` (date, optionnelle) — remplie à la main par
+  Etienne, aucune automatisation. **Champ vide = adhésion toujours active** ; seule une date
+  passée compte comme adhésion expirée.
+- `/directory` (annuaire général) : accès ET contenu nécessitent maintenant `Card status =
+  validated` + adhésion active (`isActiveMembership` dans `lib/card-display.ts`).
+- `/directory/alumni` : inchangé dans l'esprit — toujours exempté de cette limite de temps
+  ("aucune restriction dans le temps" une fois alumni), mais vérifie désormais aussi
+  explicitement `Card status = validated` côté visiteur (avant, seul le statut alumni était
+  vérifié).
+- `/directory/{memberNo}` (fiche individuelle) : nécessite maintenant l'adhésion active du
+  *visiteur* (pas forcément alumni) — cohérent avec "tous les services sauf le profil suivent la
+  logique d'adhésion".
+- `/profile` : **inchangé, reste gratuit et accessible à tout candidat connecté**, quel que soit
+  son statut d'adhésion — c'est le seul service exempté de cette règle.
+
+### Nouveau hub : "Refuge"
+
+`/refuge` — même mot en français et en anglais (nom propre, pas traduit). Devient la nouvelle
+destination par défaut après connexion (remplace `/profile`), sans rien changer au mécanisme
+`next` existant : un lien de card partagé sur WhatsApp continue d'atterrir directement sur cette
+card après connexion, pas sur Refuge.
+
+Le Refuge affiche :
+- L'état de sa propre card (pas encore créée / en attente de revue / suspendue / validée — dans
+  ce dernier cas, la card elle-même, rendue en direct).
+- Un lien vers `/profile` (toujours visible).
+- Un lien vers `/directory` seulement si adhésion active + card validée.
+- Un lien vers `/directory/alumni` seulement si alumni + card validée.
+
+Un membre voit chaque annuaire auquel il a droit — les deux s'il est éligible aux deux, aucun si
+son adhésion a expiré (avec une note l'invitant à nous écrire).
+
+### Variables d'environnement
+
+Aucune nouvelle.
+
 ## Test local sans déploiement
 
 Si tu veux développer/tester en local :

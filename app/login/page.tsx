@@ -108,7 +108,7 @@ function LoginForm() {
       });
       const result = await res.json();
       if (res.ok && result.ok) {
-        router.push(next || '/profile');
+        router.push(next || '/refuge');
         return;
       }
       throw new Error();

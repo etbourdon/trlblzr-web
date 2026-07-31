@@ -37,7 +37,7 @@ export default async function AlumniDirectoryPage({
     );
   } else {
     const viewer = await getCandidateById(session.candidateId);
-    if (!viewer || !isAlumni(viewer)) {
+    if (!viewer || viewer.cardStatus !== 'validated' || !isAlumni(viewer)) {
       body = <DirectoryTeaser t={t.directory} variant="alumniOnly" />;
     } else {
       body = <AlumniList title={t.directory.title} />;

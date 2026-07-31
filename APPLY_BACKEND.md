@@ -398,6 +398,60 @@ admin = directement dans Notion (pas de nouvelle interface d'admin). Suppression
 suspension repasse automatiquement par `submitted` (voir `/api/profile/card/validate`), même si
 la card avait déjà été validée avant.
 
+## Batch 6 — Connexion par code OTP email (en complément du lien magique)
+
+`/login` propose maintenant deux méthodes de connexion, au choix — le lien magique existant
+(Batch 5.1, `app/api/auth/request-link` + `app/api/auth/verify`, inchangés) et un nouveau code à
+6 chiffres envoyé par email (`app/api/auth/request-otp` + `app/api/auth/verify-otp`). Les deux
+restent actifs en parallèle, un bouton permet de basculer de l'un à l'autre ; à terme, si le code
+OTP couvre tous les usages, le lien magique pourra être retiré (décision à prendre plus tard sur
+la base de l'usage réel, pas maintenant).
+
+### Nouvelles propriétés Notion (Candidates DB)
+
+- `Login code hash` (rich text) — hash HMAC-SHA256 du code (`lib/otp.ts`, réutilise le secret de
+  `AUTH_SECRET` déjà utilisé pour les liens magiques). **Jamais le code en clair** : n'importe qui
+  a accès en lecture à la base Notion pourrait sinon se connecter à la place du candidat.
+- `Login code expires` (date, avec heure) — expiration à 10 minutes.
+- `Login code attempts` (number) — compteur de tentatives échouées, remis à 0 à chaque nouveau
+  code.
+- `Login code sent at` (date, avec heure) — sert au cooldown de renvoi (60s).
+
+Ces 4 propriétés sont volontairement tenues à l'écart de `CandidateRecord` (voir
+`lib/notion-candidates.ts`) : `GET /api/profile` sérialise tout l'objet candidat vers le
+navigateur du membre connecté, donc y ajouter le hash l'enverrait inutilement à chaque
+chargement de `/profile`.
+
+### Sécurité : tentatives limitées, pas seulement l'espace du code
+
+Le code fait 1 chance sur 1 000 000, mais ce n'est pas la seule protection : chaque code
+n'autorise que 5 tentatives de vérification avant d'être invalidé, et expire après 10 minutes.
+Toute vérification échouée renvoie exactement le même message générique ("code invalide ou
+expiré"), qu'il s'agisse d'un email inconnu, d'un code faux, expiré, ou d'un compte ayant déjà
+épuisé ses 5 tentatives — pour ne jamais laisser deviner, par la différence de réponse, si un
+email correspond à un candidat (même logique anti-énumération que `/api/auth/request-link`).
+
+**Limite connue** : comme pour les liens magiques, les écritures Notion ne sont pas
+transactionnelles. Deux vérifications concurrentes pour le même candidat pourraient, dans de
+rares cas, ne compter que pour une seule tentative. Sans impact réel vu le volume de ce site et
+la taille de l'espace de code. De même, le cooldown de renvoi (60s) est vérifié côté serveur sur
+`Login code sent at`, mais le compte à rebours affiché côté client redémarre à zéro après un
+rechargement de page — un renvoi demandé pendant cette fenêtre répond toujours `ok:true` sans
+renvoyer d'email, pour ne pas casser l'anti-énumération avec une réponse distincte.
+
+### Variables d'environnement
+
+Aucune nouvelle — réutilise `AUTH_SECRET` (hash du code) et `RESEND_API_KEY`/`RESEND_FROM_EMAIL`
+déjà documentés en Batch 5.1/4.
+
+### OTP par SMS — envisagé, non construit
+
+Le SMS a été volontairement écarté de ce batch : ça implique un coût par message auprès d'un
+fournisseur (Twilio ou équivalent), la création d'un compte dédié, et un enregistrement
+d'expéditeur / conformité A2P en France/UE — non négligeable pour un club à faible volume. Si
+le besoin se confirme un jour, regarder d'abord le Vercel Marketplace pour une intégration SMS
+existante plutôt que de coder en dur un fournisseur particulier.
+
 ## Test local sans déploiement
 
 Si tu veux développer/tester en local :

@@ -240,3 +240,53 @@ export async function markEmailVerified(id: string): Promise<boolean> {
     'Email verified at': { date: { start: new Date().toISOString().slice(0, 10) } },
   });
 }
+
+// Batch 6 — email OTP login state. Deliberately NOT part of CandidateRecord/toCandidateRecord:
+// GET /api/profile serializes the whole candidate object straight to the logged-in user's own
+// browser, and the code hash has no business ever reaching a client, even the right one's.
+export type OtpState = {
+  hash: string | null;
+  expiresAt: string | null;
+  attempts: number;
+  sentAt: string | null;
+};
+
+export async function getOtpState(id: string): Promise<OtpState | null> {
+  const res = await fetch(`${NOTION_API_URL}/pages/${id}`, { headers: authHeaders() });
+  if (!res.ok) return null;
+  const page = await res.json();
+  const p = page.properties as Record<string, NotionProperty>;
+  return {
+    hash: richText(p['Login code hash']),
+    expiresAt: dateValue(p['Login code expires']),
+    attempts: numberValue(p['Login code attempts']) ?? 0,
+    sentAt: dateValue(p['Login code sent at']),
+  };
+}
+
+export async function setOtpCode(
+  id: string,
+  hash: string,
+  expiresAt: string,
+  sentAt: string,
+): Promise<boolean> {
+  return updateCandidateProperties(id, {
+    'Login code hash': { rich_text: txt(hash) },
+    'Login code expires': { date: { start: expiresAt } },
+    'Login code attempts': { number: 0 },
+    'Login code sent at': { date: { start: sentAt } },
+  });
+}
+
+export async function incrementOtpAttempts(id: string, nextAttempts: number): Promise<boolean> {
+  return updateCandidateProperties(id, { 'Login code attempts': { number: nextAttempts } });
+}
+
+export async function clearOtpCode(id: string): Promise<boolean> {
+  return updateCandidateProperties(id, {
+    'Login code hash': { rich_text: [] },
+    'Login code expires': { date: null },
+    'Login code attempts': { number: 0 },
+    'Login code sent at': { date: null },
+  });
+}

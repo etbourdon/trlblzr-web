@@ -25,6 +25,11 @@ export const VERIFY_LINK_TTL_SECONDS = 20 * 60; // 20 min
 export const LOGIN_LINK_TTL_SECONDS = 20 * 60; // 20 min
 export const SESSION_TTL_SECONDS = 30 * 24 * 60 * 60; // 30 days
 
+// Batch 6 — email OTP login (alongside the magic link above, not replacing it).
+export const OTP_CODE_TTL_SECONDS = 10 * 60; // 10 min
+export const OTP_RESEND_COOLDOWN_SECONDS = 60;
+export const OTP_MAX_ATTEMPTS = 5;
+
 function getSecret(): string {
   const secret = process.env.AUTH_SECRET;
   if (!secret) throw new Error('Missing AUTH_SECRET env var');
@@ -37,6 +42,12 @@ function base64url(input: Buffer | string): string {
 
 function sign(payloadB64: string, secret: string): string {
   return crypto.createHmac('sha256', secret).update(payloadB64).digest('base64url');
+}
+
+// Batch 6 — reused for OTP code hashing (lib/otp.ts) so there's only one HMAC secret/impl
+// in the codebase, not a parallel one for OTP.
+export function hmac(input: string): string {
+  return sign(input, getSecret());
 }
 
 export function createToken(payload: Omit<TokenPayload, 'exp'>, ttlSeconds: number): string {

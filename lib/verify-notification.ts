@@ -42,6 +42,39 @@ export function buildVerifyEmail({
   };
 }
 
+// Batch 6 — email OTP login code. No button() here — the code is meant to be typed on the page
+// where it was requested, not clicked, so there's nothing to link to.
+export function buildOtpEmail({
+  firstname,
+  code,
+  locale,
+}: {
+  firstname: string;
+  code: string;
+  locale: 'FR' | 'EN';
+}): { subject: string; html: string } {
+  if (locale === 'EN') {
+    return {
+      subject: 'Your TRLBLZR.run login code',
+      html: wrap(`
+        <h2>Hey ${escapeHtml(firstname || '')},</h2>
+        <p>Here's your one-time login code — enter it on the page where you requested it.</p>
+        <p style="font-size:32px;font-weight:bold;letter-spacing:8px;text-align:center;margin:24px 0;">${escapeHtml(code)}</p>
+        <p style="color:#888;font-size:12px;">This code expires in 10 minutes and works once. Didn't request this? You can ignore this email.</p>
+      `),
+    };
+  }
+  return {
+    subject: 'Ton code de connexion TRLBLZR.run',
+    html: wrap(`
+      <h2>Salut ${escapeHtml(firstname || '')},</h2>
+      <p>Voici ton code de connexion à usage unique — saisis-le sur la page où tu l'as demandé.</p>
+      <p style="font-size:32px;font-weight:bold;letter-spacing:8px;text-align:center;margin:24px 0;">${escapeHtml(code)}</p>
+      <p style="color:#888;font-size:12px;">Ce code expire dans 10 minutes et ne fonctionne qu'une fois. Tu n'as rien demandé ? Ignore cet email.</p>
+    `),
+  };
+}
+
 export function buildLoginEmail({
   firstname,
   loginUrl,

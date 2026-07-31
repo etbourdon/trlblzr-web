@@ -119,6 +119,10 @@ export type Dict = {
   login: {
     title: string; lead: string; emailLabel: string; submit: string; submitting: string;
     checkTitle: string; checkBody: string; errorExpired: string; backHome: string;
+    otpLead: string; otpSubmit: string; otpSubmitting: string; otpSentHint: string;
+    otpVerify: string; otpVerifying: string; otpErrorInvalid: string; otpHintManyTries: string;
+    otpResend: string; otpResendIn: string; otpChangeEmail: string;
+    switchToLink: string; switchToOtp: string;
   };
   profile: {
     title: string; lead: string; selfDescLabel: string; pictureLabel: string;
@@ -367,6 +371,19 @@ export const dictionary: Record<Locale, Dict> = {
       checkBody: "Si cet email correspond à une candidature, un lien de connexion vient d'être envoyé. Il expire dans 20 minutes.",
       errorExpired: 'Ce lien a expiré ou est invalide. Demandes-en un nouveau ci-dessous.',
       backHome: "Retour à l'accueil",
+      otpLead: "Entre l'email de ta candidature — on t'envoie un code à 6 chiffres, valable 10 minutes.",
+      otpSubmit: 'Recevoir mon code',
+      otpSubmitting: 'Envoi du code…',
+      otpSentHint: 'Code envoyé par email. Vérifie ta boîte mail (et les spams).',
+      otpVerify: 'Valider',
+      otpVerifying: 'Vérification…',
+      otpErrorInvalid: 'Code invalide ou expiré. Demande-en un nouveau.',
+      otpHintManyTries: 'Plusieurs essais infructueux ? Demande un nouveau code plutôt que de continuer à deviner.',
+      otpResend: 'Renvoyer le code',
+      otpResendIn: 'Renvoyer dans',
+      otpChangeEmail: "Changer d'email",
+      switchToLink: 'Tu préfères un lien de connexion ? →',
+      switchToOtp: 'Tu préfères un code ? →',
     },
     profile: {
       title: 'Ton profil.',
@@ -639,6 +656,19 @@ export const dictionary: Record<Locale, Dict> = {
       checkBody: "If that email matches an application, a login link was just sent. It expires in 20 minutes.",
       errorExpired: 'That link has expired or is invalid. Request a new one below.',
       backHome: 'Back to homepage',
+      otpLead: "Enter the email from your application — we'll send you a 6-digit code, valid for 10 minutes.",
+      otpSubmit: 'Send my code',
+      otpSubmitting: 'Sending code…',
+      otpSentHint: 'Code sent by email. Check your inbox (and spam).',
+      otpVerify: 'Verify',
+      otpVerifying: 'Verifying…',
+      otpErrorInvalid: 'Invalid or expired code. Request a new one.',
+      otpHintManyTries: "A few failed tries? Request a new code instead of guessing.",
+      otpResend: 'Resend code',
+      otpResendIn: 'Resend in',
+      otpChangeEmail: 'Change email',
+      switchToLink: 'Prefer a login link instead? →',
+      switchToOtp: 'Prefer a code instead? →',
     },
     profile: {
       title: 'Your profile.',

@@ -129,7 +129,7 @@ export type Dict = {
     title: string; lead: string; selfDescLabel: string; pictureLabel: string;
     saveLabel: string; savingLabel: string; savedMessage: string; logoutLabel: string;
     loadErrorMessage: string; notLoggedInMessage: string; languageLabel: string;
-    completionLabel: string;
+    completionLabel: string; nameLabel: string;
   };
   card: {
     sectionLabel: string; generateLabel: string; regenerateLabel: string; generatingLabel: string;
@@ -402,6 +402,7 @@ export const dictionary: Record<Locale, Dict> = {
       notLoggedInMessage: 'Tu dois te connecter pour voir cette page.',
       languageLabel: 'Langue préférée (emails et messages)',
       completionLabel: 'Profil complété',
+      nameLabel: 'Nom complet',
     },
     card: {
       sectionLabel: 'Ta Member Card',
@@ -690,6 +691,7 @@ export const dictionary: Record<Locale, Dict> = {
       notLoggedInMessage: 'You need to log in to see this page.',
       languageLabel: 'Preferred language (emails and messages)',
       completionLabel: 'Profile completeness',
+      nameLabel: 'Full name',
     },
     card: {
       sectionLabel: 'Your Member Card',

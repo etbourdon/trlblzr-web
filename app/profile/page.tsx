@@ -20,6 +20,8 @@ const CODE_BY_SPORT_LABEL: Record<string, string> = Object.fromEntries(
 type SportLevel = '' | '1' | '2' | '3' | '4' | '5';
 
 type FormState = {
+  name: string;
+  whatsapp: string;
   selfDescription: string;
   role: string;
   company: string;
@@ -57,6 +59,8 @@ function computeCompletion(form: FormState): number {
 }
 
 const EMPTY_FORM: FormState = {
+  name: '',
+  whatsapp: '',
   selfDescription: '',
   role: '',
   company: '',
@@ -83,7 +87,6 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
-  const [name, setName] = useState('');
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -92,7 +95,6 @@ export default function ProfilePage() {
   // Batch 5.2 — Member Card
   const [category, setCategory] = useState('');
   const [itra, setItra] = useState('');
-  const [whatsapp, setWhatsapp] = useState('');
   const [cardBio, setCardBio] = useState('');
   const [cardLookingFor, setCardLookingFor] = useState('');
   const [cardConsent, setCardConsent] = useState(false);
@@ -127,8 +129,9 @@ export default function ProfilePage() {
         if (!res.ok || !body.ok) throw new Error();
         if (cancelled) return;
         const c = body.candidate;
-        setName(c.name || '');
         setForm({
+          name: c.name || '',
+          whatsapp: c.whatsapp || '',
           selfDescription: c.selfDescription || '',
           role: c.role || '',
           company: c.company || '',
@@ -148,7 +151,6 @@ export default function ProfilePage() {
         });
         setCategory(c.category || '');
         setItra(c.itra || '');
-        setWhatsapp(c.whatsapp || '');
         setCardBio(c.cardBio || '');
         setCardLookingFor(c.cardLookingFor || '');
         if (c.cardBio || c.cardLookingFor) {
@@ -256,7 +258,7 @@ export default function ProfilePage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          firstname: name.split(' ')[0] || '',
+          firstname: form.name.split(' ')[0] || '',
           isAthlete,
           role: form.role,
           company: form.company,
@@ -442,7 +444,7 @@ export default function ProfilePage() {
                   {t.profile.logoutLabel.toUpperCase()}
                 </button>
               </div>
-              {name && <p className="mt-2 font-mono text-xs text-ash">{name}</p>}
+              {form.name && <p className="mt-2 font-mono text-xs text-ash">{form.name}</p>}
               <p className="mt-6 font-sans text-base text-ash leading-relaxed">{t.profile.lead}</p>
 
               <div className="mt-6">
@@ -459,6 +461,25 @@ export default function ProfilePage() {
               </div>
 
               <form onSubmit={handleSubmit} className="mt-10 space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <Field label={t.profile.nameLabel} required>
+                    <Input
+                      value={form.name}
+                      onChange={(v) => handleChange('name', v)}
+                      required
+                    />
+                  </Field>
+                  <Field label={t.apply.s2Whatsapp} required>
+                    <Input
+                      type="tel"
+                      inputMode="tel"
+                      value={form.whatsapp}
+                      onChange={(v) => handleChange('whatsapp', v)}
+                      required
+                    />
+                  </Field>
+                </div>
+
                 <Field label={t.profile.languageLabel}>
                   <div className="flex gap-3">
                     {(['FR', 'EN'] as const).map((lang) => (
@@ -644,7 +665,7 @@ export default function ProfilePage() {
                       <MemberCard
                         photoUrl={form.profilePictureUrl}
                         memberNo={memberNo}
-                        name={name || '—'}
+                        name={form.name || '—'}
                         metaLine={metaLine}
                         bio={cardBio}
                         lookingFor={cardLookingFor}
@@ -653,7 +674,7 @@ export default function ProfilePage() {
                         linkedin={form.linkedin}
                         stravaProfile={form.stravaProfile}
                         proWebsite={form.proWebsite}
-                        whatsapp={whatsapp}
+                        whatsapp={form.whatsapp}
                       />
                     </div>
                   </div>

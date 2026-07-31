@@ -31,6 +31,8 @@ export async function GET(req: NextRequest) {
 }
 
 type ProfilePayload = {
+  name?: string;
+  whatsapp?: string;
   selfDescription?: string;
   role?: string;
   company?: string;
@@ -60,7 +62,19 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
   }
 
+  // Name and WhatsApp are required at /apply time too — unlike the rest of this payload
+  // (optional enrichment), these are core identity fields, so a self-service fix for a typo
+  // shouldn't let a member blank them out entirely.
+  if (!data.name?.trim()) {
+    return NextResponse.json({ error: 'Name is required' }, { status: 400 });
+  }
+  if (!data.whatsapp?.trim()) {
+    return NextResponse.json({ error: 'WhatsApp is required' }, { status: 400 });
+  }
+
   const properties: Record<string, unknown> = {
+    Name: { title: txt(data.name) },
+    WhatsApp: { phone_number: data.whatsapp },
     'Self-description': { rich_text: txt(data.selfDescription) },
     'Role / Title': { rich_text: txt(data.role) },
     Company: { rich_text: txt(data.company) },

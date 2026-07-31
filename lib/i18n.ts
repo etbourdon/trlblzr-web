@@ -98,6 +98,7 @@ export type Dict = {
     s3Eyebrow: string; s3Title: string; s3TitleHighlight: string; s3Thanks: string; s3Ref: string;
     s3Suite: string; s3Body: string; s3Step1: string; s3Step2: string; s3Step3: string;
     s3CtaCal: string; s3CtaHome: string; s3Contact: string;
+    s3EmailCheck: string; s3LoginLink: string;
     stepIndicator: string;
     s1CategoryLabelDirigeant: string; s1CategoryLabelAthlete: string; s1Continue: string;
     s2Title: string; s2ProfileValueDirigeant: string; s2ProfileValueAthlete: string;
@@ -122,7 +123,7 @@ export type Dict = {
     otpLead: string; otpSubmit: string; otpSubmitting: string; otpSentHint: string;
     otpVerify: string; otpVerifying: string; otpErrorInvalid: string; otpHintManyTries: string;
     otpResend: string; otpResendIn: string; otpChangeEmail: string;
-    switchToLink: string; switchToOtp: string;
+    switchToLink: string; switchToOtp: string; forgotEmailHint: string;
   };
   profile: {
     title: string; lead: string; selfDescLabel: string; pictureLabel: string;
@@ -313,6 +314,8 @@ export const dictionary: Record<Locale, Dict> = {
       s3CtaCal: 'Réserver un appel découverte',
       s3CtaHome: "Retour à l'accueil",
       s3Contact: 'Une question urgente ? Écris-moi à',
+      s3EmailCheck: "On vient aussi de t'envoyer un email de confirmation — vérifie ta boîte mail (et les spams). Rien reçu après quelques minutes ? Assure-toi d'avoir bien orthographié ton adresse, ou connecte-toi directement.",
+      s3LoginLink: 'Se connecter →',
       stepIndicator: 'ÉTAPE',
       s1CategoryLabelDirigeant: '01 — DIRIGEANT',
       s1CategoryLabelAthlete: '02 — ATHLÈTE',
@@ -384,6 +387,7 @@ export const dictionary: Record<Locale, Dict> = {
       otpChangeEmail: "Changer d'email",
       switchToLink: 'Tu préfères un lien de connexion ? →',
       switchToOtp: 'Tu préfères un code ? →',
+      forgotEmailHint: 'Tu ne sais plus quel email tu as utilisé pour postuler ? Écris-nous à',
     },
     profile: {
       title: 'Ton profil.',
@@ -598,6 +602,8 @@ export const dictionary: Record<Locale, Dict> = {
       s3CtaCal: 'Book a discovery call',
       s3CtaHome: 'Back to homepage',
       s3Contact: 'Urgent? Write to me at',
+      s3EmailCheck: "We also just sent you a confirmation email — check your inbox (and spam). Nothing after a few minutes? Make sure you spelled your address correctly, or log in directly.",
+      s3LoginLink: 'Log in →',
       stepIndicator: 'STEP',
       s1CategoryLabelDirigeant: '01 — LEADER',
       s1CategoryLabelAthlete: '02 — ATHLETE',
@@ -669,6 +675,7 @@ export const dictionary: Record<Locale, Dict> = {
       otpChangeEmail: 'Change email',
       switchToLink: 'Prefer a login link instead? →',
       switchToOtp: 'Prefer a code instead? →',
+      forgotEmailHint: "Not sure which email you applied with? Write to us at",
     },
     profile: {
       title: 'Your profile.',

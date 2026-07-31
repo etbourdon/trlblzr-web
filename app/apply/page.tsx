@@ -586,6 +586,13 @@ function StepConfirmation({
         </div>
       </div>
 
+      <p className="mt-8 max-w-3xl font-sans text-sm text-ash leading-relaxed">
+        {t.apply.s3EmailCheck}{' '}
+        <Link href="/login" className="text-paper-white hover:text-ember transition-colors">
+          {t.apply.s3LoginLink}
+        </Link>
+      </p>
+
       <div className="mt-12 max-w-3xl space-y-6">
         <h2 className="font-display font-bold text-2xl md:text-3xl tracking-tight text-paper-white">
           {t.apply.s3Suite}

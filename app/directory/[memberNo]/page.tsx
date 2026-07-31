@@ -82,6 +82,7 @@ export default async function MemberCardPage({
             stravaProfile={candidate.stravaProfile}
             proWebsite={candidate.proWebsite}
             whatsapp={candidate.whatsapp}
+            weParticipationCount={candidate.weParticipation.length}
           />
         </div>
       </main>

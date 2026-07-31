@@ -82,6 +82,24 @@ function IconWhatsApp() {
   );
 }
 
+// Batch 8 follow-up — one star per past WE (weekend event) attended. Beyond 3 the row of glyphs
+// gets cramped in a small corner badge, so it collapses to a compact "N★" numeral form instead.
+function StarBadge({ count }: { count: number }) {
+  if (count <= 0) return null;
+  return (
+    <div className="absolute top-3 right-3 font-mono text-[11px] tracking-[0.04em] text-paper-white bg-trail-black/55 rounded px-1.5 py-0.5 flex items-center gap-px">
+      {count <= 3 ? (
+        <span className="text-ember">{'★'.repeat(count)}</span>
+      ) : (
+        <>
+          <span>{count}</span>
+          <span className="text-ember">★</span>
+        </>
+      )}
+    </div>
+  );
+}
+
 export default function MemberCard({
   photoUrl,
   memberNo,
@@ -95,6 +113,7 @@ export default function MemberCard({
   stravaProfile,
   proWebsite,
   whatsapp,
+  weParticipationCount,
 }: {
   photoUrl?: string | null;
   memberNo?: number | null;
@@ -108,6 +127,7 @@ export default function MemberCard({
   stravaProfile?: string | null;
   proWebsite?: string | null;
   whatsapp?: string | null;
+  weParticipationCount?: number | null;
 }) {
   const wa = waLink(whatsapp);
   const hasLinks = linkedin || stravaProfile || proWebsite || wa;
@@ -136,6 +156,7 @@ export default function MemberCard({
           <div className="absolute top-3 left-3.5 font-display font-extrabold text-[13px] tracking-tight text-paper-white">
             TRLBLZR<span className="text-ember">.run</span>
           </div>
+          <StarBadge count={weParticipationCount ?? 0} />
           {memberNo != null && (
             <div className="absolute bottom-2.5 right-3 font-mono text-[9px] tracking-[0.12em] text-paper-white bg-trail-black/55 rounded px-1.5 py-0.5">
               MEMBER // {String(memberNo).padStart(4, '0')}

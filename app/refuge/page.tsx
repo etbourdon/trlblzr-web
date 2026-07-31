@@ -88,6 +88,7 @@ export default async function RefugePage({
                     stravaProfile={candidate.stravaProfile}
                     proWebsite={candidate.proWebsite}
                     whatsapp={candidate.whatsapp}
+                    weParticipationCount={candidate.weParticipation.length}
                   />
                 );
               })()

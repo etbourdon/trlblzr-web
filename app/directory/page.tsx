@@ -80,6 +80,7 @@ async function DirectoryList({ title }: { title: string }) {
                 stravaProfile={c.stravaProfile}
                 proWebsite={c.proWebsite}
                 whatsapp={c.whatsapp}
+                weParticipationCount={c.weParticipation.length}
               />
             );
           })}

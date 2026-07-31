@@ -106,6 +106,7 @@ export default function ProfilePage() {
   >(null);
   const [cardDeleteAfter, setCardDeleteAfter] = useState<string | null>(null);
   const [memberNo, setMemberNo] = useState<number | null>(null);
+  const [weParticipationCount, setWeParticipationCount] = useState(0);
   const [generating, setGenerating] = useState(false);
   const [generateError, setGenerateError] = useState<string | null>(null);
   const [submittingCard, setSubmittingCard] = useState(false);
@@ -164,6 +165,7 @@ export default function ProfilePage() {
         setCardStatus(c.cardStatus || null);
         setCardDeleteAfter(c.cardDeleteAfter || null);
         setMemberNo(typeof c.memberNo === 'number' ? c.memberNo : null);
+        setWeParticipationCount(Array.isArray(c.weParticipation) ? c.weParticipation.length : 0);
       } catch {
         if (!cancelled) setLoadError(true);
       } finally {
@@ -678,6 +680,7 @@ export default function ProfilePage() {
                         stravaProfile={form.stravaProfile}
                         proWebsite={form.proWebsite}
                         whatsapp={form.whatsapp}
+                        weParticipationCount={weParticipationCount}
                       />
                     </div>
                   </div>

@@ -7,7 +7,17 @@ import Link from 'next/link';
 import Image from 'next/image';
 import LangSwitcher from '@/components/LangSwitcher';
 
-export default function FlowHeader({ homeHref, backLabel }: { homeHref: string; backLabel: string }) {
+export default function FlowHeader({
+  homeHref,
+  backLabel,
+  backHref,
+}: {
+  homeHref: string;
+  backLabel: string;
+  // Batch 8 — logo always goes to the marketing homepage (brand consistency); the "back" text
+  // link can point elsewhere (e.g. /refuge from a member-area page) when provided.
+  backHref?: string;
+}) {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 px-6 md:px-10 py-4 flex items-center justify-between bg-trail-black/85 backdrop-blur-[2px] border-b border-stone">
       <Link href={homeHref} className="flex items-center gap-3 group">
@@ -26,7 +36,7 @@ export default function FlowHeader({ homeHref, backLabel }: { homeHref: string; 
       <div className="flex items-center gap-5">
         <LangSwitcher />
         <Link
-          href={homeHref}
+          href={backHref || homeHref}
           className="font-mono text-[10px] md:text-[11px] tracking-[0.2em] text-paper-white/70 hover:text-ember transition-colors"
         >
           {backLabel.toUpperCase()}

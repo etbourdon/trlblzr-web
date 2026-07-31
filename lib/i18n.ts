@@ -792,13 +792,6 @@ export const dictionary: Record<Locale, Dict> = {
   },
 };
 
-// Batch 7 — lets Server Components (app/directory/**) resolve a locale from a `?lang=` search
-// param and read `dictionary[locale]` directly, with zero React context (useLocale() is
-// client-only and not usable there).
-export function resolveLocaleParam(lang: string | undefined): Locale {
-  return lang === 'en' ? 'en' : 'fr';
-}
-
 export function pimUrl(
   path: string,
   locale: Locale,

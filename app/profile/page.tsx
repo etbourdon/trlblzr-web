@@ -83,6 +83,9 @@ export default function ProfilePage() {
   const { t, locale } = useLocale();
   const router = useRouter();
   const homeHref = locale === 'en' ? '/?lang=en' : '/';
+  // Batch 8 — the "back" link goes to Refuge (the member hub you'd actually have come from),
+  // not the marketing homepage. Logo click still goes to homeHref, unchanged.
+  const refugeHref = locale === 'en' ? '/refuge?lang=en' : '/refuge';
 
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
@@ -424,7 +427,7 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-trail-black text-paper-white">
-      <FlowHeader homeHref={homeHref} backLabel={t.common.back} />
+      <FlowHeader homeHref={homeHref} backLabel={t.common.back} backHref={refugeHref} />
 
       <main className="pt-32 md:pt-40 px-6 md:px-10 pb-32">
         <div className="max-w-2xl mx-auto">

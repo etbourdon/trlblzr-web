@@ -29,6 +29,13 @@ function isLocale(value: unknown): value is Locale {
   return typeof value === 'string' && (LOCALES as string[]).includes(value);
 }
 
+// Batch 8 — mirrors the locale to a cookie alongside localStorage, so Server Components
+// (app/directory/**, app/refuge — see lib/locale-server.ts) can resolve the user's actual
+// preference even when navigated to without an explicit `?lang=` (e.g. the post-login redirect).
+function persistLocaleCookie(value: Locale) {
+  document.cookie = `${LOCALE_STORAGE_KEY}=${value}; path=/; max-age=31536000; samesite=lax`;
+}
+
 export function LocaleProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(DEFAULT_LOCALE);
 
@@ -51,6 +58,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
       detected = 'en';
     }
 
+    persistLocaleCookie(detected);
     setLocaleState(detected);
   }, []);
 
@@ -58,6 +66,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     setLocaleState(newLocale);
     if (typeof window === 'undefined') return;
     window.localStorage.setItem(LOCALE_STORAGE_KEY, newLocale);
+    persistLocaleCookie(newLocale);
     const url = new URL(window.location.href);
     url.searchParams.set('lang', newLocale);
     window.history.replaceState({}, '', url.toString());

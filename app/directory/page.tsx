@@ -9,7 +9,8 @@ import DirectoryTeaser from '@/components/DirectoryTeaser';
 import MemberCard from '@/components/MemberCard';
 import { getSessionFromCookies } from '@/lib/auth';
 import { getCandidateById, listValidatedCandidates } from '@/lib/notion-candidates';
-import { dictionary, resolveLocaleParam } from '@/lib/i18n';
+import { dictionary } from '@/lib/i18n';
+import { resolveServerLocale } from '@/lib/locale-server';
 import { deriveCardMeta, isActiveMembership } from '@/lib/card-display';
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
@@ -20,9 +21,10 @@ export default async function DirectoryPage({
   searchParams: Promise<{ lang?: string }>;
 }) {
   const { lang } = await searchParams;
-  const locale = resolveLocaleParam(lang);
+  const locale = await resolveServerLocale(lang);
   const t = dictionary[locale];
   const homeHref = locale === 'en' ? '/?lang=en' : '/';
+  const refugeHref = locale === 'en' ? '/refuge?lang=en' : '/refuge';
 
   const session = await getSessionFromCookies();
 
@@ -46,7 +48,7 @@ export default async function DirectoryPage({
 
   return (
     <div className="min-h-screen bg-trail-black text-paper-white">
-      <FlowHeader homeHref={homeHref} backLabel={t.common.back} />
+      <FlowHeader homeHref={homeHref} backLabel={t.common.back} backHref={refugeHref} />
       {body}
     </div>
   );

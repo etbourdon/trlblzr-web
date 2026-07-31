@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useLocale } from '@/lib/locale-provider';
 import FlowHeader from '@/components/FlowHeader';
 import { Field, Input } from '@/components/FormFields';
+import { isSafeNextPath } from '@/lib/safe-redirect';
 
 const OTP_RESEND_COOLDOWN_MS = 60 * 1000;
 
@@ -21,6 +22,9 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const expired = searchParams.get('error') === 'expired';
+  // Batch 7 — "log in, then return to the gated page you wanted" (e.g. /directory/7).
+  const rawNext = searchParams.get('next');
+  const next = isSafeNextPath(rawNext) ? rawNext : null;
 
   // Batch 6 — OTP is the default path; an expired-link redirect is link-flow-specific, so land
   // straight on the link tab in that case rather than showing an unrelated error under OTP.
@@ -62,7 +66,7 @@ function LoginForm() {
       await fetch('/api/auth/request-link', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, locale }),
+        body: JSON.stringify({ email, locale, ...(next ? { next } : {}) }),
       });
     } finally {
       // Toujours "envoyé" côté UI, même en cas d'erreur réseau — on ne révèle jamais
@@ -104,7 +108,7 @@ function LoginForm() {
       });
       const result = await res.json();
       if (res.ok && result.ok) {
-        router.push('/profile');
+        router.push(next || '/profile');
         return;
       }
       throw new Error();

@@ -11,9 +11,10 @@ import { createToken, LOGIN_LINK_TTL_SECONDS } from '@/lib/auth';
 import { findCandidateByEmail } from '@/lib/notion-candidates';
 import { sendEmail } from '@/lib/resend';
 import { buildLoginEmail } from '@/lib/verify-notification';
+import { isSafeNextPath } from '@/lib/safe-redirect';
 
 export async function POST(req: NextRequest) {
-  let body: { email?: string; locale?: 'fr' | 'en' };
+  let body: { email?: string; locale?: 'fr' | 'en'; next?: string };
   try {
     body = await req.json();
   } catch {
@@ -21,6 +22,7 @@ export async function POST(req: NextRequest) {
   }
 
   const email = body.email?.trim().toLowerCase();
+  const next = isSafeNextPath(body.next) ? body.next : null;
   const generic = () => NextResponse.json({ ok: true });
 
   if (!email) return generic();
@@ -32,7 +34,8 @@ export async function POST(req: NextRequest) {
         { candidateId: candidate.id, email, purpose: 'login' },
         LOGIN_LINK_TTL_SECONDS,
       );
-      const loginUrl = `${req.nextUrl.origin}/api/auth/verify?token=${encodeURIComponent(token)}`;
+      let loginUrl = `${req.nextUrl.origin}/api/auth/verify?token=${encodeURIComponent(token)}`;
+      if (next) loginUrl += `&next=${encodeURIComponent(next)}`;
       const locale = candidate.preferredLanguage || (body.locale === 'en' ? 'EN' : 'FR');
       const { subject, html } = buildLoginEmail({
         firstname: candidate.name?.split(' ')[0] || '',

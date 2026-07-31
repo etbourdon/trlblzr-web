@@ -452,6 +452,62 @@ d'expéditeur / conformité A2P en France/UE — non négligeable pour un club �
 le besoin se confirme un jour, regarder d'abord le Vercel Marketplace pour une intégration SMS
 existante plutôt que de coder en dur un fournisseur particulier.
 
+## Batch 7 — Annuaires gated (membres + alumni) + raccourci de publication WhatsApp
+
+La Member Card partagée sur WhatsApp est une image PNG figée — ses icônes (LinkedIn, Strava,
+site, WhatsApp) sont de vrais liens cliquables quand la card s'affiche en direct dans le
+navigateur, mais une image ne peut évidemment pas être cliquée. Solution retenue (après avoir
+écarté une simple page publique non protégée) : deux annuaires nécessitant une connexion —
+`/directory` (tous les membres validés) et `/directory/alumni` (alumni uniquement) — plus des
+fiches individuelles gated (`/directory/{memberNo}`) que l'email de validation peut cibler
+directement.
+
+### Ce qui définit un "Alumni"
+
+Pas le champ `Status` (qui a bien une option "Alumni" mais sert à autre chose, un pipeline de
+lifecycle général indépendant). Le vrai critère : avoir participé à au moins un WE (weekend)
+passé, suivi via une nouvelle propriété Notion multi-select **`WE Participation`** (une étoile
+par WE participé). Créée avec une seule option de départ (`WE #1`) — à compléter directement
+dans Notion pour matcher la liste des "Past editions" du site (ex. `// 0003 Vercors 03-26`).
+Le code ne dépend jamais du libellé exact des options, seulement du nombre sélectionné — les
+renommer/en ajouter ne casse rien.
+
+### Règles d'accès
+
+- `/directory` : n'importe quel candidat connecté peut la voir ; elle liste tous les candidats
+  avec `Card status = validated`.
+- `/directory/alumni` : l'accès lui-même est réservé aux candidats ayant 1+ étoile
+  `WE Participation` — pas juste un filtre de contenu. Un membre connecté mais non-alumni voit un
+  message dédié ("réservé aux alumni") avec un lien vers `/directory`, pas le message
+  "connecte-toi" (il l'est déjà).
+- `/directory/{memberNo}` : accessible à tout candidat connecté, alumni ou non — seule la liste
+  agrégée alumni est exclusive, pas la fiche individuelle. 404 si le membre n'est pas
+  `Card status = validated` (suspendu, brouillon, etc.) — une carte suspendue disparaît donc
+  aussi de cette page, cohérent avec le droit à l'oubli déjà en place.
+- Visiteur non connecté sur n'importe laquelle de ces pages : page d'accueil dédiée avec deux
+  boutons — "Se connecter" et "Postuler" (pour les non-membres) — plutôt qu'une redirection
+  silencieuse vers `/login`.
+
+### Retour à la bonne page après connexion
+
+`/login` accepte maintenant un paramètre `next` (ex. `/login?next=/directory/7`) : après
+connexion (lien magique ou code), le visiteur revient exactement là où il voulait aller, au lieu
+d'atterrir systématiquement sur `/profile`. Validé comme chemin relatif same-origin uniquement
+(`lib/safe-redirect.ts`) pour éviter une redirection ouverte.
+
+### Email de validation — raccourci WhatsApp
+
+L'email "Card à valider" (Batch 5.3) contient maintenant un bouton qui ouvre directement le bon
+groupe WhatsApp — Alumni ou News, choisi automatiquement selon `WE Participation` — plus un lien
+vers la fiche `/directory/{memberNo}` à coller en légende du message WhatsApp (c'est cette fiche,
+pas l'image, qui permet aux icônes d'être cliquées). Aucune action n'est automatisée au-delà de
+ça : approuver une card (passer "Card status" à `validated` dans Notion) reste manuel, exactement
+comme avant.
+
+### Variables d'environnement
+
+Aucune nouvelle.
+
 ## Test local sans déploiement
 
 Si tu veux développer/tester en local :

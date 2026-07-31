@@ -24,6 +24,7 @@ import {
 } from '@/lib/notion-candidates';
 import { sendEmail } from '@/lib/resend';
 import { buildCardSubmittedEmail } from '@/lib/card-notification';
+import { isAlumni } from '@/lib/card-display';
 
 type ValidateBody = {
   bio?: string;
@@ -39,6 +40,8 @@ async function sendCardSubmittedNotification(input: {
   lookingFor: string;
   cardImageUrl?: string | null;
   notionUrl: string;
+  isAlumni: boolean;
+  cardPageUrl: string;
 }) {
   try {
     const { NOTIFICATION_EMAIL } = process.env;
@@ -103,6 +106,8 @@ export async function POST(req: NextRequest) {
       lookingFor: data.lookingFor,
       cardImageUrl: data.cardImageUrl,
       notionUrl: `https://www.notion.so/${session.candidateId.replace(/-/g, '')}`,
+      isAlumni: isAlumni(candidate),
+      cardPageUrl: `${req.nextUrl.origin}/directory/${memberNo}`,
     });
 
     return NextResponse.json({ ok: true, memberNo });

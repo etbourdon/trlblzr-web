@@ -141,6 +141,14 @@ export type Dict = {
     suspendedMessage: string; reactivateLabel: string; reactivatingLabel: string;
     reactivateErrorMessage: string; previousVersionLabel: string; nextVersionLabel: string;
   };
+  directory: {
+    title: string;
+    teaserLoggedOut: { body: string };
+    teaserAlumni: { body: string };
+    ctaLogin: string;
+    ctaApply: string;
+    ctaBackToDirectory: string;
+  };
 };
 
 export const dictionary: Record<Locale, Dict> = {
@@ -432,6 +440,18 @@ export const dictionary: Record<Locale, Dict> = {
       previousVersionLabel: 'Proposition précédente',
       nextVersionLabel: 'Proposition suivante',
     },
+    directory: {
+      title: 'Annuaire des membres',
+      teaserLoggedOut: {
+        body: "L'annuaire TRLBLZR — profils et cartes des membres validés. Connecte-toi pour y accéder.",
+      },
+      teaserAlumni: {
+        body: 'Cette liste est réservée aux membres Alumni.',
+      },
+      ctaLogin: 'Se connecter',
+      ctaApply: 'Postuler',
+      ctaBackToDirectory: "Voir l'annuaire",
+    },
   },
   en: {
     meta: {
@@ -721,8 +741,27 @@ export const dictionary: Record<Locale, Dict> = {
       previousVersionLabel: 'Previous proposition',
       nextVersionLabel: 'Next proposition',
     },
+    directory: {
+      title: 'Member directory',
+      teaserLoggedOut: {
+        body: "The TRLBLZR member directory — validated members' profiles and cards. Log in to access it.",
+      },
+      teaserAlumni: {
+        body: 'This list is reserved for Alumni members.',
+      },
+      ctaLogin: 'Log in',
+      ctaApply: 'Apply for membership',
+      ctaBackToDirectory: 'View the directory',
+    },
   },
 };
+
+// Batch 7 — lets Server Components (app/directory/**) resolve a locale from a `?lang=` search
+// param and read `dictionary[locale]` directly, with zero React context (useLocale() is
+// client-only and not usable there).
+export function resolveLocaleParam(lang: string | undefined): Locale {
+  return lang === 'en' ? 'en' : 'fr';
+}
 
 export function pimUrl(
   path: string,

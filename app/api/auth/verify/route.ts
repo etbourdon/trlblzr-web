@@ -6,21 +6,28 @@
  *    then logs the candidate in.
  *  - "login" (from /login → /api/auth/request-link): just logs the candidate in.
  *
- * Either way, sets the session cookie and redirects to /profile. Invalid/expired tokens
- * redirect back to /login with an error flag.
+ * Either way, sets the session cookie and redirects to /profile — or to the safe `next` path
+ * (Batch 7, e.g. a gated /directory/{memberNo} page) if one was carried through the link.
+ * Invalid/expired tokens redirect back to /login with an error flag, preserving `next` too.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken, createToken, SESSION_COOKIE_NAME, SESSION_TTL_SECONDS } from '@/lib/auth';
 import { markEmailVerified } from '@/lib/notion-candidates';
+import { isSafeNextPath } from '@/lib/safe-redirect';
 
 export async function GET(req: NextRequest) {
   const origin = req.nextUrl.origin;
   const token = req.nextUrl.searchParams.get('token');
   const payload = verifyToken(token);
+  const rawNext = req.nextUrl.searchParams.get('next');
+  const next = isSafeNextPath(rawNext) ? rawNext : null;
 
   if (!payload || (payload.purpose !== 'verify' && payload.purpose !== 'login')) {
-    return NextResponse.redirect(`${origin}/login?error=expired`);
+    const expiredUrl = next
+      ? `${origin}/login?error=expired&next=${encodeURIComponent(next)}`
+      : `${origin}/login?error=expired`;
+    return NextResponse.redirect(expiredUrl);
   }
 
   if (payload.purpose === 'verify') {
@@ -38,7 +45,7 @@ export async function GET(req: NextRequest) {
     SESSION_TTL_SECONDS,
   );
 
-  const res = NextResponse.redirect(`${origin}/profile`);
+  const res = NextResponse.redirect(`${origin}${next || '/profile'}`);
   res.cookies.set(SESSION_COOKIE_NAME, sessionToken, {
     httpOnly: true,
     secure: true,

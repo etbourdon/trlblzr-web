@@ -10,6 +10,7 @@
 
 import crypto from 'crypto';
 import type { NextRequest } from 'next/server';
+import { cookies } from 'next/headers';
 
 export type TokenPurpose = 'verify' | 'login' | 'session';
 
@@ -86,6 +87,17 @@ export function verifyToken(token: string | undefined | null): TokenPayload | nu
 // Shared by every session-gated route (/api/profile, /api/profile/upload, ...).
 export function getSessionFromRequest(req: NextRequest): TokenPayload | null {
   const token = req.cookies.get(SESSION_COOKIE_NAME)?.value;
+  const payload = verifyToken(token);
+  return payload && payload.purpose === 'session' ? payload : null;
+}
+
+// Batch 7 — Server Component page gating (app/directory/**). Distinct from
+// getSessionFromRequest: Server Components read cookies() (async in Next 15), not a NextRequest.
+// Only ever imported by server-only files (API routes, Server Components) — never a client
+// component, which is what makes it safe for this file to import next/headers.
+export async function getSessionFromCookies(): Promise<TokenPayload | null> {
+  const store = await cookies();
+  const token = store.get(SESSION_COOKIE_NAME)?.value;
   const payload = verifyToken(token);
   return payload && payload.purpose === 'session' ? payload : null;
 }

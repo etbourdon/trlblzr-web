@@ -57,6 +57,7 @@ export type CandidateRecord = {
   cardImageUrl: string | null;
   cardSuspendedAt: string | null;
   cardDeleteAfter: string | null;
+  weParticipation: string[];
 };
 
 // Minimal shape of what we read out of a Notion property value — avoids pulling in Notion's SDK.
@@ -143,6 +144,7 @@ function toCandidateRecord(page: { id: string; properties: Record<string, Notion
     cardImageUrl: urlValue(p['Card image URL']),
     cardSuspendedAt: dateValue(p['Card suspended at']),
     cardDeleteAfter: dateValue(p['Card delete after']),
+    weParticipation: multiSelectNames(p['WE Participation']),
   };
 }
 
@@ -289,4 +291,57 @@ export async function clearOtpCode(id: string): Promise<boolean> {
     'Login code attempts': { number: 0 },
     'Login code sent at': { date: null },
   });
+}
+
+// Batch 7 — resolves the WhatsApp-shared individual card page. Bakes in the validated-only
+// requirement: a suspended/draft/rejected member's URL 404s rather than leaking their data.
+export async function findCandidateByMemberNo(memberNo: number): Promise<CandidateRecord | null> {
+  const res = await fetch(`${NOTION_API_URL}/databases/${databaseId()}/query`, {
+    method: 'POST',
+    headers: authHeaders(),
+    body: JSON.stringify({
+      filter: {
+        and: [
+          { property: 'Member No', number: { equals: memberNo } },
+          { property: 'Card status', select: { equals: 'validated' } },
+        ],
+      },
+      page_size: 1,
+    }),
+  });
+  if (!res.ok) {
+    console.error('Notion query error (findCandidateByMemberNo)', res.status, await res.text());
+    return null;
+  }
+  const body = await res.json();
+  const page = body.results?.[0];
+  return page ? toCandidateRecord(page) : null;
+}
+
+// Batch 7 — directory listings. v1 limitation: single page_size:100 request, no pagination —
+// acceptable for a small club today, revisit if membership grows past ~100 validated cards.
+// alumniOnly is expressed as "WE Participation is not empty" rather than any specific option
+// name, so it stays correct as those options get renamed/completed later.
+export async function listValidatedCandidates(
+  { alumniOnly = false }: { alumniOnly?: boolean } = {},
+): Promise<CandidateRecord[]> {
+  const conditions: unknown[] = [{ property: 'Card status', select: { equals: 'validated' } }];
+  if (alumniOnly) {
+    conditions.push({ property: 'WE Participation', multi_select: { is_not_empty: true } });
+  }
+  const res = await fetch(`${NOTION_API_URL}/databases/${databaseId()}/query`, {
+    method: 'POST',
+    headers: authHeaders(),
+    body: JSON.stringify({
+      filter: conditions.length > 1 ? { and: conditions } : conditions[0],
+      sorts: [{ property: 'Member No', direction: 'ascending' }],
+      page_size: 100,
+    }),
+  });
+  if (!res.ok) {
+    console.error('Notion query error (listValidatedCandidates)', res.status, await res.text());
+    return [];
+  }
+  const body = await res.json();
+  return (body.results ?? []).map(toCandidateRecord);
 }

@@ -276,7 +276,11 @@ export default function ProfilePage() {
 
   const captureCardBlob = async (): Promise<Blob | null> => {
     if (!cardRef.current) return null;
-    return toBlob(cardRef.current, { pixelRatio: 2 });
+    // Chat apps (WhatsApp included) flatten a shared photo's transparent regions to white when
+    // compressing it — an explicit backgroundColor fills those regions with the card's own
+    // trail-black instead, so the rounded corners stay a deliberate part of the card rather than
+    // a white halo once posted.
+    return toBlob(cardRef.current, { pixelRatio: 2, backgroundColor: '#0A0A0A' });
   };
 
   const handleDownloadCard = async () => {

@@ -1,6 +1,15 @@
 // Batch 5.2 — the Member Card visual template, approved 2026-07-30. Every member's card uses
 // this exact layout; only the data varies. Claude only generates `bio` and `lookingFor` — every
 // other field here is a direct passthrough of already-structured profile data.
+//
+// Batch 5.3 follow-up (2026-07-30): reworked from a tall portrait card to a wide landscape one —
+// the portrait version got cropped when shared as a WhatsApp photo (chat bubbles only show the
+// top portion of tall images). Text is intentionally left unclamped so future fields have room
+// to grow; the left column's own background extends the full row height so extra space below the
+// icons reads as more card, not a gap. Corners stay rounded — WhatsApp/most chat apps flatten a
+// PNG's transparent regions to white when compressing a shared photo, so the export must fill
+// those regions with the card's own background color rather than leaving them transparent (see
+// captureCardBlob in app/profile/page.tsx), keeping the rounded look intact instead of a white halo.
 
 function waLink(phone: string | null | undefined): string | null {
   if (!phone) return null;
@@ -48,6 +57,23 @@ function IconWorld() {
     </svg>
   );
 }
+function IconCamera() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="28"
+      height="28"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 011 1v9a1 1 0 01-1 1H4a1 1 0 01-1-1V9a1 1 0 011-1z" />
+      <circle cx="12" cy="13.5" r="3.5" />
+    </svg>
+  );
+}
 function IconWhatsApp() {
   return (
     <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
@@ -87,127 +113,111 @@ export default function MemberCard({
   const hasLinks = linkedin || stravaProfile || proWebsite || wa;
 
   return (
-    <div className="w-full max-w-[380px] bg-trail-black border border-stone rounded-2xl overflow-hidden">
-      <div className="relative w-full aspect-[4/5] bg-stone flex items-center justify-center">
-        {photoUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={photoUrl}
-            alt={name}
-            className="absolute inset-0 w-full h-full object-cover grayscale contrast-[1.05]"
-          />
-        ) : (
-          <div className="w-16 h-16 rounded-full bg-stone" />
-        )}
-        <div className="absolute top-[18px] left-5 font-display font-extrabold text-[15px] tracking-tight text-paper-white">
-          TRLBLZR<span className="text-ember">.run</span>
+    <div className="w-full max-w-[640px] bg-trail-black border border-stone rounded-2xl overflow-hidden grid grid-cols-[200px_1fr]">
+      <div className="flex flex-col bg-trail-black">
+        <div className="relative w-full h-[220px] flex-shrink-0 bg-stone flex items-center justify-center">
+          {photoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={photoUrl}
+              alt={name}
+              className="absolute inset-0 w-full h-full object-cover grayscale contrast-[1.05]"
+            />
+          ) : (
+            <div className="flex flex-col items-center justify-center gap-2.5 text-ash px-4">
+              <IconCamera />
+              <div className="font-mono text-[10px] tracking-[0.1em] text-center leading-relaxed">
+                NO PHOTO YET
+                <br />
+                ADD ONE IN YOUR PROFILE
+              </div>
+            </div>
+          )}
+          <div className="absolute top-3 left-3.5 font-display font-extrabold text-[13px] tracking-tight text-paper-white">
+            TRLBLZR<span className="text-ember">.run</span>
+          </div>
+          {memberNo != null && (
+            <div className="absolute bottom-2.5 right-3 font-mono text-[9px] tracking-[0.12em] text-paper-white bg-trail-black/55 rounded px-1.5 py-0.5">
+              MEMBER // {String(memberNo).padStart(4, '0')}
+            </div>
+          )}
         </div>
-        {memberNo != null && (
-          <div className="absolute bottom-4 right-5 font-mono text-[10px] tracking-[0.15em] text-paper-white">
-            MEMBER // {String(memberNo).padStart(4, '0')}
+
+        {hasLinks && (
+          <div className="flex justify-center items-center gap-4 py-3.5 text-ember">
+            {linkedin && (
+              <a href={linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                <IconLinkedIn />
+              </a>
+            )}
+            {stravaProfile && (
+              <a href={stravaProfile} target="_blank" rel="noopener noreferrer" aria-label="Strava">
+                <IconTrail />
+              </a>
+            )}
+            {proWebsite && (
+              <a href={proWebsite} target="_blank" rel="noopener noreferrer" aria-label="Website">
+                <IconWorld />
+              </a>
+            )}
+            {wa && (
+              <a href={wa} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+                <IconWhatsApp />
+              </a>
+            )}
           </div>
         )}
       </div>
 
-      <div className="px-7 pt-8 pb-7">
-        <div className="font-display font-extrabold text-[28px] leading-[1.1] text-paper-white">
+      <div className="px-[22px] pt-[18px] pb-[18px] pr-6">
+        <div className="font-display font-extrabold text-[25px] leading-[1.1] text-paper-white">
           {name}
         </div>
         {metaLine && (
-          <div className="font-mono text-xs tracking-[0.08em] text-dust mt-2 uppercase">
+          <div className="font-mono text-xs tracking-[0.06em] text-dust mt-1.5 uppercase">
             {metaLine}
           </div>
         )}
 
-        <div className="h-px bg-stone my-6" />
+        <div className="h-px bg-stone my-3" />
 
-        {bio && <p className="text-sm leading-[1.75] text-paper-white mb-5">{bio}</p>}
+        {bio && <p className="text-sm leading-[1.5] text-paper-white">{bio}</p>}
 
         {lookingFor && (
-          <div className="mb-5">
-            <div className="font-mono text-[10px] tracking-[0.15em] text-ember mb-2">
+          <div className="mt-2.5">
+            <div className="font-mono text-[10px] tracking-[0.1em] text-ember mb-1">
               LOOKING FOR
             </div>
-            <div className="text-sm leading-[1.6] text-paper-white">{lookingFor}</div>
+            <div className="text-sm leading-[1.45] text-paper-white">{lookingFor}</div>
           </div>
         )}
 
-        {sportLevel != null && sportLevel > 0 && (
-          <div className="mb-3.5">
-            <div className="flex justify-between items-baseline mb-2">
-              <span className="font-mono text-[10px] tracking-[0.15em] text-ember">
-                TRAIL LEVEL
-              </span>
-              <span className="font-mono text-[11px] text-dust">{sportLevel}/5</span>
-            </div>
-            <div className="flex gap-1">
-              {[1, 2, 3, 4, 5].map((n) => (
-                <div
-                  key={n}
-                  className={`flex-1 h-[5px] rounded-sm ${n <= sportLevel ? 'bg-ember' : 'bg-stone'}`}
-                />
-              ))}
-            </div>
+        {((sportLevel != null && sportLevel > 0) || itra) && (
+          <div className="flex flex-col gap-1.5 mt-3">
+            {sportLevel != null && sportLevel > 0 && (
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-[9px] tracking-[0.1em] text-ember w-[74px] flex-shrink-0">
+                  TRAIL LEVEL
+                </span>
+                <div className="flex gap-[3px] w-20">
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <div
+                      key={n}
+                      className={`flex-1 h-1 rounded-sm ${n <= sportLevel ? 'bg-ember' : 'bg-stone'}`}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+            {itra && (
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-[9px] tracking-[0.1em] text-ember w-[74px] flex-shrink-0">
+                  ITRA
+                </span>
+                <span className="text-sm text-paper-white">{itra}</span>
+              </div>
+            )}
           </div>
-        )}
-
-        {itra && (
-          <div className="flex justify-between text-sm mb-6">
-            <span className="font-mono text-[10px] tracking-[0.15em] text-ember">ITRA INDEX</span>
-            <span className="text-paper-white">{itra}</span>
-          </div>
-        )}
-
-        {hasLinks && (
-          <>
-            <div className="h-px bg-stone mb-5" />
-            <div className="flex justify-between items-center">
-              {linkedin && (
-                <a
-                  href={linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="LinkedIn"
-                  className="text-ember"
-                >
-                  <IconLinkedIn />
-                </a>
-              )}
-              {stravaProfile && (
-                <a
-                  href={stravaProfile}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Strava"
-                  className="text-ember"
-                >
-                  <IconTrail />
-                </a>
-              )}
-              {proWebsite && (
-                <a
-                  href={proWebsite}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Website"
-                  className="text-ember"
-                >
-                  <IconWorld />
-                </a>
-              )}
-              {wa && (
-                <a
-                  href={wa}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="WhatsApp"
-                  className="text-ember"
-                >
-                  <IconWhatsApp />
-                </a>
-              )}
-            </div>
-          </>
         )}
       </div>
     </div>

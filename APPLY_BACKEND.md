@@ -278,11 +278,21 @@ Blob store doit être connecté à **ce projet-là**, pas à `trlblzr-web`.
 
 ## Batch 5.2 — Member Card (génération + preview + itération)
 
-Template visuel approuvé le 30/07 (voir `components/MemberCard.tsx`) : logo TRLBLZR.run et numéro
-de membre en overlay sur une photo N&B dominante, puis nom / rôle @ société / ville, bio courte,
-"looking for", jauge de niveau trail (toujours affichée), index ITRA (ligne indépendante, disparaît
-proprement si absent), et une rangée d'icônes (LinkedIn, Strava, site perso, WhatsApp) répartie
-en `justify-between`.
+Template visuel approuvé le 30/07 (voir `components/MemberCard.tsx`), revu en format paysage le
+même jour suite au premier envoi WhatsApp réel (le format portrait initial était rogné dans la
+bulle de chat) : colonne gauche = photo N&B (logo TRLBLZR.run et numéro de membre en overlay,
+placeholder appareil photo + "NO PHOTO YET" si pas encore de photo) puis rangée d'icônes
+(LinkedIn, Strava, site perso, WhatsApp) sous la photo ; colonne droite, alignée à gauche et
+ancrée au coin de la photo = nom / rôle @ société / ville, bio, "looking for", puis niveau trail
+et index ITRA empilés verticalement (alignés sur la même largeur de label). Le texte n'est
+volontairement pas tronqué (pas de line-clamp) pour laisser de la place à de futurs champs — la
+colonne gauche porte elle-même le fond noir de la card sur toute sa hauteur, donc si la colonne de
+texte est plus haute que la photo, l'espace en dessous des icônes reste simplement du fond de
+card, pas un vide ou un artefact visuel. Coins arrondis conservés ; l'export (`toBlob` dans
+`app/profile/page.tsx`) fixe explicitement `backgroundColor: '#0A0A0A'` car WhatsApp (et la
+plupart des apps de chat) aplatit les zones transparentes d'un PNG partagé en blanc lors de la
+compression — sans ce fond explicite, les coins arrondis exportés deviennent un halo blanc au
+lieu de rester discrets.
 
 **Ce que Claude génère réellement** : uniquement `bio` (1-2 phrases) et `lookingFor` (1 phrase),
 à partir des champs texte bruts du profil (self-description, motivation, looking-for, role,

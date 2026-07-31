@@ -134,7 +134,7 @@ export type Dict = {
     downloadLabel: string; downloadingLabel: string; validatedMessage: string;
     suspendLabel: string; suspendingLabel: string; suspendConfirm: string; suspendErrorMessage: string;
     suspendedMessage: string; reactivateLabel: string; reactivatingLabel: string;
-    reactivateErrorMessage: string;
+    reactivateErrorMessage: string; previousVersionLabel: string; nextVersionLabel: string;
   };
 };
 
@@ -407,6 +407,8 @@ export const dictionary: Record<Locale, Dict> = {
       reactivateLabel: 'Réactiver ma card',
       reactivatingLabel: 'Réactivation…',
       reactivateErrorMessage: 'Échec de la réactivation. Réessaie dans un instant.',
+      previousVersionLabel: 'Proposition précédente',
+      nextVersionLabel: 'Proposition suivante',
     },
   },
   en: {
@@ -677,6 +679,8 @@ export const dictionary: Record<Locale, Dict> = {
       reactivateLabel: 'Reactivate my card',
       reactivatingLabel: 'Reactivating…',
       reactivateErrorMessage: 'Reactivation failed. Try again in a moment.',
+      previousVersionLabel: 'Previous proposition',
+      nextVersionLabel: 'Next proposition',
     },
   },
 };

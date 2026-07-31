@@ -8,6 +8,10 @@
  * "Member No" the first time they submit; never reassigned afterward. Also clears any
  * prior suspension dates — re-submitting an edited card always goes back through review,
  * even if it was previously suspended.
+ *
+ * Sends a best-effort admin email (same Resend setup as Batch 4's apply notification) so
+ * Etienne actually finds out a card is waiting — without it, nothing prompts a check of the
+ * "Cards — Pending review" Notion view.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -18,6 +22,8 @@ import {
   getNextMemberNumber,
   txt,
 } from '@/lib/notion-candidates';
+import { sendEmail } from '@/lib/resend';
+import { buildCardSubmittedEmail } from '@/lib/card-notification';
 
 type ValidateBody = {
   bio?: string;
@@ -25,6 +31,27 @@ type ValidateBody = {
   consent?: boolean;
   cardImageUrl?: string;
 };
+
+async function sendCardSubmittedNotification(input: {
+  fullName: string;
+  memberNo: number | null;
+  bio: string;
+  lookingFor: string;
+  cardImageUrl?: string | null;
+  notionUrl: string;
+}) {
+  try {
+    const { NOTIFICATION_EMAIL } = process.env;
+    const recipients = (NOTIFICATION_EMAIL || 'etienne@bourdon.com')
+      .split(',')
+      .map((addr) => addr.trim())
+      .filter(Boolean);
+    const { subject, html } = buildCardSubmittedEmail(input);
+    await sendEmail({ to: recipients, subject, html });
+  } catch (err) {
+    console.error('Card submitted notification failed', err);
+  }
+}
 
 export async function POST(req: NextRequest) {
   const session = getSessionFromRequest(req);
@@ -68,6 +95,16 @@ export async function POST(req: NextRequest) {
 
     const ok = await updateCandidateProperties(session.candidateId, properties);
     if (!ok) return NextResponse.json({ error: 'Failed to submit card' }, { status: 502 });
+
+    await sendCardSubmittedNotification({
+      fullName: candidate.name || 'Membre',
+      memberNo,
+      bio: data.bio,
+      lookingFor: data.lookingFor,
+      cardImageUrl: data.cardImageUrl,
+      notionUrl: `https://www.notion.so/${session.candidateId.replace(/-/g, '')}`,
+    });
+
     return NextResponse.json({ ok: true, memberNo });
   } catch (err) {
     console.error('Card validate failed', err);

@@ -108,6 +108,10 @@ export default function ProfilePage() {
   const [downloadingCard, setDownloadingCard] = useState(false);
   const [suspending, setSuspending] = useState(false);
   const [suspendError, setSuspendError] = useState<string | null>(null);
+  // Session-only undo/redo across regenerations — not persisted, just lets the member flip back
+  // to an earlier AI proposition instead of losing it the moment they hit "regenerate" again.
+  const [cardHistory, setCardHistory] = useState<{ bio: string; lookingFor: string }[]>([]);
+  const [cardHistoryIndex, setCardHistoryIndex] = useState(-1);
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -147,6 +151,10 @@ export default function ProfilePage() {
         setWhatsapp(c.whatsapp || '');
         setCardBio(c.cardBio || '');
         setCardLookingFor(c.cardLookingFor || '');
+        if (c.cardBio || c.cardLookingFor) {
+          setCardHistory([{ bio: c.cardBio || '', lookingFor: c.cardLookingFor || '' }]);
+          setCardHistoryIndex(0);
+        }
         setCardConsent(Boolean(c.cardConsent));
         setCardStatus(c.cardStatus || null);
         setCardDeleteAfter(c.cardDeleteAfter || null);
@@ -267,11 +275,36 @@ export default function ProfilePage() {
       if (!res.ok || !result.ok) throw new Error(result.error || 'Generation failed');
       setCardBio(result.bio);
       setCardLookingFor(result.lookingFor);
+      // Regenerating after navigating back into history drops any propositions ahead of the
+      // current one — same "new branch" behavior as a normal undo/redo stack.
+      setCardHistory((prev) => [
+        ...prev.slice(0, cardHistoryIndex + 1),
+        { bio: result.bio, lookingFor: result.lookingFor },
+      ]);
+      setCardHistoryIndex(cardHistoryIndex + 1);
     } catch {
       setGenerateError(t.card.generateErrorMessage);
     } finally {
       setGenerating(false);
     }
+  };
+
+  const handlePrevCardVersion = () => {
+    if (cardHistoryIndex <= 0) return;
+    const idx = cardHistoryIndex - 1;
+    setCardHistoryIndex(idx);
+    setCardBio(cardHistory[idx].bio);
+    setCardLookingFor(cardHistory[idx].lookingFor);
+    setCardStatus(null);
+  };
+
+  const handleNextCardVersion = () => {
+    if (cardHistoryIndex >= cardHistory.length - 1) return;
+    const idx = cardHistoryIndex + 1;
+    setCardHistoryIndex(idx);
+    setCardBio(cardHistory[idx].bio);
+    setCardLookingFor(cardHistory[idx].lookingFor);
+    setCardStatus(null);
   };
 
   const captureCardBlob = async (): Promise<Blob | null> => {
@@ -605,25 +638,27 @@ export default function ProfilePage() {
                   {t.card.sectionLabel}
                 </h2>
 
-                <div className="flex flex-col md:flex-row gap-8 items-start">
-                  <div ref={cardRef}>
-                    <MemberCard
-                      photoUrl={form.profilePictureUrl}
-                      memberNo={memberNo}
-                      name={name || '—'}
-                      metaLine={metaLine}
-                      bio={cardBio}
-                      lookingFor={cardLookingFor}
-                      sportLevel={sportLevelNumber}
-                      itra={itra}
-                      linkedin={form.linkedin}
-                      stravaProfile={form.stravaProfile}
-                      proWebsite={form.proWebsite}
-                      whatsapp={whatsapp}
-                    />
+                <div className="flex flex-col gap-8">
+                  <div className="flex justify-center">
+                    <div ref={cardRef} className="inline-block">
+                      <MemberCard
+                        photoUrl={form.profilePictureUrl}
+                        memberNo={memberNo}
+                        name={name || '—'}
+                        metaLine={metaLine}
+                        bio={cardBio}
+                        lookingFor={cardLookingFor}
+                        sportLevel={sportLevelNumber}
+                        itra={itra}
+                        linkedin={form.linkedin}
+                        stravaProfile={form.stravaProfile}
+                        proWebsite={form.proWebsite}
+                        whatsapp={whatsapp}
+                      />
+                    </div>
                   </div>
 
-                  <div className="flex-1 w-full space-y-6">
+                  <div className="w-full space-y-6">
                     <div className="flex flex-wrap items-center gap-4">
                       <button
                         type="button"
@@ -635,6 +670,31 @@ export default function ProfilePage() {
                           ? t.card.generatingLabel.toUpperCase()
                           : (cardBio ? t.card.regenerateLabel : t.card.generateLabel).toUpperCase()}
                       </button>
+                      {cardHistory.length > 1 && (
+                        <div className="flex items-center gap-2 text-ash">
+                          <button
+                            type="button"
+                            onClick={handlePrevCardVersion}
+                            disabled={cardHistoryIndex <= 0}
+                            aria-label={t.card.previousVersionLabel}
+                            className="text-lg leading-none disabled:opacity-30 hover:text-ember transition-colors disabled:hover:text-ash"
+                          >
+                            ‹
+                          </button>
+                          <span className="font-mono text-[10px] tracking-wider">
+                            {cardHistoryIndex + 1}/{cardHistory.length}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={handleNextCardVersion}
+                            disabled={cardHistoryIndex >= cardHistory.length - 1}
+                            aria-label={t.card.nextVersionLabel}
+                            className="text-lg leading-none disabled:opacity-30 hover:text-ember transition-colors disabled:hover:text-ash"
+                          >
+                            ›
+                          </button>
+                        </div>
+                      )}
                       {(cardBio || cardLookingFor) && (
                         <button
                           type="button"

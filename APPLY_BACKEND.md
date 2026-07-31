@@ -307,13 +307,17 @@ trail, ITRA) est un passthrough direct de champs déjà structurés — pas de g
    non sauvegardées) via `components/MemberCard.tsx`.
 2. Bouton "Générer ma card" → `POST /api/profile/card/generate` (session requise) → Claude
    renvoie `{bio, lookingFor}` → affichés dans des champs modifiables. Ne touche pas Notion.
-3. L'utilisateur peut éditer le texte généré à la main et/ou cliquer "Régénérer" en boucle.
+3. L'utilisateur peut éditer le texte généré à la main et/ou cliquer "Régénérer" en boucle. Chaque
+   génération est gardée en mémoire côté client (pas persisté, juste pour la session en cours) —
+   des flèches `‹ 2/3 ›` apparaissent dès qu'il y a plus d'une proposition, pour revenir à une
+   version précédente sans avoir à la regénérer à l'identique. Régénérer après être revenu en
+   arrière écrase les propositions plus récentes (comportement classique d'undo/redo).
 4. Case de consentement RGPD obligatoire ("mon profil est visible publiquement...").
 5. Bouton "Envoyer pour validation" → `POST /api/profile/card/validate` (session requise) →
    sauvegarde `Card bio` / `Card looking for` dans Notion, `Card status` passe à `submitted`,
-   `Card consent` = true. Assigne `Member No` (voir plus bas) si pas déjà fait. **Rien d'autre
-   ne se passe automatiquement après ça** — la validation admin + publication est le Batch 5.3,
-   pas encore construit. Auto-contenu comme 5.1 : utilisable même sans 5.3.
+   `Card consent` = true, assigne `Member No` (voir plus bas) si pas déjà fait, upload l'image de
+   la card vers Vercel Blob et sauvegarde son URL. Envoie aussi un email (best-effort, via Resend
+   — voir Batch 5.3 plus bas) pour prévenir qu'une card attend une validation.
 
 ### Numéro de membre
 
@@ -357,6 +361,12 @@ admin = directement dans Notion (pas de nouvelle interface d'admin). Suppression
 
 ### Workflow admin (entièrement dans Notion, aucune UI dédiée)
 
+0. **Notification** : dès qu'un membre soumet sa card, un email part vers `NOTIFICATION_EMAIL`
+   (même variable que Batch 4, fallback `etienne@bourdon.com`) via `lib/card-notification.ts` +
+   `lib/resend.ts` — objet "Card à valider — {nom}", contenu = bio/looking-for, lien direct vers
+   la fiche Notion, et un bouton vers l'image de la card. Sans ça, rien ne signale qu'une card
+   attend une revue. Best-effort (comme la notification de candidature) : un échec d'envoi
+   n'empêche jamais la soumission de réussir côté membre.
 1. Vue **"Cards — Pending review"** (filtre `Card status = submitted`) : ouvrir la fiche, relire
    `Card bio` / `Card looking for`, ouvrir `Card image URL` pour voir/télécharger l'image prête à
    poster, puis flipper `Card status` sur `validated` pour approuver.
@@ -366,6 +376,20 @@ admin = directement dans Notion (pas de nouvelle interface d'admin). Suppression
    dépassée et purger manuellement (`Card bio`, `Card looking for`, `Card image URL`, `Card
    status` → vider/remettre à blanc) — pas de job planifié pour l'instant, décision volontaire
    pour garder le système simple tant que le volume reste faible.
+
+### Corrections de mise en page (2026-07-31)
+
+- **Card poussée dans une colonne étroite en grand écran** : la section Member Card empilait la
+  card et les champs éditables en `flex-row` à partir de `md:`, ce qui écrasait la colonne de
+  contenu sur les écrans larges (la card fait 640px de large). Passé en `flex-col` permanent,
+  card centrée au-dessus, contenu éditable en pleine largeur en dessous — quelle que soit la
+  taille d'écran.
+- **Rectangle noir superflu sur l'export** : le conteneur `<div ref={cardRef}>` n'était pas
+  contraint en largeur ; dans l'ancien layout `flex-row`, il s'étirait plus large que la card
+  elle-même (640px), et `toBlob({backgroundColor: '#0A0A0A'})` remplissait cet espace excédentaire
+  en noir plein — visible comme un bandeau noir à droite de la card sur l'image exportée. Fixé en
+  rendant ce conteneur `inline-block` (largeur = contenu exact), donc la capture correspond
+  pixel pour pixel à la card visible, sans marge cachée.
 
 ### Statuts possibles de `Card status`
 

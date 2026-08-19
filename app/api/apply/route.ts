@@ -241,12 +241,20 @@ export async function POST(req: NextRequest) {
       console.error('Échec envoi email notification (candidature déjà enregistrée)', err);
     }
 
+    // SBL-26 follow-up — short-lived token letting the confirmation screen resend the verify
+    // email or correct a mistyped address without a session.
+    const pendingToken = createToken(
+      { candidateId: notionBody.id, email: data.email!, purpose: 'pending' },
+      VERIFY_LINK_TTL_SECONDS,
+    );
+
     return NextResponse.json({
       ok: true,
       reference: `TRLBLZR-${new Date().getFullYear()}-${String(
         Math.floor(Math.random() * 9000) + 1000,
       )}`,
       notion_id: notionBody.id,
+      pendingToken,
     });
   } catch (err) {
     console.error('Server exception', err);

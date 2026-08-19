@@ -12,7 +12,7 @@ import crypto from 'crypto';
 import type { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 
-export type TokenPurpose = 'verify' | 'login' | 'session';
+export type TokenPurpose = 'verify' | 'login' | 'session' | 'pending';
 
 export type TokenPayload = {
   candidateId: string;
@@ -30,6 +30,12 @@ export const SESSION_TTL_SECONDS = 30 * 24 * 60 * 60; // 30 days
 export const OTP_CODE_TTL_SECONDS = 10 * 60; // 10 min
 export const OTP_RESEND_COOLDOWN_SECONDS = 60;
 export const OTP_MAX_ATTEMPTS = 5;
+
+// SBL-26 follow-up — short-lived token handed to the client right after /apply, so the
+// "Candidature en cours" screen can resend the verify email or correct a mistyped address
+// without a session. No Notion-side cooldown state for resend (low abuse value — worst case is
+// spamming your own inbox); the 60s cooldown is enforced client-side only.
+export const VERIFY_RESEND_COOLDOWN_SECONDS = 60;
 
 function getSecret(): string {
   const secret = process.env.AUTH_SECRET;

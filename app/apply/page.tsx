@@ -71,6 +71,7 @@ export default function ApplyPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [reference, setReference] = useState<string | null>(null);
+  const [pendingToken, setPendingToken] = useState<string | null>(null);
   // SBL-18 — Tracking Source: URL param ?source=… lu au mount et injecté dans le payload
   const [sourceParam, setSourceParam] = useState<string | null>(null);
 
@@ -134,6 +135,7 @@ export default function ApplyPage() {
         throw new Error(body.error || t.apply.errorFallback);
       }
       setReference(body.reference);
+      setPendingToken(body.pendingToken || null);
       setStep(3);
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : t.apply.errorUnknown);
@@ -174,6 +176,8 @@ export default function ApplyPage() {
             <StepConfirmation
               reference={reference}
               firstname={form.firstname}
+              email={form.email}
+              pendingToken={pendingToken}
               t={t}
               homeHref={homeHref}
             />
@@ -555,17 +559,85 @@ function StepInfos({
   );
 }
 
+// SBL-26 follow-up — "kar***@***.fr" style masking, just enough for the candidate to recognize
+// their own address without fully exposing it on screen.
+function maskEmail(email: string): string {
+  const at = email.indexOf('@');
+  if (at < 1) return email;
+  const user = email.slice(0, at);
+  const domain = email.slice(at + 1);
+  const tld = domain.split('.').pop() || domain;
+  return `${user.slice(0, 3)}***@***.${tld}`;
+}
+
 function StepConfirmation({
   reference,
   firstname,
+  email,
+  pendingToken,
   t,
   homeHref,
 }: {
   reference: string;
   firstname: string;
+  email: string;
+  pendingToken: string | null;
   t: Dict;
   homeHref: string;
 }) {
+  const [currentEmail, setCurrentEmail] = useState(email);
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const [resendStatus, setResendStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const [showChangeEmail, setShowChangeEmail] = useState(false);
+  const [newEmail, setNewEmail] = useState('');
+  const [changeStatus, setChangeStatus] = useState<'idle' | 'saving' | 'error'>('idle');
+
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const id = setInterval(() => setResendCooldown((s) => Math.max(0, s - 1)), 1000);
+    return () => clearInterval(id);
+  }, [resendCooldown]);
+
+  const handleResend = async () => {
+    if (!pendingToken || resendCooldown > 0) return;
+    setResendStatus('sending');
+    try {
+      const res = await fetch('/api/auth/resend-verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pendingToken }),
+      });
+      if (!res.ok) throw new Error();
+      setResendStatus('sent');
+      setResendCooldown(60);
+    } catch {
+      setResendStatus('error');
+    }
+  };
+
+  const handleChangeEmail = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!pendingToken || !newEmail.trim()) return;
+    setChangeStatus('saving');
+    try {
+      const res = await fetch('/api/auth/update-pending-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pendingToken, newEmail: newEmail.trim() }),
+      });
+      const body = await res.json();
+      if (!res.ok || !body.ok) throw new Error();
+      setCurrentEmail(newEmail.trim());
+      setShowChangeEmail(false);
+      setNewEmail('');
+      setChangeStatus('idle');
+      setResendStatus('sent');
+      setResendCooldown(60);
+    } catch {
+      setChangeStatus('error');
+    }
+  };
+
   return (
     <section>
       <h1 className="font-display font-bold text-4xl md:text-6xl tracking-tight leading-[0.95] text-paper-white uppercase">
@@ -586,35 +658,70 @@ function StepConfirmation({
         </div>
       </div>
 
-      <p className="mt-8 max-w-3xl font-sans text-sm text-ash leading-relaxed">
-        {t.apply.s3EmailCheck}{' '}
-        <Link href="/login" className="text-paper-white hover:text-ember transition-colors">
-          {t.apply.s3LoginLink}
-        </Link>
-      </p>
+      <div className="mt-8 max-w-3xl space-y-3">
+        <p className="font-sans text-sm text-ash leading-relaxed">{t.apply.s3EmailCheck}</p>
+        <p className="font-mono text-xs text-paper-white/80">
+          {t.apply.s3EmailSentTo}{' '}
+          <span className="text-paper-white">{maskEmail(currentEmail)}</span>
+        </p>
 
-      <div className="mt-12 max-w-3xl space-y-6">
-        <h2 className="font-display font-bold text-2xl md:text-3xl tracking-tight text-paper-white">
-          {t.apply.s3Suite}
-        </h2>
-        <p className="font-sans text-base text-ash leading-relaxed">{t.apply.s3Body}</p>
+        {pendingToken && (
+          <div className="flex flex-wrap items-center gap-4 pt-1">
+            <button
+              type="button"
+              onClick={handleResend}
+              disabled={resendCooldown > 0 || resendStatus === 'sending'}
+              className="font-mono text-xs tracking-[0.15em] text-paper-white border border-paper-white/30 px-5 py-3 rounded-full hover:border-ember hover:text-ember transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              {resendCooldown > 0
+                ? `${t.apply.s3ResendCta.toUpperCase()} (${resendCooldown}s)`
+                : t.apply.s3ResendCta.toUpperCase()}
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowChangeEmail((v) => !v)}
+              className="font-mono text-xs tracking-[0.15em] text-paper-white/70 hover:text-ember transition-colors"
+            >
+              {t.apply.s3ChangeEmailCta.toUpperCase()}
+            </button>
+          </div>
+        )}
 
-        <ul className="space-y-4 font-sans text-base text-ash leading-relaxed">
-          <li className="border-l-2 border-ember pl-4">{t.apply.s3Step1}</li>
-          <li className="border-l-2 border-ember pl-4">{t.apply.s3Step2}</li>
-          <li className="border-l-2 border-ember pl-4">{t.apply.s3Step3}</li>
-        </ul>
+        {resendStatus === 'sent' && (
+          <p className="font-mono text-xs text-ember">{t.apply.s3ResendSent}</p>
+        )}
+        {resendCooldown > 0 && resendStatus !== 'sent' && (
+          <p className="font-mono text-[10px] text-ash">{t.apply.s3ResendCooldown}</p>
+        )}
+
+        {showChangeEmail && pendingToken && (
+          <form onSubmit={handleChangeEmail} className="flex flex-wrap items-end gap-3 pt-2">
+            <div className="w-64">
+              <Field label={t.apply.s3ChangeEmailLabel}>
+                <Input type="email" value={newEmail} onChange={setNewEmail} required />
+              </Field>
+            </div>
+            <button
+              type="submit"
+              disabled={changeStatus === 'saving'}
+              className="font-mono text-xs tracking-[0.15em] bg-ember text-trail-black px-5 py-3 rounded-full hover:bg-paper-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              {t.apply.s3ChangeEmailSubmit.toUpperCase()}
+            </button>
+          </form>
+        )}
+        {changeStatus === 'error' && (
+          <p className="font-mono text-xs text-ember">{t.apply.s3ChangeEmailError}</p>
+        )}
+
+        <p className="font-sans text-sm text-ash leading-relaxed pt-2">
+          <Link href="/login" className="text-paper-white hover:text-ember transition-colors">
+            {t.apply.s3LoginLink}
+          </Link>
+        </p>
       </div>
 
       <div className="mt-12 flex flex-wrap gap-4">
-        <a
-          href="https://cal.com/bourdon/discovery"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-mono text-xs tracking-[0.2em] bg-ember text-trail-black px-7 py-4 rounded-full hover:bg-paper-white transition-colors"
-        >
-          {t.apply.s3CtaCal.toUpperCase()} ↗
-        </a>
         <Link
           href={homeHref}
           className="font-mono text-xs tracking-[0.2em] text-paper-white border border-paper-white/30 px-7 py-4 rounded-full hover:border-ember hover:text-ember transition-colors"

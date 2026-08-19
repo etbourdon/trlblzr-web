@@ -95,9 +95,11 @@ export type Dict = {
     s2Email: string; s2Whatsapp: string; s2Linkedin: string; s2LinkedinOptional: string;
     s2Rgpd: string; s2Submit: string; s2Submitting: string;
     s3Eyebrow: string; s3Title: string; s3TitleHighlight: string; s3Thanks: string; s3Ref: string;
-    s3Suite: string; s3Body: string; s3Step1: string; s3Step2: string; s3Step3: string;
-    s3CtaCal: string; s3CtaHome: string; s3Contact: string;
+    s3CtaHome: string; s3Contact: string;
     s3EmailCheck: string; s3LoginLink: string;
+    s3EmailSentTo: string; s3ResendCta: string; s3ResendCooldown: string; s3ResendSent: string;
+    s3ChangeEmailCta: string; s3ChangeEmailLabel: string; s3ChangeEmailSubmit: string;
+    s3ChangeEmailError: string; s3ChangeEmailSuccess: string;
     stepIndicator: string;
     s1CategoryLabelDirigeant: string; s1CategoryLabelAthlete: string; s1Continue: string;
     s2Title: string; s2ProfileValueDirigeant: string; s2ProfileValueAthlete: string;
@@ -115,6 +117,11 @@ export type Dict = {
     s2StravaLabel: string; s2OtherLinkLabel: string; s2OtherLinkHint: string;
     s2SectionAbout: string; s2SectionSport: string; s2SectionMotivation: string;
     s2SectionLocation: string; s2SectionLinks: string; s2SectionContact: string;
+  };
+  confirmed: {
+    eyebrow: string; title: string; titleHighlight: string; body: string;
+    suite: string; step1: string; step2: string; step3: string;
+    ctaProfile: string; ctaHome: string;
   };
   login: {
     title: string; lead: string; emailLabel: string; submit: string; submitting: string;
@@ -320,16 +327,19 @@ export const dictionary: Record<Locale, Dict> = {
       s3TitleHighlight: 'en cours.',
       s3Thanks: "Dernière étape : ouvre l'email qu'on vient de t'envoyer et clique sur le bouton pour finaliser ta candidature.",
       s3Ref: 'Référence —',
-      s3Suite: 'Voici la suite',
-      s3Body: "Etienne va personnellement étudier ta candidature. Toutes les soumissions passent par une revue manuelle — c'est ce qui garde le club exigeant.",
-      s3Step1: "Revue de ta candidature (48–72 h). On évalue le profil et l'alignement avec les sessions à venir.",
-      s3Step2: "Réponse par email. Si éligible, tu recevras un lien direct pour réserver un appel découverte de 30 min avec Etienne, qui finalise l'inscription.",
-      s3Step3: "Sinon, on t'écrit aussi. Si la session ciblée est complète ou si le timing n'est pas le bon, on revient vers toi dès qu'une fenêtre se libère.",
-      s3CtaCal: 'Réserver un appel découverte',
       s3CtaHome: "Retour à l'accueil",
       s3Contact: 'Une question urgente ? Écris-moi à',
-      s3EmailCheck: "On vient de t'envoyer un email pour finaliser ta candidature — vérifie ta boîte mail (et les spams). Rien reçu après quelques minutes ? Assure-toi d'avoir bien orthographié ton adresse, ou connecte-toi directement.",
-      s3LoginLink: 'Se connecter →',
+      s3EmailCheck: 'Vérifie ta boîte mail (et les spams).',
+      s3LoginLink: "Je n'ai pas accès à cet email — se connecter →",
+      s3EmailSentTo: 'Email envoyé à :',
+      s3ResendCta: "Renvoyer l'email",
+      s3ResendCooldown: 'Tu peux renvoyer un email toutes les 60 secondes.',
+      s3ResendSent: 'Email renvoyé.',
+      s3ChangeEmailCta: "Changer d'email",
+      s3ChangeEmailLabel: 'Nouvelle adresse email',
+      s3ChangeEmailSubmit: 'Valider',
+      s3ChangeEmailError: 'Cette adresse ne peut pas être utilisée. Réessaie.',
+      s3ChangeEmailSuccess: 'Email mis à jour — vérifie ta nouvelle boîte mail.',
       stepIndicator: 'ÉTAPE',
       s1CategoryLabelDirigeant: '01 — DIRIGEANT',
       s1CategoryLabelAthlete: '02 — ATHLÈTE',
@@ -377,6 +387,18 @@ export const dictionary: Record<Locale, Dict> = {
       s2SectionLocation: 'Localisation',
       s2SectionLinks: 'Liens (optionnels)',
       s2SectionContact: 'Contact',
+    },
+    confirmed: {
+      eyebrow: 'Candidature',
+      title: 'Candidature',
+      titleHighlight: 'finalisée.',
+      body: 'Ton email est confirmé. Ta candidature est bien enregistrée.',
+      suite: 'Voici la suite',
+      step1: "Revue de ta candidature (48–72 h). On évalue le profil et l'alignement avec les sessions à venir.",
+      step2: "Réponse par email. Si éligible, tu recevras un lien direct pour réserver un appel découverte de 30 min avec Etienne, qui finalise l'inscription.",
+      step3: "Sinon, on t'écrit aussi. Si la session ciblée est complète ou si le timing n'est pas le bon, on revient vers toi dès qu'une fenêtre se libère.",
+      ctaProfile: 'Compléter mon profil',
+      ctaHome: "Retour à l'accueil",
     },
     login: {
       title: 'Connexion.',
@@ -630,16 +652,19 @@ export const dictionary: Record<Locale, Dict> = {
       s3TitleHighlight: 'in progress.',
       s3Thanks: 'Final step: open the email we just sent you and click the button to finish your application.',
       s3Ref: 'Reference —',
-      s3Suite: "Here's what happens next",
-      s3Body: "Etienne will personally review your application. Every submission goes through a manual review — that's what keeps the club exacting.",
-      s3Step1: 'Application review (48–72 h). We assess the profile and the fit with upcoming sessions.',
-      s3Step2: "Email response. If eligible, you'll get a direct link to book a 30-min discovery call with Etienne, who finalizes your registration.",
-      s3Step3: "If not, we still write back. If the targeted session is full or the timing is off, we'll come back as soon as a window opens.",
-      s3CtaCal: 'Book a discovery call',
       s3CtaHome: 'Back to homepage',
       s3Contact: 'Urgent? Write to me at',
-      s3EmailCheck: "We just sent you an email to finish your application — check your inbox (and spam). Nothing after a few minutes? Make sure you spelled your address correctly, or log in directly.",
-      s3LoginLink: 'Log in →',
+      s3EmailCheck: 'Check your inbox (and spam).',
+      s3LoginLink: "I don't have access to this email — log in →",
+      s3EmailSentTo: 'Email sent to:',
+      s3ResendCta: 'Resend email',
+      s3ResendCooldown: 'You can resend an email once every 60 seconds.',
+      s3ResendSent: 'Email resent.',
+      s3ChangeEmailCta: 'Change email',
+      s3ChangeEmailLabel: 'New email address',
+      s3ChangeEmailSubmit: 'Confirm',
+      s3ChangeEmailError: "This address can't be used. Try another one.",
+      s3ChangeEmailSuccess: 'Email updated — check your new inbox.',
       stepIndicator: 'STEP',
       s1CategoryLabelDirigeant: '01 — LEADER',
       s1CategoryLabelAthlete: '02 — ATHLETE',
@@ -687,6 +712,18 @@ export const dictionary: Record<Locale, Dict> = {
       s2SectionLocation: 'Location',
       s2SectionLinks: 'Links (optional)',
       s2SectionContact: 'Contact',
+    },
+    confirmed: {
+      eyebrow: 'Application',
+      title: 'Application',
+      titleHighlight: 'confirmed.',
+      body: 'Your email is confirmed. Your application is submitted.',
+      suite: "Here's what happens next",
+      step1: 'Application review (48–72 h). We assess the profile and the fit with upcoming sessions.',
+      step2: "Email response. If eligible, you'll get a direct link to book a 30-min discovery call with Etienne, who finalizes your registration.",
+      step3: "If not, we still write back. If the targeted session is full or the timing is off, we'll come back as soon as a window opens.",
+      ctaProfile: 'Complete my profile',
+      ctaHome: 'Back to homepage',
     },
     login: {
       title: 'Log in.',

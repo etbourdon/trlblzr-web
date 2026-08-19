@@ -45,7 +45,11 @@ export async function GET(req: NextRequest) {
     SESSION_TTL_SECONDS,
   );
 
-  const res = NextResponse.redirect(`${origin}${next || '/refuge'}`);
+  // SBL-26 follow-up — a first-time verify (from /apply) lands on a dedicated confirmation
+  // screen (review-process explanation, no premature discovery-call CTA); a returning login
+  // keeps going straight to /refuge as before. `next` still wins in either case.
+  const defaultDestination = payload.purpose === 'verify' ? '/apply/confirmed' : '/refuge';
+  const res = NextResponse.redirect(`${origin}${next || defaultDestination}`);
   res.cookies.set(SESSION_COOKIE_NAME, sessionToken, {
     httpOnly: true,
     secure: true,

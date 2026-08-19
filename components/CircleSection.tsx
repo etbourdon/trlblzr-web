@@ -7,9 +7,8 @@ import { upcomingSessions } from '@/lib/content';
 export default function CircleSection() {
   const { t } = useLocale();
 
-  // Mapping slug → clés i18n. Saison automne 2026 (5 sessions chronologiques).
+  // Mapping slug → clés i18n. Saison automne 2026 (france-2026-09 annulée, retirée).
   const labels: Record<string, { date: string; theme: string; place: string; body: string; number: string; isTbd?: boolean }> = {
-    'france-2026-09': { date: t.sessions.septDate, theme: t.sessions.septTheme, place: t.sessions.septPlace, body: t.sessions.septBody, number: '0007' },
     'france-2026-10': { date: t.sessions.octDate, theme: t.sessions.octTheme, place: t.sessions.octPlace, body: t.sessions.octBody, number: '0008' },
     'grand-canyon-2026-10': { date: t.sessions.grandCanyonDate, theme: t.sessions.grandCanyonTheme, place: t.sessions.grandCanyonPlace, body: t.sessions.grandCanyonBody, number: '0009' },
     'maroc-2026-11': { date: t.sessions.marocDate, theme: t.sessions.marocTheme, place: t.sessions.marocPlace, body: t.sessions.marocBody, number: '0010' },

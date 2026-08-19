@@ -38,8 +38,7 @@ export type Dict = {
     clubHeading: string;
   };
   sessions: {
-    // Saison automne 2026 — 5 sessions chronologiques
-    septDate: string; septPlace: string; septTheme: string; septBody: string;
+    // Saison automne 2026 — sessions chronologiques (france-2026-09 annulée, retirée)
     octDate: string; octPlace: string; octTheme: string; octBody: string;
     grandCanyonDate: string; grandCanyonPlace: string; grandCanyonTheme: string; grandCanyonBody: string;
     marocDate: string; marocPlace: string; marocTheme: string; marocBody: string;
@@ -202,10 +201,6 @@ export const dictionary: Record<Locale, Dict> = {
     },
     sessions: {
       // Saison automne 2026
-      septDate: '11 — 13 septembre 2026',
-      septPlace: 'France',
-      septTheme: 'TRLBLZR WE',
-      septBody: "La rentrée pour repartir fort. Trois jours, un corps durable, une saison qui dure. Tes prochains défis commencent ici, sur les sentiers comme dans tes projets.",
       octDate: '2 — 4 octobre 2026',
       octPlace: 'France',
       octTheme: 'TRLBLZR WE',
@@ -214,10 +209,10 @@ export const dictionary: Record<Locale, Dict> = {
       grandCanyonPlace: 'Grand Canyon, États-Unis',
       grandCanyonTheme: 'RIM to RIM to RIM',
       grandCanyonBody: "67 km de légende au cœur du Grand Canyon. Des milliers de mètres de dénivelé, des paysages à couper le souffle. Trois jours pour sortir du cadre et repousser tes limites avec d'autres entrepreneurs.",
-      marocDate: '12 — 15 novembre 2026',
-      marocPlace: 'Maroc',
-      marocTheme: 'Trail & Business',
-      marocBody: "Quatre jours pour prendre le temps. Plus de kilomètres, plus d'échanges, plus de profondeur. Sentiers marocains, soleil de novembre, business. Une parenthèse pour avancer en courant.",
+      marocDate: '6 — 8 novembre 2026',
+      marocPlace: 'France',
+      marocTheme: 'TRLBLZR WE',
+      marocBody: "Trois jours pour clôturer la saison fort. Un corps durable, des sentiers d'automne, des échanges profonds. Tes prochains défis se préparent ici, sur les sentiers comme dans tes projets.",
       novDate: '20 — 22 novembre 2026',
       novPlace: 'France',
       novTheme: 'TRLBLZR WE',
@@ -516,10 +511,6 @@ export const dictionary: Record<Locale, Dict> = {
     },
     sessions: {
       // Fall 2026 season
-      septDate: 'September 11 — 13, 2026',
-      septPlace: 'France',
-      septTheme: 'TRLBLZR WE',
-      septBody: "Back to school, back to strong. Three days, a durable body, a season that lasts. Your next challenges start here, on the trails and in your projects.",
       octDate: 'October 2 — 4, 2026',
       octPlace: 'France',
       octTheme: 'TRLBLZR WE',
@@ -528,10 +519,10 @@ export const dictionary: Record<Locale, Dict> = {
       grandCanyonPlace: 'Grand Canyon, USA',
       grandCanyonTheme: 'RIM to RIM to RIM',
       grandCanyonBody: "67 km of legend through the Grand Canyon. Thousands of meters of elevation, breathtaking landscapes. Three days to step out of the frame and push your limits with fellow entrepreneurs.",
-      marocDate: 'November 12 — 15, 2026',
-      marocPlace: 'Morocco',
-      marocTheme: 'Trail & Business',
-      marocBody: "Four days to take your time. More kilometers, more exchanges, more depth. Moroccan trails, November sun, business. A break to move forward while running.",
+      marocDate: 'November 6 — 8, 2026',
+      marocPlace: 'France',
+      marocTheme: 'TRLBLZR WE',
+      marocBody: "Three days to close the season strong. A durable body, autumn trails, deeper conversations. Your next challenges start here, on the trails and in your projects.",
       novDate: 'November 20 — 22, 2026',
       novPlace: 'France',
       novTheme: 'TRLBLZR WE',

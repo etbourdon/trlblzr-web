@@ -22,16 +22,6 @@ export type Session = {
 // de lib/i18n.ts (bilingue FR/EN) via components/CircleSection.tsx qui mappe slug → clés i18n.
 export const upcomingSessions: Session[] = [
   {
-    slug: 'france-2026-09',
-    number: '0007',
-    location: 'FRANCE',
-    dates: '11 — 13 SEPTEMBRE 2026',
-    theme: 'À RÉVÉLER',
-    status: 'upcoming',
-    intro: 'Rentrée — bases solides et récupération.',
-    imageSrc: '/sessions/france-2026-09.jpg',
-  },
-  {
     slug: 'france-2026-10',
     number: '0008',
     location: 'FRANCE',
@@ -54,12 +44,12 @@ export const upcomingSessions: Session[] = [
   {
     slug: 'maroc-2026-11',
     number: '0010',
-    location: 'MAROC',
-    dates: '12 — 15 NOVEMBRE 2026',
-    theme: 'TRAIL & BUSINESS',
+    location: 'FRANCE',
+    dates: '06 — 08 NOVEMBRE 2026',
+    theme: 'TRLBLZR WE',
     status: 'upcoming',
-    intro: 'Format long — 4 jours. Effort, réflexion, connexions.',
-    imageSrc: '/sessions/maroc-2026-11.jpg',
+    intro: 'Clôture de saison — corps durable, sentiers d’automne.',
+    imageSrc: '/sessions/france-2026-09.jpg',
   },
   {
     slug: 'france-2026-11',

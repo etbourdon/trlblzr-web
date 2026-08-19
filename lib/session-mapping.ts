@@ -1,18 +1,17 @@
-// Shared slug <-> Notion label mapping for the Session multi-select — used by /api/apply
-// (write) and /api/profile (read + write), so a candidate's session interest can be edited
-// later from /profile using the same slugs the /apply checkboxes use.
-//
-// Mapping slug → libellé Notion (doit EXACTEMENT matcher les options Multi-select de la colonne
-// Session). Slugs actifs : saison automne 2026 (5 sessions chronologiques depuis lib/content.ts).
-// Legacy slugs conservés pour compat backwards (liens externes historiques).
+// Slug → libellé lisible, utilisé uniquement pour le texte de l'email de notification admin
+// (lib/apply-notification.ts) — depuis SBL-19, l'écriture Notion se fait via la relation
+// "Sessions" (voir SESSION_PAGE_IDS ci-dessous), plus via ce multi-select de libellés texte, donc
+// ces valeurs n'ont plus besoin de matcher une option Notion exacte. Maintenu à la main en même
+// temps que lib/content.ts et SESSION_PAGE_IDS à chaque sync manuelle depuis la base Sessions.
+// Legacy slugs conservés pour compat backwards (liens externes historiques ou sessions annulées).
 export const SESSION_LABELS: Record<string, string> = {
   // Saison automne 2026 (actives)
-  'france-2026-09': 'France — 11-13 septembre 2026',
   'france-2026-10': 'France — 2-4 octobre 2026',
   'grand-canyon-2026-10': 'Grand Canyon — 8-11 octobre 2026 · RIM to RIM to RIM',
-  'maroc-2026-11': 'Maroc — 12-15 novembre 2026 · Trail & Business',
+  'maroc-2026-11': 'France — 6-8 novembre 2026', // slug conservé tel quel malgré le contenu changé (opaque, cf. SBL-19)
   'france-2026-11': 'France — 20-22 novembre 2026',
   // Legacy — mappent tous vers "Sans session ciblée" (sessions non-existantes ou annulées)
+  'france-2026-09': '— Sans session ciblée —',
   'annecy-mai-2026': '— Sans session ciblée —',
   'vercors-juillet-2026': '— Sans session ciblée —',
   'vercors-2026-07': '— Sans session ciblée —',
@@ -37,7 +36,6 @@ export function mapSlugsToSessionLabels(slugs: string[] | undefined): string[] {
 // Sessions n'est pas fetchée dynamiquement par le site, ces IDs sont mis à jour ici quand une
 // session est ajoutée/retirée côté Notion.
 export const SESSION_PAGE_IDS: Record<string, string> = {
-  'france-2026-09': '469e8127-ce05-4049-bd41-ba670c0dd892',
   'france-2026-10': '742ee5c5-53d7-440e-855b-6e98dbb55cbd',
   'grand-canyon-2026-10': '80b72385-9d05-47c3-8d9b-a425e52a3ab3',
   'maroc-2026-11': 'bb32c309-0676-4bce-9338-68561a697a82',

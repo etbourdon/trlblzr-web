@@ -534,17 +534,6 @@ function StepInfos({
   );
 }
 
-// SBL-26 follow-up — "kar***@***.fr" style masking, just enough for the candidate to recognize
-// their own address without fully exposing it on screen.
-function maskEmail(email: string): string {
-  const at = email.indexOf('@');
-  if (at < 1) return email;
-  const user = email.slice(0, at);
-  const domain = email.slice(at + 1);
-  const tld = domain.split('.').pop() || domain;
-  return `${user.slice(0, 3)}***@***.${tld}`;
-}
-
 function StepConfirmation({
   reference,
   firstname,
@@ -616,14 +605,10 @@ function StepConfirmation({
   return (
     <section>
       <h1 className="font-display font-bold text-4xl md:text-6xl tracking-tight leading-[0.95] text-paper-white uppercase">
-        {t.apply.s3Title} {t.apply.s3TitleHighlight}
+        {t.apply.s3Title}
       </h1>
-      <p className="mt-6 font-sans text-base md:text-lg text-ash leading-relaxed">
-        {firstname ? `${firstname}, ` : ''}
-        {t.apply.s3Thanks}
-      </p>
 
-      <div className="mt-12 inline-flex items-center gap-3 border border-ember/40 bg-stone px-6 py-4 rounded">
+      <div className="mt-6 inline-flex items-center gap-3 border border-ember/40 bg-stone px-6 py-4 rounded">
         <span className="font-display font-bold text-2xl text-ember">✓</span>
         <div>
           <p className="font-mono text-[10px] tracking-[0.25em] text-ash">
@@ -633,15 +618,21 @@ function StepConfirmation({
         </div>
       </div>
 
-      <div className="mt-8 max-w-3xl space-y-3">
-        <p className="font-sans text-sm text-ash leading-relaxed">{t.apply.s3EmailCheck}</p>
-        <p className="font-mono text-xs text-paper-white/80">
-          {t.apply.s3EmailSentTo}{' '}
-          <span className="text-paper-white">{maskEmail(currentEmail)}</span>
-        </p>
+      <p className="mt-10 max-w-xl font-sans text-lg md:text-xl text-paper-white leading-relaxed">
+        {firstname ? `${firstname}, ` : ''}
+        {t.apply.s3Thanks}
+      </p>
+
+      <div className="mt-6 max-w-md border border-stone rounded-lg p-6 space-y-4">
+        <div>
+          <p className="font-sans text-sm text-ash leading-relaxed">{t.apply.s3EmailCheck}</p>
+          <p className="mt-2 font-mono text-xs text-paper-white/80">
+            {t.apply.s3EmailSentTo} <span className="text-paper-white">{currentEmail}</span>
+          </p>
+        </div>
 
         {pendingToken && (
-          <div className="flex flex-wrap items-center gap-4 pt-1">
+          <div className="flex flex-wrap items-center gap-3">
             <button
               type="button"
               onClick={handleResend}
@@ -655,7 +646,7 @@ function StepConfirmation({
             <button
               type="button"
               onClick={() => setShowChangeEmail((v) => !v)}
-              className="font-mono text-xs tracking-[0.15em] text-paper-white/70 hover:text-ember transition-colors"
+              className="font-mono text-xs tracking-[0.15em] text-paper-white border border-paper-white/30 px-5 py-3 rounded-full hover:border-ember hover:text-ember transition-colors"
             >
               {t.apply.s3ChangeEmailCta.toUpperCase()}
             </button>
@@ -670,8 +661,8 @@ function StepConfirmation({
         )}
 
         {showChangeEmail && pendingToken && (
-          <form onSubmit={handleChangeEmail} className="flex flex-wrap items-end gap-3 pt-2">
-            <div className="w-64">
+          <form onSubmit={handleChangeEmail} className="flex flex-wrap items-end gap-3">
+            <div className="w-56">
               <Field label={t.apply.s3ChangeEmailLabel}>
                 <Input type="email" value={newEmail} onChange={setNewEmail} required />
               </Field>
@@ -689,8 +680,8 @@ function StepConfirmation({
           <p className="font-mono text-xs text-ember">{t.apply.s3ChangeEmailError}</p>
         )}
 
-        <p className="font-sans text-sm text-ash leading-relaxed pt-2">
-          <Link href="/login" className="text-paper-white hover:text-ember transition-colors">
+        <p className="font-mono text-[11px] text-ash/70 pt-3 border-t border-stone">
+          <Link href="/login" className="hover:text-ember transition-colors">
             {t.apply.s3LoginLink}
           </Link>
         </p>

@@ -93,7 +93,7 @@ export type Dict = {
     s2Itra: string; s2ItraHint: string; s2Utmb: string; s2UtmbHint: string;
     s2Email: string; s2Whatsapp: string; s2Linkedin: string; s2LinkedinOptional: string;
     s2Rgpd: string; s2Submit: string; s2Submitting: string;
-    s3Title: string; s3TitleHighlight: string; s3Thanks: string; s3Ref: string;
+    s3Title: string; s3Thanks: string; s3Ref: string;
     s3CtaHome: string; s3Contact: string;
     s3EmailCheck: string; s3LoginLink: string;
     s3EmailSentTo: string; s3ResendCta: string; s3ResendCooldown: string; s3ResendSent: string;
@@ -325,7 +325,6 @@ export const dictionary: Record<Locale, Dict> = {
       s2Submit: 'Soumettre ma candidature',
       s2Submitting: 'Envoi en cours…',
       s3Title: 'Candidature',
-      s3TitleHighlight: 'en cours.',
       s3Thanks: "Dernière étape : ouvre l'email qu'on vient de t'envoyer et clique sur le bouton pour finaliser ta candidature.",
       s3Ref: 'Référence —',
       s3CtaHome: "Retour à l'accueil",
@@ -655,7 +654,6 @@ export const dictionary: Record<Locale, Dict> = {
       s2Submit: 'Submit my application',
       s2Submitting: 'Sending…',
       s3Title: 'Application',
-      s3TitleHighlight: 'in progress.',
       s3Thanks: 'Final step: open the email we just sent you and click the button to finish your application.',
       s3Ref: 'Reference —',
       s3CtaHome: 'Back to homepage',

@@ -113,10 +113,6 @@ export default function ProfilePage() {
   const [downloadingCard, setDownloadingCard] = useState(false);
   const [suspending, setSuspending] = useState(false);
   const [suspendError, setSuspendError] = useState<string | null>(null);
-  // Session-only undo/redo across regenerations — not persisted, just lets the member flip back
-  // to an earlier AI proposition instead of losing it the moment they hit "regenerate" again.
-  const [cardHistory, setCardHistory] = useState<{ bio: string; lookingFor: string }[]>([]);
-  const [cardHistoryIndex, setCardHistoryIndex] = useState(-1);
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -156,10 +152,6 @@ export default function ProfilePage() {
         setItra(c.itra || '');
         setCardBio(c.cardBio || '');
         setCardLookingFor(c.cardLookingFor || '');
-        if (c.cardBio || c.cardLookingFor) {
-          setCardHistory([{ bio: c.cardBio || '', lookingFor: c.cardLookingFor || '' }]);
-          setCardHistoryIndex(0);
-        }
         setCardConsent(Boolean(c.cardConsent));
         setCardStatus(c.cardStatus || null);
         setCardDeleteAfter(c.cardDeleteAfter || null);
@@ -281,36 +273,11 @@ export default function ProfilePage() {
       if (!res.ok || !result.ok) throw new Error(result.error || 'Generation failed');
       setCardBio(result.bio);
       setCardLookingFor(result.lookingFor);
-      // Regenerating after navigating back into history drops any propositions ahead of the
-      // current one — same "new branch" behavior as a normal undo/redo stack.
-      setCardHistory((prev) => [
-        ...prev.slice(0, cardHistoryIndex + 1),
-        { bio: result.bio, lookingFor: result.lookingFor },
-      ]);
-      setCardHistoryIndex(cardHistoryIndex + 1);
     } catch {
       setGenerateError(t.card.generateErrorMessage);
     } finally {
       setGenerating(false);
     }
-  };
-
-  const handlePrevCardVersion = () => {
-    if (cardHistoryIndex <= 0) return;
-    const idx = cardHistoryIndex - 1;
-    setCardHistoryIndex(idx);
-    setCardBio(cardHistory[idx].bio);
-    setCardLookingFor(cardHistory[idx].lookingFor);
-    setCardStatus(null);
-  };
-
-  const handleNextCardVersion = () => {
-    if (cardHistoryIndex >= cardHistory.length - 1) return;
-    const idx = cardHistoryIndex + 1;
-    setCardHistoryIndex(idx);
-    setCardBio(cardHistory[idx].bio);
-    setCardLookingFor(cardHistory[idx].lookingFor);
-    setCardStatus(null);
   };
 
   const captureCardBlob = async (): Promise<Blob | null> => {
@@ -461,6 +428,40 @@ export default function ProfilePage() {
                     className="h-full bg-ember transition-all"
                     style={{ width: `${completion}%` }}
                   />
+                </div>
+              </div>
+
+              <div className="mt-10 pt-8 border-t border-stone">
+                <h2 className="font-display font-bold text-lg tracking-tight text-paper-white uppercase mb-4">
+                  {t.card.previewTitle}
+                </h2>
+                <div className="flex justify-center">
+                  <MemberCard
+                    photoUrl={form.profilePictureUrl}
+                    memberNo={memberNo}
+                    name={form.name || '—'}
+                    metaLine={metaLine}
+                    bio={cardBio}
+                    lookingFor={cardLookingFor}
+                    sportLevel={sportLevelNumber}
+                    itra={itra}
+                    linkedin={form.linkedin}
+                    stravaProfile={form.stravaProfile}
+                    proWebsite={form.proWebsite}
+                    whatsapp={form.whatsapp}
+                    weParticipationCount={weParticipationCount}
+                  />
+                </div>
+                <div className="mt-4 text-center">
+                  {!cardBio && !cardLookingFor && (
+                    <p className="font-mono text-xs text-ash">{t.card.previewIncomplete}</p>
+                  )}
+                  <a
+                    href="#member-card-edit"
+                    className="inline-block mt-2 font-mono text-xs tracking-[0.2em] text-ember hover:text-paper-white transition-colors"
+                  >
+                    {t.card.previewCta.toUpperCase()}
+                  </a>
                 </div>
               </div>
 
@@ -658,7 +659,7 @@ export default function ProfilePage() {
                 </div>
               </form>
 
-              <div className="mt-16 pt-10 border-t border-stone">
+              <div id="member-card-edit" className="mt-16 pt-10 border-t border-stone">
                 <h2 className="font-display font-bold text-2xl tracking-tight text-paper-white uppercase mb-6">
                   {t.card.sectionLabel}
                 </h2>
@@ -686,40 +687,17 @@ export default function ProfilePage() {
 
                   <div className="w-full space-y-6">
                     <div className="flex flex-wrap items-center gap-4">
-                      <button
-                        type="button"
-                        onClick={handleGenerateCard}
-                        disabled={generating}
-                        className="font-mono text-xs tracking-[0.2em] bg-ember text-trail-black px-7 py-4 rounded-full hover:bg-paper-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                      >
-                        {generating
-                          ? t.card.generatingLabel.toUpperCase()
-                          : (cardBio ? t.card.regenerateLabel : t.card.generateLabel).toUpperCase()}
-                      </button>
-                      {cardHistory.length > 1 && (
-                        <div className="flex items-center gap-2 text-ash">
-                          <button
-                            type="button"
-                            onClick={handlePrevCardVersion}
-                            disabled={cardHistoryIndex <= 0}
-                            aria-label={t.card.previousVersionLabel}
-                            className="text-lg leading-none disabled:opacity-30 hover:text-ember transition-colors disabled:hover:text-ash"
-                          >
-                            ‹
-                          </button>
-                          <span className="font-mono text-[10px] tracking-wider">
-                            {cardHistoryIndex + 1}/{cardHistory.length}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={handleNextCardVersion}
-                            disabled={cardHistoryIndex >= cardHistory.length - 1}
-                            aria-label={t.card.nextVersionLabel}
-                            className="text-lg leading-none disabled:opacity-30 hover:text-ember transition-colors disabled:hover:text-ash"
-                          >
-                            ›
-                          </button>
-                        </div>
+                      {!cardBio && !cardLookingFor && (
+                        <button
+                          type="button"
+                          onClick={handleGenerateCard}
+                          disabled={generating}
+                          className="font-mono text-xs tracking-[0.2em] bg-ember text-trail-black px-7 py-4 rounded-full hover:bg-paper-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                        >
+                          {generating
+                            ? t.card.generatingLabel.toUpperCase()
+                            : t.card.generateLabel.toUpperCase()}
+                        </button>
                       )}
                       {(cardBio || cardLookingFor) && (
                         <button

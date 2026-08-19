@@ -13,10 +13,10 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { buildNotificationEmail } from '@/lib/apply-notification';
-import { buildVerifyEmail } from '@/lib/verify-notification';
+import { buildVerifyEmail, buildLoginEmail } from '@/lib/verify-notification';
 import { sendEmail } from '@/lib/resend';
-import { createCandidatePage, txt } from '@/lib/notion-candidates';
-import { createToken, VERIFY_LINK_TTL_SECONDS } from '@/lib/auth';
+import { createCandidatePage, findCandidateByEmail, txt } from '@/lib/notion-candidates';
+import { createToken, VERIFY_LINK_TTL_SECONDS, LOGIN_LINK_TTL_SECONDS } from '@/lib/auth';
 import { SPORT_LEVEL_LABELS, CITY_OPTIONS } from '@/lib/field-options';
 import { mapSlugsToSessionLabels, mapSlugsToSessionRelations } from '@/lib/session-mapping';
 
@@ -109,11 +109,39 @@ export async function POST(req: NextRequest) {
 
   const fullName = `${data.firstname} ${data.lastname}`.trim();
 
-  const sessionLabels = mapSlugsToSessionLabels(data.sessions);
-  const isAthlete = data.category === 'athlete';
-
   // Preferred language (Batch 2) — FR par défaut si non fournie ou valeur invalide
   const preferredLang: 'FR' | 'EN' = data.locale === 'en' ? 'EN' : 'FR';
+
+  // SBL-26 point 5 — un email qui a déjà une fiche Candidates ne doit jamais créer de doublon.
+  // Même logique anti-énumération que /api/auth/request-link : réponse générique identique dans
+  // les deux cas, seul un email de connexion part à la place d'un email de finalisation.
+  try {
+    const existing = await findCandidateByEmail(data.email);
+    if (existing) {
+      const token = createToken(
+        { candidateId: existing.id, email: data.email, purpose: 'login' },
+        LOGIN_LINK_TTL_SECONDS,
+      );
+      const loginUrl = `${req.nextUrl.origin}/api/auth/verify?token=${encodeURIComponent(token)}`;
+      const { subject, html } = buildLoginEmail({
+        firstname: existing.name?.split(' ')[0] || data.firstname!,
+        loginUrl,
+        locale: existing.preferredLanguage || preferredLang,
+      });
+      await sendEmail({ to: data.email, subject, html });
+      return NextResponse.json({
+        ok: true,
+        reference: `TRLBLZR-${new Date().getFullYear()}-${String(
+          Math.floor(Math.random() * 9000) + 1000,
+        )}`,
+      });
+    }
+  } catch (err) {
+    console.error('Duplicate-email check failed, proceeding with normal application', err);
+  }
+
+  const sessionLabels = mapSlugsToSessionLabels(data.sessions);
+  const isAthlete = data.category === 'athlete';
 
   // Sport level (Batch 3) — numeric value → Notion SELECT label
   const sportLevelLabel = data.sportLevel ? SPORT_LEVEL_LABELS[data.sportLevel] : null;

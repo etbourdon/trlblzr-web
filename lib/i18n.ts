@@ -131,14 +131,15 @@ export type Dict = {
     completionLabel: string; nameLabel: string;
   };
   card: {
-    sectionLabel: string; generateLabel: string; regenerateLabel: string; generatingLabel: string;
+    sectionLabel: string; generateLabel: string; generatingLabel: string;
     generateErrorMessage: string; bioFieldLabel: string; lookingForFieldLabel: string;
     consentLabel: string; submitLabel: string; submittingLabel: string; submitErrorMessage: string;
     submittedMessage: string; needsGenerationMessage: string;
     downloadLabel: string; downloadingLabel: string; validatedMessage: string;
     suspendLabel: string; suspendingLabel: string; suspendConfirm: string; suspendErrorMessage: string;
     suspendedMessage: string; reactivateLabel: string; reactivatingLabel: string;
-    reactivateErrorMessage: string; previousVersionLabel: string; nextVersionLabel: string;
+    reactivateErrorMessage: string;
+    previewTitle: string; previewIncomplete: string; previewCta: string;
   };
   directory: {
     title: string;
@@ -316,8 +317,8 @@ export const dictionary: Record<Locale, Dict> = {
       s2Submitting: 'Envoi en cours…',
       s3Eyebrow: 'Postuler / Étape 3 sur 3',
       s3Title: 'Candidature',
-      s3TitleHighlight: 'reçue.',
-      s3Thanks: 'On revient vers toi sous 48 à 72 heures avec une réponse personnalisée.',
+      s3TitleHighlight: 'en cours.',
+      s3Thanks: "Dernière étape : ouvre l'email qu'on vient de t'envoyer et clique sur le bouton pour finaliser ta candidature.",
       s3Ref: 'Référence —',
       s3Suite: 'Voici la suite',
       s3Body: "Etienne va personnellement étudier ta candidature. Toutes les soumissions passent par une revue manuelle — c'est ce qui garde le club exigeant.",
@@ -327,7 +328,7 @@ export const dictionary: Record<Locale, Dict> = {
       s3CtaCal: 'Réserver un appel découverte',
       s3CtaHome: "Retour à l'accueil",
       s3Contact: 'Une question urgente ? Écris-moi à',
-      s3EmailCheck: "On vient aussi de t'envoyer un email de confirmation — vérifie ta boîte mail (et les spams). Rien reçu après quelques minutes ? Assure-toi d'avoir bien orthographié ton adresse, ou connecte-toi directement.",
+      s3EmailCheck: "On vient de t'envoyer un email pour finaliser ta candidature — vérifie ta boîte mail (et les spams). Rien reçu après quelques minutes ? Assure-toi d'avoir bien orthographié ton adresse, ou connecte-toi directement.",
       s3LoginLink: 'Se connecter →',
       stepIndicator: 'ÉTAPE',
       s1CategoryLabelDirigeant: '01 — DIRIGEANT',
@@ -420,7 +421,6 @@ export const dictionary: Record<Locale, Dict> = {
     card: {
       sectionLabel: 'Ta Member Card',
       generateLabel: 'Générer ma card',
-      regenerateLabel: 'Régénérer',
       generatingLabel: 'Génération…',
       generateErrorMessage: "Échec de la génération. Réessaie dans un instant.",
       bioFieldLabel: 'Bio (modifiable)',
@@ -442,8 +442,9 @@ export const dictionary: Record<Locale, Dict> = {
       reactivateLabel: 'Réactiver ma card',
       reactivatingLabel: 'Réactivation…',
       reactivateErrorMessage: 'Échec de la réactivation. Réessaie dans un instant.',
-      previousVersionLabel: 'Proposition précédente',
-      nextVersionLabel: 'Proposition suivante',
+      previewTitle: 'Ta Member Card',
+      previewIncomplete: "Ta carte n'est pas encore complète — complète ton profil pour la générer.",
+      previewCta: 'Compléter ma carte →',
     },
     directory: {
       title: 'Annuaire des membres',
@@ -626,8 +627,8 @@ export const dictionary: Record<Locale, Dict> = {
       s2Submitting: 'Sending…',
       s3Eyebrow: 'Apply / Step 3 of 3',
       s3Title: 'Application',
-      s3TitleHighlight: 'received.',
-      s3Thanks: 'We get back to you within 48–72 hours with a personal reply.',
+      s3TitleHighlight: 'in progress.',
+      s3Thanks: 'Final step: open the email we just sent you and click the button to finish your application.',
       s3Ref: 'Reference —',
       s3Suite: "Here's what happens next",
       s3Body: "Etienne will personally review your application. Every submission goes through a manual review — that's what keeps the club exacting.",
@@ -637,7 +638,7 @@ export const dictionary: Record<Locale, Dict> = {
       s3CtaCal: 'Book a discovery call',
       s3CtaHome: 'Back to homepage',
       s3Contact: 'Urgent? Write to me at',
-      s3EmailCheck: "We also just sent you a confirmation email — check your inbox (and spam). Nothing after a few minutes? Make sure you spelled your address correctly, or log in directly.",
+      s3EmailCheck: "We just sent you an email to finish your application — check your inbox (and spam). Nothing after a few minutes? Make sure you spelled your address correctly, or log in directly.",
       s3LoginLink: 'Log in →',
       stepIndicator: 'STEP',
       s1CategoryLabelDirigeant: '01 — LEADER',
@@ -730,7 +731,6 @@ export const dictionary: Record<Locale, Dict> = {
     card: {
       sectionLabel: 'Your Member Card',
       generateLabel: 'Generate my card',
-      regenerateLabel: 'Regenerate',
       generatingLabel: 'Generating…',
       generateErrorMessage: 'Generation failed. Try again in a moment.',
       bioFieldLabel: 'Bio (editable)',
@@ -752,8 +752,9 @@ export const dictionary: Record<Locale, Dict> = {
       reactivateLabel: 'Reactivate my card',
       reactivatingLabel: 'Reactivating…',
       reactivateErrorMessage: 'Reactivation failed. Try again in a moment.',
-      previousVersionLabel: 'Previous proposition',
-      nextVersionLabel: 'Next proposition',
+      previewTitle: 'Your Member Card',
+      previewIncomplete: "Your card isn't complete yet — finish your profile to generate it.",
+      previewCta: 'Complete my card →',
     },
     directory: {
       title: 'Member directory',

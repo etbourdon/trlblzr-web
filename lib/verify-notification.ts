@@ -22,21 +22,21 @@ export function buildVerifyEmail({
 }): { subject: string; html: string } {
   if (locale === 'EN') {
     return {
-      subject: 'Confirm your email — TRLBLZR.run',
+      subject: 'Finish your application — TRLBLZR.run',
       html: wrap(`
         <h2>Hey ${escapeHtml(firstname)},</h2>
-        <p>Thanks for applying to TRLBLZR.run. Confirm your email address — it'll let you manage your profile later on.</p>
-        ${button(verifyUrl, 'Confirm my email')}
+        <p>Thanks for applying to TRLBLZR.run. Final step — click below to verify your email and finish your application.</p>
+        ${button(verifyUrl, 'Finish my application')}
         <p style="color:#888;font-size:12px;">This link expires in 20 minutes. Didn't apply on TRLBLZR.run? You can ignore this email.</p>
       `),
     };
   }
   return {
-    subject: 'Confirme ton email — TRLBLZR.run',
+    subject: 'Finalise ta candidature — TRLBLZR.run',
     html: wrap(`
       <h2>Salut ${escapeHtml(firstname)},</h2>
-      <p>Merci pour ta candidature sur TRLBLZR.run. Confirme ton adresse email — ça te permettra de gérer ton profil plus tard.</p>
-      ${button(verifyUrl, 'Confirmer mon email')}
+      <p>Merci pour ta candidature sur TRLBLZR.run. Dernière étape — clique pour valider ton email et finaliser ta candidature.</p>
+      ${button(verifyUrl, 'Finaliser ma candidature')}
       <p style="color:#888;font-size:12px;">Ce lien expire dans 20 minutes. Tu n'as pas postulé sur TRLBLZR.run ? Ignore cet email.</p>
     `),
   };

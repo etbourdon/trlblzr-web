@@ -18,7 +18,7 @@ import { sendEmail } from '@/lib/resend';
 import { createCandidatePage, txt } from '@/lib/notion-candidates';
 import { createToken, VERIFY_LINK_TTL_SECONDS } from '@/lib/auth';
 import { SPORT_LEVEL_LABELS, CITY_OPTIONS } from '@/lib/field-options';
-import { mapSlugsToSessionLabels } from '@/lib/session-mapping';
+import { mapSlugsToSessionLabels, mapSlugsToSessionRelations } from '@/lib/session-mapping';
 
 // Batch 4 — best-effort: la candidature est déjà sauvegardée dans Notion à ce stade,
 // donc un échec d'envoi d'email ne doit jamais faire échouer la réponse au candidat.
@@ -130,7 +130,7 @@ export async function POST(req: NextRequest) {
     WhatsApp: { phone_number: data.whatsapp || null },
     LinkedIn: { url: data.linkedin || null },
     Category: { select: { name: isAthlete ? 'Athlète' : 'Dirigeant' } },
-    Session: { multi_select: sessionLabels.map((name) => ({ name })) },
+    Sessions: { relation: mapSlugsToSessionRelations(data.sessions) },
     Status: { select: { name: 'Nouveau' } },
     'Preferred language': { select: { name: preferredLang } },
     Company: { rich_text: txt(data.company) },

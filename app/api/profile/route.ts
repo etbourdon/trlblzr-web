@@ -14,7 +14,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSessionFromRequest } from '@/lib/auth';
 import { getCandidateById, updateCandidateProperties, txt } from '@/lib/notion-candidates';
 import { SPORT_LEVEL_LABELS, CITY_OPTIONS } from '@/lib/field-options';
-import { mapSlugsToSessionLabels } from '@/lib/session-mapping';
+import { mapSlugsToSessionRelations } from '@/lib/session-mapping';
 
 export async function GET(req: NextRequest) {
   const session = getSessionFromRequest(req);
@@ -95,7 +95,7 @@ export async function PATCH(req: NextRequest) {
       data.sportLevel && SPORT_LEVEL_LABELS[data.sportLevel]
         ? { select: { name: SPORT_LEVEL_LABELS[data.sportLevel] } }
         : { select: null },
-    Session: { multi_select: mapSlugsToSessionLabels(data.sessions).map((name) => ({ name })) },
+    Sessions: { relation: mapSlugsToSessionRelations(data.sessions) },
     'Preferred language': {
       select: { name: data.preferredLanguage === 'EN' ? 'EN' : 'FR' },
     },

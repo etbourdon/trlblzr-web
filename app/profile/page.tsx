@@ -10,7 +10,6 @@ import CityCountryFields from '@/components/CityCountryFields';
 import MemberCard from '@/components/MemberCard';
 import { Field, Input, Textarea, SectionHeader } from '@/components/FormFields';
 import { SPORT_LEVEL_LABELS } from '@/lib/field-options';
-import { mapLabelsToSlugs } from '@/lib/session-mapping';
 import type { Dict } from '@/lib/i18n';
 
 const CODE_BY_SPORT_LABEL: Record<string, string> = Object.fromEntries(
@@ -150,7 +149,7 @@ export default function ProfilePage() {
           lookingFor: c.lookingFor || '',
           motivation: c.motivation || '',
           profilePictureUrl: c.profilePictureUrl || '',
-          sessions: mapLabelsToSlugs(c.sessionLabels),
+          sessions: c.sessionSlugs,
           preferredLanguage: c.preferredLanguage === 'EN' ? 'EN' : 'FR',
         });
         setCategory(c.category || '');

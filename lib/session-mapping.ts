@@ -20,15 +20,6 @@ export const SESSION_LABELS: Record<string, string> = {
   '': '— Sans session ciblée —',
 };
 
-// Reverse lookup (label → slug), used to pre-check /profile's session checkboxes from what's
-// already stored in Notion. Several slugs share the "Sans session ciblée" label — '' is the
-// canonical slug for it (there's no checkbox for "no session", it's just the empty state).
-export const SESSION_SLUG_BY_LABEL: Record<string, string> = {};
-for (const [slug, label] of Object.entries(SESSION_LABELS)) {
-  if (!(label in SESSION_SLUG_BY_LABEL)) SESSION_SLUG_BY_LABEL[label] = slug;
-}
-SESSION_SLUG_BY_LABEL['— Sans session ciblée —'] = '';
-
 export function mapSlugsToSessionLabels(slugs: string[] | undefined): string[] {
   return Array.from(
     new Set(
@@ -39,8 +30,40 @@ export function mapSlugsToSessionLabels(slugs: string[] | undefined): string[] {
   );
 }
 
-export function mapLabelsToSlugs(labels: string[] | undefined): string[] {
-  return (labels || [])
-    .map((label) => SESSION_SLUG_BY_LABEL[label])
+// SBL-19 — slug → ID de page Notion de la session, dans la base "TRLBLZR Sessions". Utilisé pour
+// écrire la relation "Sessions" sur Candidates (remplace le multi-select de libellés texte comme
+// mécanisme d'écriture ; SESSION_LABELS reste utilisé tel quel pour les libellés lisibles de
+// l'email de notification). Maintenu à la main, dans le même esprit que SESSION_LABELS : la base
+// Sessions n'est pas fetchée dynamiquement par le site, ces IDs sont mis à jour ici quand une
+// session est ajoutée/retirée côté Notion.
+export const SESSION_PAGE_IDS: Record<string, string> = {
+  'france-2026-09': '469e8127-ce05-4049-bd41-ba670c0dd892',
+  'france-2026-10': '742ee5c5-53d7-440e-855b-6e98dbb55cbd',
+  'grand-canyon-2026-10': '80b72385-9d05-47c3-8d9b-a425e52a3ab3',
+  'maroc-2026-11': 'bb32c309-0676-4bce-9338-68561a697a82',
+  'france-2026-11': '0144a83f-5e16-4cde-af2d-1b68903bfb14',
+};
+
+// Reverse lookup (page ID → slug), used to pre-check /profile's session checkboxes from the
+// "Sessions" relation read back from Notion.
+export const SESSION_SLUG_BY_PAGE_ID: Record<string, string> = {};
+for (const [slug, pageId] of Object.entries(SESSION_PAGE_IDS)) {
+  SESSION_SLUG_BY_PAGE_ID[pageId] = slug;
+}
+
+// slug[] → relation write payload for the Notion "Sessions" property. Unknown/legacy/empty slugs
+// are dropped — unlike the old multi-select, a relation has no "— Sans session ciblée —" page to
+// point at, so "no session targeted" is just an empty relation array.
+export function mapSlugsToSessionRelations(slugs: string[] | undefined): { id: string }[] {
+  return Array.from(new Set((slugs || []).map((slug) => SESSION_PAGE_IDS[slug]).filter(Boolean))).map(
+    (id) => ({ id }),
+  );
+}
+
+// Notion relation IDs (read from Candidates.Sessions) → slugs, for pre-checking /profile's
+// SessionPicker. Unknown IDs (e.g. a session later deleted from the Sessions DB) are dropped.
+export function mapRelationIdsToSlugs(ids: string[] | undefined): string[] {
+  return (ids || [])
+    .map((id) => SESSION_SLUG_BY_PAGE_ID[id])
     .filter((slug): slug is string => !!slug);
 }

@@ -1,6 +1,8 @@
 // Shared Notion API helpers for the Candidates DB — used by /api/apply, /api/auth/*, /api/profile.
 // Centralizes the fetch+auth boilerplate that used to live only in app/api/apply/route.ts.
 
+import { mapRelationIdsToSlugs } from '@/lib/session-mapping';
+
 const NOTION_API_URL = 'https://api.notion.com/v1';
 const NOTION_VERSION = '2022-06-28';
 
@@ -46,6 +48,7 @@ export type CandidateRecord = {
   profilePictureUrl: string | null;
   preferredLanguage: 'FR' | 'EN' | null;
   sessionLabels: string[];
+  sessionSlugs: string[];
   itra: string | null;
   utmb: string | null;
   cardBio: string | null;
@@ -74,6 +77,7 @@ type NotionProperty = {
   number?: number | null;
   phone_number?: string | null;
   date?: { start: string; end?: string | null } | null;
+  relation?: { id: string }[];
 };
 
 function richText(prop?: NotionProperty): string | null {
@@ -95,6 +99,9 @@ function emailValue(prop?: NotionProperty): string | null {
 }
 function multiSelectNames(prop?: NotionProperty): string[] {
   return prop?.multi_select?.map((o) => o.name) ?? [];
+}
+function relationIds(prop?: NotionProperty): string[] {
+  return prop?.relation?.map((r) => r.id) ?? [];
 }
 function checkboxValue(prop?: NotionProperty): boolean {
   return prop?.checkbox ?? false;
@@ -132,6 +139,7 @@ function toCandidateRecord(page: { id: string; properties: Record<string, Notion
     profilePictureUrl: urlValue(p['Profile picture URL']),
     preferredLanguage: (selectName(p['Preferred language']) as 'FR' | 'EN' | null) ?? null,
     sessionLabels: multiSelectNames(p['Session']),
+    sessionSlugs: mapRelationIdsToSlugs(relationIds(p['Sessions'])),
     itra: richText(p['ITRA']),
     utmb: richText(p['UTMB']),
     cardBio: richText(p['Card bio']),

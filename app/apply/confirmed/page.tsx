@@ -8,10 +8,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import FlowHeader from '@/components/FlowHeader';
+import OnboardingProgress from '@/components/OnboardingProgress';
+import MemberCard from '@/components/MemberCard';
 import { getSessionFromCookies } from '@/lib/auth';
 import { getCandidateById } from '@/lib/notion-candidates';
 import { dictionary } from '@/lib/i18n';
 import { resolveServerLocale } from '@/lib/locale-server';
+import { deriveCardMeta } from '@/lib/card-display';
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
@@ -28,15 +31,22 @@ export default async function ApplyConfirmedPage({
   const session = await getSessionFromCookies();
   const candidate = session ? await getCandidateById(session.candidateId) : null;
   const firstname = candidate?.name?.split(' ')[0] || '';
+  const { metaLine, sportLevelNumber } = candidate
+    ? deriveCardMeta(candidate)
+    : { metaLine: '', sportLevelNumber: null };
+  const cardEditHref = '/profile#member-card-edit';
 
   return (
     <div className="min-h-screen bg-trail-black text-paper-white">
       <FlowHeader homeHref={homeHref} backLabel={t.common.back} />
       <main className="pt-32 md:pt-40 px-6 md:px-10 pb-32">
         <div className="max-w-2xl mx-auto">
-          <p className="font-mono text-[11px] tracking-[0.3em] text-ember mb-4">
-            {t.confirmed.eyebrow.toUpperCase()}
-          </p>
+          <OnboardingProgress
+            step={3}
+            eyebrow={t.progress.eyebrow}
+            stepWord={t.progress.stepWord}
+            label={t.progress.step3Label}
+          />
           <h1 className="font-display font-bold text-4xl md:text-6xl tracking-tight leading-[0.95] text-paper-white uppercase">
             {t.confirmed.title} {t.confirmed.titleHighlight}
           </h1>
@@ -44,6 +54,24 @@ export default async function ApplyConfirmedPage({
             {firstname ? `${firstname}, ` : ''}
             {t.confirmed.body}
           </p>
+
+          {candidate && (
+            // No social-link props here on purpose — this is a motivational teaser, not the
+            // real card, and MemberCard renders those as <a> tags, which can't nest inside the
+            // <Link> below. The full, functional card lives at /profile.
+            <Link href={cardEditHref} className="mt-10 flex justify-center">
+              <MemberCard
+                photoUrl={candidate.profilePictureUrl}
+                memberNo={candidate.memberNo}
+                name={candidate.name || '—'}
+                metaLine={metaLine}
+                bio={candidate.cardBio}
+                lookingFor={candidate.cardLookingFor}
+                sportLevel={sportLevelNumber}
+                itra={candidate.itra}
+              />
+            </Link>
+          )}
 
           <div className="mt-12 max-w-3xl space-y-6">
             <h2 className="font-display font-bold text-2xl md:text-3xl tracking-tight text-paper-white">
@@ -58,7 +86,7 @@ export default async function ApplyConfirmedPage({
 
           <div className="mt-12 flex flex-wrap gap-4">
             <Link
-              href="/profile"
+              href={cardEditHref}
               className="font-mono text-xs tracking-[0.2em] bg-ember text-trail-black px-7 py-4 rounded-full hover:bg-paper-white transition-colors"
             >
               {t.confirmed.ctaProfile.toUpperCase()}

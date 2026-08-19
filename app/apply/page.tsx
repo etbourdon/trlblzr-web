@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect, type FormEvent } from 'react';
 import { useLocale } from '@/lib/locale-provider';
 import FlowHeader from '@/components/FlowHeader';
+import OnboardingProgress from '@/components/OnboardingProgress';
 import SessionPicker from '@/components/SessionPicker';
 import CityCountryFields from '@/components/CityCountryFields';
 import { Field, Input, Textarea, SectionHeader } from '@/components/FormFields';
@@ -152,7 +153,12 @@ export default function ApplyPage() {
 
       <div className="pt-24 md:pt-32 px-6 md:px-10">
         <div className="max-w-4xl mx-auto">
-          <Stepper step={step} category={category} t={t} />
+          <OnboardingProgress
+            step={step === 3 ? 2 : 1}
+            eyebrow={t.progress.eyebrow}
+            stepWord={t.progress.stepWord}
+            label={step === 3 ? t.progress.step2Label : t.progress.step1Label}
+          />
         </div>
       </div>
 
@@ -184,37 +190,6 @@ export default function ApplyPage() {
           )}
         </div>
       </main>
-    </div>
-  );
-}
-
-function Stepper({ step, category, t }: { step: Step; category: Category | null; t: Dict }) {
-  return (
-    <div className="font-mono text-[10px] tracking-[0.3em] text-ash flex items-center gap-6 flex-wrap mb-10">
-      <span className={step === 1 ? 'text-ember' : 'text-paper-white/60'}>
-        01 {t.apply.step1.toUpperCase()}
-      </span>
-      <span className="text-ash/40">·</span>
-      <span className={step === 2 ? 'text-ember' : 'text-paper-white/60'}>
-        02 {t.apply.step2.toUpperCase()}
-      </span>
-      <span className="text-ash/40">·</span>
-      <span className={step === 3 ? 'text-ember' : 'text-paper-white/60'}>
-        03 {t.apply.step3.toUpperCase()}
-      </span>
-      <span className="ml-auto text-ash">
-        {t.apply.stepIndicator} {step} / 3
-        {category && step >= 2 && (
-          <span className="ml-3">
-            ·{' '}
-            <span className="text-ember">
-              {category === 'dirigeant'
-                ? t.apply.s1DirigeantTitleLine1.toUpperCase()
-                : t.apply.s1AthleteTitleLine1.toUpperCase()}
-            </span>
-          </span>
-        )}
-      </span>
     </div>
   );
 }

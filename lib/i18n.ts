@@ -83,7 +83,6 @@ export type Dict = {
   final: { eyebrow: string; titleLine1: string; titleLine2Pre: string; titleLine2Highlight: string; body1: string; body2: string; cta: string };
   footer: { descr: string; explore: string; follow: string; copyright: string; tagline: string; sisterBrand: string; memberLogin: string };
   apply: {
-    step1: string; step2: string; step3: string;
     s1Eyebrow: string; s1Title: string; s1TitleHighlight: string; s1Lead: string;
     s1DirigeantTitleLine1: string; s1DirigeantTitleLine2: string; s1DirigeantDesc: string;
     s1AthleteTitleLine1: string; s1AthleteTitleLine2: string; s1AthleteDesc: string;
@@ -94,13 +93,12 @@ export type Dict = {
     s2Itra: string; s2ItraHint: string; s2Utmb: string; s2UtmbHint: string;
     s2Email: string; s2Whatsapp: string; s2Linkedin: string; s2LinkedinOptional: string;
     s2Rgpd: string; s2Submit: string; s2Submitting: string;
-    s3Eyebrow: string; s3Title: string; s3TitleHighlight: string; s3Thanks: string; s3Ref: string;
+    s3Title: string; s3TitleHighlight: string; s3Thanks: string; s3Ref: string;
     s3CtaHome: string; s3Contact: string;
     s3EmailCheck: string; s3LoginLink: string;
     s3EmailSentTo: string; s3ResendCta: string; s3ResendCooldown: string; s3ResendSent: string;
     s3ChangeEmailCta: string; s3ChangeEmailLabel: string; s3ChangeEmailSubmit: string;
     s3ChangeEmailError: string; s3ChangeEmailSuccess: string;
-    stepIndicator: string;
     s1CategoryLabelDirigeant: string; s1CategoryLabelAthlete: string; s1Continue: string;
     s2Title: string; s2ProfileValueDirigeant: string; s2ProfileValueAthlete: string;
     s2SessionNoTarget: string; s2ItraShortHint: string; s2UtmbShortHint: string; s2LinkedinHint: string;
@@ -119,9 +117,13 @@ export type Dict = {
     s2SectionLocation: string; s2SectionLinks: string; s2SectionContact: string;
   };
   confirmed: {
-    eyebrow: string; title: string; titleHighlight: string; body: string;
+    title: string; titleHighlight: string; body: string;
     suite: string; step1: string; step2: string; step3: string;
     ctaProfile: string; ctaHome: string;
+  };
+  progress: {
+    eyebrow: string; stepWord: string;
+    step1Label: string; step2Label: string; step3Label: string;
   };
   login: {
     title: string; lead: string; emailLabel: string; submit: string; submitting: string;
@@ -293,7 +295,6 @@ export const dictionary: Record<Locale, Dict> = {
       memberLogin: 'Déjà membre ? Se connecter',
     },
     apply: {
-      step1: 'Profil', step2: 'Informations', step3: 'Envoi',
       s1Eyebrow: 'Postuler / Étape 1 sur 3',
       s1Title: 'Rejoindre',
       s1TitleHighlight: 'le club.',
@@ -322,7 +323,6 @@ export const dictionary: Record<Locale, Dict> = {
       s2Rgpd: "J'accepte que mes informations soient utilisées par TRLBLZR.RUN pour traiter ma candidature et me recontacter. Conformément au RGPD, je peux à tout moment demander la suppression de mes données en écrivant à etienne@bourdon.com.",
       s2Submit: 'Soumettre ma candidature',
       s2Submitting: 'Envoi en cours…',
-      s3Eyebrow: 'Postuler / Étape 3 sur 3',
       s3Title: 'Candidature',
       s3TitleHighlight: 'en cours.',
       s3Thanks: "Dernière étape : ouvre l'email qu'on vient de t'envoyer et clique sur le bouton pour finaliser ta candidature.",
@@ -340,7 +340,6 @@ export const dictionary: Record<Locale, Dict> = {
       s3ChangeEmailSubmit: 'Valider',
       s3ChangeEmailError: 'Cette adresse ne peut pas être utilisée. Réessaie.',
       s3ChangeEmailSuccess: 'Email mis à jour — vérifie ta nouvelle boîte mail.',
-      stepIndicator: 'ÉTAPE',
       s1CategoryLabelDirigeant: '01 — DIRIGEANT',
       s1CategoryLabelAthlete: '02 — ATHLÈTE',
       s1Continue: 'CONTINUER',
@@ -389,7 +388,6 @@ export const dictionary: Record<Locale, Dict> = {
       s2SectionContact: 'Contact',
     },
     confirmed: {
-      eyebrow: 'Candidature',
       title: 'Candidature',
       titleHighlight: 'finalisée.',
       body: 'Ton email est confirmé. Ta candidature est bien enregistrée.',
@@ -397,8 +395,15 @@ export const dictionary: Record<Locale, Dict> = {
       step1: "Revue de ta candidature (48–72 h). On évalue le profil et l'alignement avec les sessions à venir.",
       step2: "Réponse par email. Si éligible, tu recevras un lien direct pour réserver un appel découverte de 30 min avec Etienne, qui finalise l'inscription.",
       step3: "Sinon, on t'écrit aussi. Si la session ciblée est complète ou si le timing n'est pas le bon, on revient vers toi dès qu'une fenêtre se libère.",
-      ctaProfile: 'Compléter mon profil',
+      ctaProfile: 'Compléter ma carte',
       ctaHome: "Retour à l'accueil",
+    },
+    progress: {
+      eyebrow: 'Candidature',
+      stepWord: 'Étape',
+      step1Label: 'Formulaire ok',
+      step2Label: 'Confirme ton email',
+      step3Label: 'Complète ton profil',
     },
     login: {
       title: 'Connexion.',
@@ -618,7 +623,6 @@ export const dictionary: Record<Locale, Dict> = {
       memberLogin: 'Already a member? Log in',
     },
     apply: {
-      step1: 'Profile', step2: 'Info', step3: 'Send',
       s1Eyebrow: 'Apply / Step 1 of 3',
       s1Title: 'Join',
       s1TitleHighlight: 'the club.',
@@ -647,7 +651,6 @@ export const dictionary: Record<Locale, Dict> = {
       s2Rgpd: 'I agree that my information is used by TRLBLZR.RUN to process my application and contact me. Under GDPR, I can request deletion of my data at any time by writing to etienne@bourdon.com.',
       s2Submit: 'Submit my application',
       s2Submitting: 'Sending…',
-      s3Eyebrow: 'Apply / Step 3 of 3',
       s3Title: 'Application',
       s3TitleHighlight: 'in progress.',
       s3Thanks: 'Final step: open the email we just sent you and click the button to finish your application.',
@@ -665,7 +668,6 @@ export const dictionary: Record<Locale, Dict> = {
       s3ChangeEmailSubmit: 'Confirm',
       s3ChangeEmailError: "This address can't be used. Try another one.",
       s3ChangeEmailSuccess: 'Email updated — check your new inbox.',
-      stepIndicator: 'STEP',
       s1CategoryLabelDirigeant: '01 — LEADER',
       s1CategoryLabelAthlete: '02 — ATHLETE',
       s1Continue: 'CONTINUE',
@@ -714,7 +716,6 @@ export const dictionary: Record<Locale, Dict> = {
       s2SectionContact: 'Contact',
     },
     confirmed: {
-      eyebrow: 'Application',
       title: 'Application',
       titleHighlight: 'confirmed.',
       body: 'Your email is confirmed. Your application is submitted.',
@@ -722,8 +723,15 @@ export const dictionary: Record<Locale, Dict> = {
       step1: 'Application review (48–72 h). We assess the profile and the fit with upcoming sessions.',
       step2: "Email response. If eligible, you'll get a direct link to book a 30-min discovery call with Etienne, who finalizes your registration.",
       step3: "If not, we still write back. If the targeted session is full or the timing is off, we'll come back as soon as a window opens.",
-      ctaProfile: 'Complete my profile',
+      ctaProfile: 'Complete my card',
       ctaHome: 'Back to homepage',
+    },
+    progress: {
+      eyebrow: 'Application',
+      stepWord: 'Step',
+      step1Label: 'Form done',
+      step2Label: 'Confirm your email',
+      step3Label: 'Complete your profile',
     },
     login: {
       title: 'Log in.',

@@ -24,6 +24,7 @@ export function buildVerifyEmail({
     return {
       subject: 'Finish your application — TRLBLZR.run',
       html: wrap(`
+        <p style="color:#e8590c;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;margin:0 0 8px;">Application — Step 2/3</p>
         <h2>Hey ${escapeHtml(firstname)},</h2>
         <p>Thanks for applying to TRLBLZR.run. Final step — click below to verify your email and finish your application.</p>
         ${button(verifyUrl, 'Finish my application')}
@@ -34,6 +35,7 @@ export function buildVerifyEmail({
   return {
     subject: 'Finalise ta candidature — TRLBLZR.run',
     html: wrap(`
+      <p style="color:#e8590c;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;margin:0 0 8px;">Candidature — Étape 2/3</p>
       <h2>Salut ${escapeHtml(firstname)},</h2>
       <p>Merci pour ta candidature sur TRLBLZR.run. Dernière étape — clique pour valider ton email et finaliser ta candidature.</p>
       ${button(verifyUrl, 'Finaliser ma candidature')}

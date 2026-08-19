@@ -716,30 +716,26 @@ export default function ProfilePage() {
                       <p className="font-mono text-xs text-ember">{generateError}</p>
                     )}
 
-                    {(cardBio || cardLookingFor) && (
-                      <>
-                        <Field label={t.card.bioFieldLabel}>
-                          <Textarea
-                            value={cardBio}
-                            onChange={(v) => {
-                              setCardBio(v);
-                              setCardStatus(null);
-                            }}
-                            rows={2}
-                          />
-                        </Field>
-                        <Field label={t.card.lookingForFieldLabel}>
-                          <Textarea
-                            value={cardLookingFor}
-                            onChange={(v) => {
-                              setCardLookingFor(v);
-                              setCardStatus(null);
-                            }}
-                            rows={2}
-                          />
-                        </Field>
-                      </>
-                    )}
+                    <Field label={t.card.bioFieldLabel}>
+                      <Textarea
+                        value={cardBio}
+                        onChange={(v) => {
+                          setCardBio(v);
+                          setCardStatus(null);
+                        }}
+                        rows={2}
+                      />
+                    </Field>
+                    <Field label={t.card.lookingForFieldLabel}>
+                      <Textarea
+                        value={cardLookingFor}
+                        onChange={(v) => {
+                          setCardLookingFor(v);
+                          setCardStatus(null);
+                        }}
+                        rows={2}
+                      />
+                    </Field>
 
                     <label className="flex items-start gap-3 font-sans text-sm text-ash leading-relaxed cursor-pointer">
                       <input

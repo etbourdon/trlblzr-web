@@ -149,6 +149,7 @@ export type Dict = {
     suspendedMessage: string; reactivateLabel: string; reactivatingLabel: string;
     reactivateErrorMessage: string;
     previewTitle: string; previewIncomplete: string; previewCta: string;
+    unsavedChanges: string; downloadRequiresValidation: string;
   };
   directory: {
     title: string;
@@ -453,7 +454,7 @@ export const dictionary: Record<Locale, Dict> = {
       bioFieldLabel: 'Bio (modifiable)',
       lookingForFieldLabel: 'Recherche (modifiable)',
       consentLabel: "J'accepte que ma Member Card soit visible publiquement dans la communauté TRLBLZR.",
-      submitLabel: 'Envoyer pour validation',
+      submitLabel: 'Confirmer ma Card',
       submittingLabel: 'Envoi…',
       submitErrorMessage: "Échec de l'envoi. Réessaie dans un instant.",
       submittedMessage: 'Card envoyée — en attente de validation.',
@@ -472,6 +473,8 @@ export const dictionary: Record<Locale, Dict> = {
       previewTitle: 'Ta Member Card',
       previewIncomplete: "Ta carte n'est pas encore complète — complète ton profil pour la générer.",
       previewCta: 'Compléter ma carte →',
+      unsavedChanges: 'Modifications non enregistrées — confirme ta card pour les appliquer.',
+      downloadRequiresValidation: 'Disponible une fois ta card validée par TRLBLZR.',
     },
     directory: {
       title: 'Annuaire des membres',
@@ -781,7 +784,7 @@ export const dictionary: Record<Locale, Dict> = {
       bioFieldLabel: 'Bio (editable)',
       lookingForFieldLabel: 'Looking for (editable)',
       consentLabel: 'I agree that my Member Card is visible publicly in the TRLBLZR community.',
-      submitLabel: 'Submit for review',
+      submitLabel: 'Confirm my card',
       submittingLabel: 'Submitting…',
       submitErrorMessage: 'Submission failed. Try again in a moment.',
       submittedMessage: 'Card submitted — awaiting review.',
@@ -800,6 +803,8 @@ export const dictionary: Record<Locale, Dict> = {
       previewTitle: 'Your Member Card',
       previewIncomplete: "Your card isn't complete yet — finish your profile to generate it.",
       previewCta: 'Complete my card →',
+      unsavedChanges: 'Unsaved changes — confirm your card to apply them.',
+      downloadRequiresValidation: 'Available once your card is validated by TRLBLZR.',
     },
     directory: {
       title: 'Member directory',

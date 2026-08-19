@@ -99,6 +99,10 @@ export default function ProfilePage() {
   const [itra, setItra] = useState('');
   const [cardBio, setCardBio] = useState('');
   const [cardLookingFor, setCardLookingFor] = useState('');
+  // SBL-26 follow-up — snapshot of the last confirmed (submitted) bio/looking-for, to flag
+  // edits that only live in this tab until "Confirmer ma Card" is clicked.
+  const [savedCardBio, setSavedCardBio] = useState('');
+  const [savedCardLookingFor, setSavedCardLookingFor] = useState('');
   const [cardConsent, setCardConsent] = useState(false);
   const [cardStatus, setCardStatus] = useState<
     'draft' | 'submitted' | 'validated' | 'suspended' | null
@@ -152,6 +156,8 @@ export default function ProfilePage() {
         setItra(c.itra || '');
         setCardBio(c.cardBio || '');
         setCardLookingFor(c.cardLookingFor || '');
+        setSavedCardBio(c.cardBio || '');
+        setSavedCardLookingFor(c.cardLookingFor || '');
         setCardConsent(Boolean(c.cardConsent));
         setCardStatus(c.cardStatus || null);
         setCardDeleteAfter(c.cardDeleteAfter || null);
@@ -245,6 +251,9 @@ export default function ProfilePage() {
     .filter(Boolean)
     .join(' · ');
   const sportLevelNumber = form.sportLevel ? parseInt(form.sportLevel, 10) : null;
+  const cardHasUnsavedChanges =
+    (cardBio || cardLookingFor) &&
+    (cardBio !== savedCardBio || cardLookingFor !== savedCardLookingFor);
 
   const handleGenerateCard = async () => {
     setGenerating(true);
@@ -345,6 +354,8 @@ export default function ProfilePage() {
       setCardStatus('submitted');
       setCardDeleteAfter(null);
       setMemberNo(result.memberNo ?? memberNo);
+      setSavedCardBio(cardBio);
+      setSavedCardLookingFor(cardLookingFor);
     } catch {
       setCardSubmitError(t.card.submitErrorMessage);
     } finally {
@@ -703,7 +714,7 @@ export default function ProfilePage() {
                         <button
                           type="button"
                           onClick={handleDownloadCard}
-                          disabled={downloadingCard}
+                          disabled={downloadingCard || cardStatus !== 'validated' || !!cardHasUnsavedChanges}
                           className="font-mono text-xs tracking-[0.2em] text-paper-white border border-paper-white/30 px-7 py-4 rounded-full hover:border-ember hover:text-ember transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                         >
                           {downloadingCard
@@ -715,26 +726,17 @@ export default function ProfilePage() {
                     {generateError && (
                       <p className="font-mono text-xs text-ember">{generateError}</p>
                     )}
+                    {(cardBio || cardLookingFor) && cardStatus !== 'validated' && (
+                      <p className="font-mono text-[10px] text-ash">
+                        {t.card.downloadRequiresValidation}
+                      </p>
+                    )}
 
                     <Field label={t.card.bioFieldLabel}>
-                      <Textarea
-                        value={cardBio}
-                        onChange={(v) => {
-                          setCardBio(v);
-                          setCardStatus(null);
-                        }}
-                        rows={2}
-                      />
+                      <Textarea value={cardBio} onChange={setCardBio} rows={2} />
                     </Field>
                     <Field label={t.card.lookingForFieldLabel}>
-                      <Textarea
-                        value={cardLookingFor}
-                        onChange={(v) => {
-                          setCardLookingFor(v);
-                          setCardStatus(null);
-                        }}
-                        rows={2}
-                      />
+                      <Textarea value={cardLookingFor} onChange={setCardLookingFor} rows={2} />
                     </Field>
 
                     <label className="flex items-start gap-3 font-sans text-sm text-ash leading-relaxed cursor-pointer">
@@ -747,13 +749,20 @@ export default function ProfilePage() {
                       <span>{t.card.consentLabel}</span>
                     </label>
 
+                    {cardHasUnsavedChanges && (
+                      <p className="font-mono text-[10px] tracking-[0.15em] text-dust flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-dust flex-shrink-0" />
+                        {t.card.unsavedChanges}
+                      </p>
+                    )}
+
                     {cardStatus !== 'suspended' && (
                       <div className="flex items-center gap-4">
                         <button
                           type="button"
                           onClick={handleSubmitCard}
                           disabled={submittingCard || !cardBio || !cardLookingFor || !cardConsent}
-                          className="font-mono text-xs tracking-[0.2em] text-paper-white border border-paper-white/30 px-7 py-4 rounded-full hover:border-ember hover:text-ember transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                          className="font-mono text-xs tracking-[0.2em] bg-ember text-trail-black px-7 py-4 rounded-full hover:bg-paper-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                         >
                           {submittingCard
                             ? t.card.submittingLabel.toUpperCase()
@@ -767,10 +776,10 @@ export default function ProfilePage() {
                     {cardSubmitError && (
                       <p className="font-mono text-xs text-ember">{cardSubmitError}</p>
                     )}
-                    {cardStatus === 'submitted' && (
+                    {cardStatus === 'submitted' && !cardHasUnsavedChanges && (
                       <p className="font-mono text-xs text-ember">{t.card.submittedMessage}</p>
                     )}
-                    {cardStatus === 'validated' && (
+                    {cardStatus === 'validated' && !cardHasUnsavedChanges && (
                       <p className="font-mono text-xs text-ember">{t.card.validatedMessage}</p>
                     )}
 

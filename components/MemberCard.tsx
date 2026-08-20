@@ -114,6 +114,7 @@ export default function MemberCard({
   proWebsite,
   whatsapp,
   weParticipationCount,
+  onPhotoClick,
 }: {
   photoUrl?: string | null;
   memberNo?: number | null;
@@ -128,6 +129,9 @@ export default function MemberCard({
   proWebsite?: string | null;
   whatsapp?: string | null;
   weParticipationCount?: number | null;
+  // SBL-26 follow-up — when provided, the photo area becomes clickable (own editable card only;
+  // read-only renders like /directory or another member's card simply omit this).
+  onPhotoClick?: () => void;
 }) {
   const wa = waLink(whatsapp);
   const hasLinks = linkedin || stravaProfile || proWebsite || wa;
@@ -135,21 +139,35 @@ export default function MemberCard({
   return (
     <div className="w-full max-w-[640px] bg-trail-black border border-stone rounded-2xl overflow-hidden grid grid-cols-[200px_1fr]">
       <div className="flex flex-col bg-trail-black">
-        <div className="relative w-full h-[220px] flex-shrink-0 bg-stone flex items-center justify-center">
+        <button
+          type="button"
+          onClick={onPhotoClick}
+          disabled={!onPhotoClick}
+          className={`relative w-full h-[220px] flex-shrink-0 bg-stone flex items-center justify-center text-left ${onPhotoClick ? 'group cursor-pointer' : ''}`}
+        >
           {photoUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={photoUrl}
-              alt={name}
-              className="absolute inset-0 w-full h-full object-cover grayscale contrast-[1.05]"
-            />
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={photoUrl}
+                alt={name}
+                className="absolute inset-0 w-full h-full object-cover grayscale contrast-[1.05]"
+              />
+              {onPhotoClick && (
+                <div className="absolute inset-0 flex items-center justify-center bg-trail-black/0 opacity-0 group-hover:bg-trail-black/60 group-hover:opacity-100 transition-colors">
+                  <span className="font-mono text-[10px] tracking-[0.15em] text-paper-white">
+                    CHANGE PHOTO
+                  </span>
+                </div>
+              )}
+            </>
           ) : (
             <div className="flex flex-col items-center justify-center gap-2.5 text-ash px-4">
               <IconCamera />
               <div className="font-mono text-[10px] tracking-[0.1em] text-center leading-relaxed">
                 NO PHOTO YET
                 <br />
-                ADD ONE IN YOUR PROFILE
+                {onPhotoClick ? 'TAP TO ADD' : 'ADD ONE IN YOUR PROFILE'}
               </div>
             </div>
           )}
@@ -162,7 +180,7 @@ export default function MemberCard({
               MEMBER // {String(memberNo).padStart(4, '0')}
             </div>
           )}
-        </div>
+        </button>
 
         {hasLinks && (
           <div className="flex justify-center items-center gap-4 py-3.5 text-ember">

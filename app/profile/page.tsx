@@ -118,6 +118,7 @@ export default function ProfilePage() {
   const [suspending, setSuspending] = useState(false);
   const [suspendError, setSuspendError] = useState<string | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const photoInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -461,6 +462,7 @@ export default function ProfilePage() {
                     proWebsite={form.proWebsite}
                     whatsapp={form.whatsapp}
                     weParticipationCount={weParticipationCount}
+                    onPhotoClick={() => photoInputRef.current?.click()}
                   />
                 </div>
                 <div className="mt-4 text-center">
@@ -643,6 +645,7 @@ export default function ProfilePage() {
                     <label className="font-mono text-xs tracking-[0.2em] text-paper-white border border-paper-white/30 px-5 py-3 rounded-full hover:border-ember hover:text-ember transition-colors cursor-pointer disabled:opacity-40">
                       {uploading ? t.profile.savingLabel.toUpperCase() : t.profile.pictureLabel.toUpperCase()}
                       <input
+                        ref={photoInputRef}
                         type="file"
                         accept="image/*"
                         onChange={handlePhotoSelect}
@@ -692,6 +695,7 @@ export default function ProfilePage() {
                         proWebsite={form.proWebsite}
                         whatsapp={form.whatsapp}
                         weParticipationCount={weParticipationCount}
+                    onPhotoClick={() => photoInputRef.current?.click()}
                       />
                     </div>
                   </div>

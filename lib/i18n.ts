@@ -11,8 +11,9 @@ export const LOCALE_STORAGE_KEY = 'trlblzr-locale';
 // Trailblazer Archetype questionnaire — still a standalone Notion flow (not encoded into this
 // app), so this is just a link, not a feature. Keeping it a link (rather than the questions
 // themselves) means the questionnaire content can keep changing freely in Notion with zero
-// redeploy here.
-export const ARCHETYPE_QUESTIONNAIRE_URL = 'https://www.notion.so/c33345e9413046179a95282d48be61f8';
+// redeploy here. Points straight at the public form (not the explainer page) since visitors
+// coming from this site already know what they're signing up for.
+export const ARCHETYPE_QUESTIONNAIRE_URL = 'https://sideways-anteater-360.notion.site/f492c6d5597d491f81c35d5d47ac0b6d';
 
 export type Dict = {
   meta: { titleHome: string; titleApply: string; desc: string };

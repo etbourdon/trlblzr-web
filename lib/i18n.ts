@@ -135,6 +135,7 @@ export type Dict = {
   };
   profile: {
     title: string; lead: string; selfDescLabel: string; pictureLabel: string;
+    changePhotoLabel: string; photoSavedMessage: string;
     saveLabel: string; savingLabel: string; savedMessage: string; logoutLabel: string;
     loadErrorMessage: string; notLoggedInMessage: string; languageLabel: string;
     completionLabel: string; nameLabel: string;
@@ -434,7 +435,9 @@ export const dictionary: Record<Locale, Dict> = {
       title: 'Ton profil.',
       lead: 'Mets à jour tes informations à tout moment.',
       selfDescLabel: 'Décris-toi',
-      pictureLabel: 'Photo (URL)',
+      pictureLabel: 'Photo de profil',
+      changePhotoLabel: 'Changer ma photo',
+      photoSavedMessage: 'Photo enregistrée.',
       saveLabel: 'Enregistrer',
       savingLabel: 'Enregistrement…',
       savedMessage: 'Profil mis à jour.',
@@ -763,7 +766,9 @@ export const dictionary: Record<Locale, Dict> = {
       title: 'Your profile.',
       lead: 'Update your details anytime.',
       selfDescLabel: 'Describe yourself',
-      pictureLabel: 'Photo (URL)',
+      pictureLabel: 'Profile photo',
+      changePhotoLabel: 'Change my photo',
+      photoSavedMessage: 'Photo saved.',
       saveLabel: 'Save',
       savingLabel: 'Saving…',
       savedMessage: 'Profile updated.',

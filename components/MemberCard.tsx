@@ -171,7 +171,7 @@ export default function MemberCard({
               </div>
             </div>
           )}
-          <div className="absolute top-3 left-3.5 font-display font-extrabold text-[13px] tracking-tight text-paper-white">
+          <div className="absolute top-3 left-3.5 font-display font-extrabold text-[13px] tracking-tight text-paper-white bg-trail-black/55 rounded px-1.5 py-0.5">
             TRLBLZR<span className="text-ember">.run</span>
           </div>
           <StarBadge count={weParticipationCount ?? 0} />

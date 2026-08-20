@@ -93,6 +93,7 @@ export default function ProfilePage() {
   const [saved, setSaved] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [photoSaved, setPhotoSaved] = useState(false);
 
   // Batch 5.2 — Member Card
   const [category, setCategory] = useState('');
@@ -199,6 +200,7 @@ export default function ProfilePage() {
 
     setUploading(true);
     setUploadError(null);
+    setPhotoSaved(false);
     try {
       const body = new FormData();
       body.append('file', file);
@@ -209,8 +211,10 @@ export default function ProfilePage() {
         return;
       }
       if (!res.ok || !result.ok) throw new Error(result.error || 'Upload failed');
+      // The upload endpoint also saves this field to Notion on its own (SBL-26 follow-up) —
+      // no need to wait for the main "Enregistrer" click for the photo specifically.
       setForm((f) => ({ ...f, profilePictureUrl: result.url }));
-      setSaved(false);
+      setPhotoSaved(true);
     } catch (err) {
       setUploadError(err instanceof Error ? err.message : 'Upload failed');
     } finally {
@@ -643,7 +647,7 @@ export default function ProfilePage() {
                       />
                     )}
                     <label className="font-mono text-xs tracking-[0.2em] text-paper-white border border-paper-white/30 px-5 py-3 rounded-full hover:border-ember hover:text-ember transition-colors cursor-pointer disabled:opacity-40">
-                      {uploading ? t.profile.savingLabel.toUpperCase() : t.profile.pictureLabel.toUpperCase()}
+                      {uploading ? t.profile.savingLabel.toUpperCase() : t.profile.changePhotoLabel.toUpperCase()}
                       <input
                         ref={photoInputRef}
                         type="file"
@@ -653,6 +657,11 @@ export default function ProfilePage() {
                         className="hidden"
                       />
                     </label>
+                    {photoSaved && !uploading && (
+                      <span className="font-mono text-xs text-ember">
+                        {t.profile.photoSavedMessage}
+                      </span>
+                    )}
                   </div>
                   {uploadError && (
                     <p className="mt-2 font-mono text-xs text-ember">{uploadError}</p>

@@ -2,9 +2,13 @@
  * Batch 5.1 follow-up — POST /api/profile/upload
  *
  * Session-gated. Accepts a single image file (multipart/form-data, field name "file"),
- * uploads it to Vercel Blob, and returns its public URL. The client then saves that URL
- * into the profile form like any other field (via PATCH /api/profile) — this route only
- * handles the upload itself, it doesn't touch Notion.
+ * uploads it to Vercel Blob, and returns its public URL.
+ *
+ * SBL-26 follow-up: also persists the new URL to Notion immediately (Profile picture URL +
+ * page cover), so a photo change is saved on its own rather than waiting for the separate
+ * "Enregistrer" submit — a photo click-to-change shouldn't have a second, easy-to-miss step.
+ * Deliberately narrow: only this one field, so it can't accidentally save other in-progress,
+ * possibly-invalid edits elsewhere on the form the way a full profile PATCH could.
  *
  * Requires a Vercel Blob store connected to this project (see APPLY_BACKEND.md). Note:
  * Vercel prefixes the injected token env var with the store's name (e.g. a store named
@@ -17,6 +21,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { put } from '@vercel/blob';
 import { getSessionFromRequest } from '@/lib/auth';
+import { updateCandidateProperties } from '@/lib/notion-candidates';
 
 const MAX_BYTES = 5 * 1024 * 1024; // 5 MB
 
@@ -59,6 +64,19 @@ export async function POST(req: NextRequest) {
       addRandomSuffix: true,
       token,
     });
+
+    try {
+      await updateCandidateProperties(
+        session.candidateId,
+        { 'Profile picture URL': { url: blob.url } },
+        { coverImageUrl: blob.url },
+      );
+    } catch (err) {
+      // Best-effort — the photo is uploaded either way; the client still holds the URL and
+      // the next full profile save will persist it if this one write hiccups.
+      console.error('Failed to save photo URL to Notion', err);
+    }
+
     return NextResponse.json({ ok: true, url: blob.url });
   } catch (err) {
     console.error('Blob upload failed', err);

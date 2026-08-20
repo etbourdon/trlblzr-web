@@ -8,6 +8,12 @@ export const LOCALES: Locale[] = ['fr', 'en'];
 export const DEFAULT_LOCALE: Locale = 'fr';
 export const LOCALE_STORAGE_KEY = 'trlblzr-locale';
 
+// Trailblazer Archetype questionnaire — still a standalone Notion flow (not encoded into this
+// app), so this is just a link, not a feature. Keeping it a link (rather than the questions
+// themselves) means the questionnaire content can keep changing freely in Notion with zero
+// redeploy here.
+export const ARCHETYPE_QUESTIONNAIRE_URL = 'https://www.notion.so/c33345e9413046179a95282d48be61f8';
+
 export type Dict = {
   meta: { titleHome: string; titleApply: string; desc: string };
   nav: { sessions: string; athletes: string; club: string };
@@ -120,6 +126,7 @@ export type Dict = {
     title: string; titleHighlight: string; body: string;
     suite: string; step1: string; step2: string; step3: string;
     ctaProfile: string; ctaHome: string;
+    archetypeTeaser: string; archetypeCta: string;
   };
   progress: {
     eyebrow: string; stepWord: string;
@@ -151,6 +158,7 @@ export type Dict = {
     reactivateErrorMessage: string;
     previewTitle: string; previewIncomplete: string; previewCta: string;
     unsavedChanges: string; downloadRequiresValidation: string;
+    archetypeTeaser: string; archetypeCta: string;
   };
   directory: {
     title: string;
@@ -398,6 +406,8 @@ export const dictionary: Record<Locale, Dict> = {
       step3: "Sinon, on t'écrit aussi. Si la session ciblée est complète ou si le timing n'est pas le bon, on revient vers toi dès qu'une fenêtre se libère.",
       ctaProfile: 'Compléter ma carte',
       ctaHome: "Retour à l'accueil",
+      archetypeTeaser: 'En attendant, découvre ton profil Trailblazer — 10 questions, 2 minutes.',
+      archetypeCta: 'Faire le test →',
     },
     progress: {
       eyebrow: 'Candidature',
@@ -477,6 +487,8 @@ export const dictionary: Record<Locale, Dict> = {
       previewCta: 'Compléter ma carte →',
       unsavedChanges: 'Modifications non enregistrées — confirme ta card pour les appliquer.',
       downloadRequiresValidation: 'Disponible une fois ta card validée par TRLBLZR.',
+      archetypeTeaser: 'Pendant que ta card est en revue, découvre ton profil Trailblazer.',
+      archetypeCta: 'Faire le test (2 min) →',
     },
     directory: {
       title: 'Annuaire des membres',
@@ -729,6 +741,8 @@ export const dictionary: Record<Locale, Dict> = {
       step3: "If not, we still write back. If the targeted session is full or the timing is off, we'll come back as soon as a window opens.",
       ctaProfile: 'Complete my card',
       ctaHome: 'Back to homepage',
+      archetypeTeaser: 'While you wait, discover your Trailblazer profile — 10 questions, 2 minutes.',
+      archetypeCta: 'Take the test →',
     },
     progress: {
       eyebrow: 'Application',
@@ -808,6 +822,8 @@ export const dictionary: Record<Locale, Dict> = {
       previewCta: 'Complete my card →',
       unsavedChanges: 'Unsaved changes — confirm your card to apply them.',
       downloadRequiresValidation: 'Available once your card is validated by TRLBLZR.',
+      archetypeTeaser: 'While your card is under review, discover your Trailblazer profile.',
+      archetypeCta: 'Take the test (2 min) →',
     },
     directory: {
       title: 'Member directory',

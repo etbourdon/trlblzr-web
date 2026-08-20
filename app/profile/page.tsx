@@ -10,7 +10,7 @@ import CityCountryFields from '@/components/CityCountryFields';
 import MemberCard from '@/components/MemberCard';
 import { Field, Input, Textarea, SectionHeader } from '@/components/FormFields';
 import { SPORT_LEVEL_LABELS } from '@/lib/field-options';
-import type { Dict } from '@/lib/i18n';
+import { ARCHETYPE_QUESTIONNAIRE_URL, type Dict } from '@/lib/i18n';
 
 const CODE_BY_SPORT_LABEL: Record<string, string> = Object.fromEntries(
   Object.entries(SPORT_LEVEL_LABELS).map(([code, label]) => [label, code]),
@@ -791,7 +791,18 @@ export default function ProfilePage() {
                       <p className="font-mono text-xs text-ember">{cardSubmitError}</p>
                     )}
                     {cardStatus === 'submitted' && !cardHasUnsavedChanges && (
-                      <p className="font-mono text-xs text-ember">{t.card.submittedMessage}</p>
+                      <>
+                        <p className="font-mono text-xs text-ember">{t.card.submittedMessage}</p>
+                        <a
+                          href={ARCHETYPE_QUESTIONNAIRE_URL}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 font-sans text-sm text-ash hover:text-ember transition-colors w-fit"
+                        >
+                          {t.card.archetypeTeaser}
+                          <span className="text-ember">{t.card.archetypeCta}</span>
+                        </a>
+                      </>
                     )}
                     {cardStatus === 'validated' && !cardHasUnsavedChanges && (
                       <p className="font-mono text-xs text-ember">{t.card.validatedMessage}</p>

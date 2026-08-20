@@ -12,7 +12,7 @@ import OnboardingProgress from '@/components/OnboardingProgress';
 import MemberCard from '@/components/MemberCard';
 import { getSessionFromCookies } from '@/lib/auth';
 import { getCandidateById } from '@/lib/notion-candidates';
-import { dictionary } from '@/lib/i18n';
+import { dictionary, ARCHETYPE_QUESTIONNAIRE_URL } from '@/lib/i18n';
 import { resolveServerLocale } from '@/lib/locale-server';
 import { deriveCardMeta } from '@/lib/card-display';
 
@@ -85,7 +85,21 @@ export default async function ApplyConfirmedPage({
             </ul>
           </div>
 
-          <div className="mt-12 flex flex-wrap gap-4">
+          {/* Optional secondary CTA — reaches ~everyone who verifies their email (unlike a
+              post-card-submission placement, which only the subset who finish their profile
+              ever see). Deliberately not a button/primary style: this must never compete with
+              or slow down "compléter ma card", the one required next action on this screen. */}
+          <a
+            href={ARCHETYPE_QUESTIONNAIRE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-8 flex items-center gap-2 font-sans text-sm text-ash hover:text-ember transition-colors w-fit"
+          >
+            {t.confirmed.archetypeTeaser}
+            <span className="text-ember">{t.confirmed.archetypeCta}</span>
+          </a>
+
+          <div className="mt-8 flex flex-wrap gap-4">
             <Link
               href={cardEditHref}
               className="font-mono text-xs tracking-[0.2em] bg-ember text-trail-black px-7 py-4 rounded-full hover:bg-paper-white transition-colors"

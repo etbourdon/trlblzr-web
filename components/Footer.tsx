@@ -78,7 +78,7 @@ export default function Footer() {
               </a>
             </li>
             <li>
-              <a href="mailto:etienne@bourdon.com" className="hover:text-ember transition-colors">
+              <a href="mailto:contact@trlblzr.run" className="hover:text-ember transition-colors">
                 Email
               </a>
             </li>
@@ -102,6 +102,14 @@ export default function Footer() {
 
       <div className="max-w-7xl mx-auto pt-8 border-t border-stone flex flex-col md:flex-row items-start md:items-center justify-between gap-4 font-mono text-[10px] tracking-[0.25em] text-ash">
         <span>{t.footer.copyright}</span>
+        <div className="flex items-center gap-4">
+          <Link href="/privacy" className="hover:text-ember transition-colors">
+            Confidentialité
+          </Link>
+          <Link href="/mentions-legales" className="hover:text-ember transition-colors">
+            Mentions légales
+          </Link>
+        </div>
         <span className="text-paper-white">{t.footer.tagline}</span>
       </div>
     </footer>

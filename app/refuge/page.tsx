@@ -89,6 +89,7 @@ export default async function RefugePage({
                     proWebsite={candidate.proWebsite}
                     whatsapp={candidate.whatsapp}
                     weParticipationCount={candidate.weParticipation.length}
+                    responsive
                   />
                 );
               })()

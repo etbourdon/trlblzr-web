@@ -115,6 +115,7 @@ export default function MemberCard({
   whatsapp,
   weParticipationCount,
   onPhotoClick,
+  responsive,
 }: {
   photoUrl?: string | null;
   memberNo?: number | null;
@@ -132,18 +133,30 @@ export default function MemberCard({
   // SBL-26 follow-up — when provided, the photo area becomes clickable (own editable card only;
   // read-only renders like /directory or another member's card simply omit this).
   onPhotoClick?: () => void;
+  // SBL-26 follow-up — shrinks the photo column on narrow viewports so the text side doesn't
+  // get crushed to ~150px on mobile. Deliberately opt-in, not the default: the /profile card
+  // that feeds the exported WhatsApp PNG stays fixed-size regardless of viewport (that PNG's
+  // whole reason for being landscape was to survive WhatsApp's crop — see MemberCard's file
+  // header) — only read-only display contexts (directory, refuge, previews) pass this.
+  responsive?: boolean;
 }) {
   const wa = waLink(whatsapp);
   const hasLinks = linkedin || stravaProfile || proWebsite || wa;
 
   return (
-    <div className="w-full max-w-[640px] bg-trail-black border border-stone rounded-2xl overflow-hidden grid grid-cols-[200px_1fr]">
+    <div
+      className={
+        responsive
+          ? 'w-full max-w-[640px] bg-trail-black border border-stone rounded-2xl overflow-hidden grid grid-cols-[130px_1fr] sm:grid-cols-[200px_1fr]'
+          : 'w-full max-w-[640px] bg-trail-black border border-stone rounded-2xl overflow-hidden grid grid-cols-[200px_1fr]'
+      }
+    >
       <div className="flex flex-col bg-trail-black">
         <button
           type="button"
           onClick={onPhotoClick}
           disabled={!onPhotoClick}
-          className={`relative w-full h-[220px] flex-shrink-0 bg-stone flex items-center justify-center text-left ${onPhotoClick ? 'group cursor-pointer' : ''}`}
+          className={`relative w-full ${responsive ? 'h-[160px] sm:h-[220px]' : 'h-[220px]'} flex-shrink-0 bg-stone flex items-center justify-center text-left ${onPhotoClick ? 'group cursor-pointer' : ''}`}
         >
           {photoUrl ? (
             <>
@@ -183,7 +196,9 @@ export default function MemberCard({
         </button>
 
         {hasLinks && (
-          <div className="flex justify-center items-center gap-4 py-3.5 text-ember">
+          <div
+            className={`flex justify-center items-center py-3.5 text-ember ${responsive ? 'gap-2.5 sm:gap-4' : 'gap-4'}`}
+          >
             {linkedin && (
               <a href={linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                 <IconLinkedIn />
@@ -208,8 +223,16 @@ export default function MemberCard({
         )}
       </div>
 
-      <div className="px-[22px] pt-[18px] pb-[18px] pr-6">
-        <div className="font-display font-extrabold text-[25px] leading-[1.1] text-paper-white">
+      <div
+        className={
+          responsive
+            ? 'px-3 pt-3 pb-3 sm:px-[22px] sm:pt-[18px] sm:pb-[18px] sm:pr-6'
+            : 'px-[22px] pt-[18px] pb-[18px] pr-6'
+        }
+      >
+        <div
+          className={`font-display font-extrabold leading-[1.1] text-paper-white ${responsive ? 'text-lg sm:text-[25px]' : 'text-[25px]'}`}
+        >
           {name}
         </div>
         {metaLine && (

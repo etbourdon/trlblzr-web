@@ -81,6 +81,7 @@ async function DirectoryList({ title }: { title: string }) {
                 proWebsite={c.proWebsite}
                 whatsapp={c.whatsapp}
                 weParticipationCount={c.weParticipation.length}
+                responsive
               />
             );
           })}

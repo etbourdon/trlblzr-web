@@ -69,6 +69,7 @@ export default async function ApplyConfirmedPage({
                 lookingFor={candidate.cardLookingFor}
                 sportLevel={sportLevelNumber}
                 itra={candidate.itra}
+                responsive
               />
             </Link>
           )}

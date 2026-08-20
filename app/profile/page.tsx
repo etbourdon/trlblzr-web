@@ -467,6 +467,7 @@ export default function ProfilePage() {
                     whatsapp={form.whatsapp}
                     weParticipationCount={weParticipationCount}
                     onPhotoClick={() => photoInputRef.current?.click()}
+                    responsive
                   />
                 </div>
                 <div className="mt-4 text-center">

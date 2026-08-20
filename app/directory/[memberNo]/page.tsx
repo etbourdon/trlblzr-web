@@ -83,6 +83,7 @@ export default async function MemberCardPage({
             proWebsite={candidate.proWebsite}
             whatsapp={candidate.whatsapp}
             weParticipationCount={candidate.weParticipation.length}
+            responsive
           />
         </div>
       </main>

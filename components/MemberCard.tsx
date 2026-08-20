@@ -84,10 +84,12 @@ function IconWhatsApp() {
 
 // Batch 8 follow-up — one star per past WE (weekend event) attended. Beyond 3 the row of glyphs
 // gets cramped in a small corner badge, so it collapses to a compact "N★" numeral form instead.
-function StarBadge({ count }: { count: number }) {
+function StarBadge({ count, responsive }: { count: number; responsive?: boolean }) {
   if (count <= 0) return null;
   return (
-    <div className="absolute top-3 right-3 font-mono text-[11px] tracking-[0.04em] text-paper-white bg-trail-black/55 rounded px-1.5 py-0.5 flex items-center gap-px">
+    <div
+      className={`absolute top-3 right-3 font-mono tracking-[0.04em] text-paper-white bg-trail-black/55 rounded flex items-center gap-px ${responsive ? 'text-[9px] px-1 py-0.5 sm:text-[11px] sm:px-1.5' : 'text-[11px] px-1.5 py-0.5'}`}
+    >
       {count <= 3 ? (
         <span className="text-ember">{'★'.repeat(count)}</span>
       ) : (
@@ -184,10 +186,12 @@ export default function MemberCard({
               </div>
             </div>
           )}
-          <div className="absolute top-3 left-3.5 font-display font-extrabold text-[13px] tracking-tight text-paper-white bg-trail-black/55 rounded px-1.5 py-0.5">
+          <div
+            className={`absolute top-3 left-3.5 font-display font-extrabold tracking-tight text-paper-white bg-trail-black/55 rounded ${responsive ? 'text-[9px] px-1 py-0.5 sm:text-[13px] sm:px-1.5' : 'text-[13px] px-1.5 py-0.5'}`}
+          >
             TRLBLZR<span className="text-ember">.run</span>
           </div>
-          <StarBadge count={weParticipationCount ?? 0} />
+          <StarBadge count={weParticipationCount ?? 0} responsive={responsive} />
           {memberNo != null && (
             <div className="absolute bottom-2.5 right-3 font-mono text-[9px] tracking-[0.12em] text-paper-white bg-trail-black/55 rounded px-1.5 py-0.5">
               MEMBER // {String(memberNo).padStart(4, '0')}

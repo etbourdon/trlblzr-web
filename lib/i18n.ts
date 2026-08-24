@@ -279,7 +279,7 @@ export const dictionary: Record<Locale, Dict> = {
     },
     club: {
       statLabel: 'Coureurs · Entrepreneurs',
-      tagline: 'Plus de 250 entrepreneurs et investisseurs qui courent ensemble — sans petits fours, sans slides, en vrai.',
+      tagline: 'Plus de 400 entrepreneurs et investisseurs qui courent ensemble — sans petits fours, sans slides, en vrai.',
       item1: 'Social Runs hebdomadaires à Paris et Lyon, en vrai.',
       item2: "Communauté WhatsApp + LinkedIn pour partager training, retours d'expérience et actus Trail × Leadership.",
       item3: 'Accès prioritaire aux informations et opportunités.',
@@ -331,7 +331,7 @@ export const dictionary: Record<Locale, Dict> = {
       s2Utmb: 'Index UTMB', s2UtmbHint: 'Index UTMB (ou laisse vide)',
       s2Email: 'Email', s2Whatsapp: 'WhatsApp', s2Linkedin: 'LinkedIn',
       s2LinkedinOptional: '(optionnel)',
-      s2Rgpd: "J'accepte que mes informations soient utilisées par TRLBLZR.RUN pour traiter ma candidature et me recontacter. Conformément au RGPD, je peux à tout moment demander la suppression de mes données en écrivant à etienne@bourdon.com.",
+      s2Rgpd: "J'accepte que mes informations soient utilisées par TRLBLZR.RUN pour traiter ma candidature et me recontacter. Conformément au RGPD, je peux à tout moment demander la suppression de mes données en écrivant à contact@brdn.pro.",
       s2Submit: 'Soumettre ma candidature',
       s2Submitting: 'Envoi en cours…',
       s3Title: 'Candidature',
@@ -363,7 +363,7 @@ export const dictionary: Record<Locale, Dict> = {
       errorTitle: 'Une erreur est survenue',
       errorFooter: 'Si le problème persiste, écris à',
       errorFooterEnd: 'en mentionnant le message ci-dessus.',
-      errorFallback: "Une erreur est survenue. Réessaie ou écris à etienne@bourdon.com.",
+      errorFallback: "Une erreur est survenue. Réessaie ou écris à contact@trlblzr.run.",
       errorUnknown: 'Erreur inconnue',
       // Batch 3 — Form v2
       s2SelfDescLabelDirigeant: 'Décris-toi en tant que dirigeant',
@@ -614,7 +614,7 @@ export const dictionary: Record<Locale, Dict> = {
     },
     club: {
       statLabel: 'Runners · Entrepreneurs',
-      tagline: 'More than 250 entrepreneurs and investors running together — no canapés, no slides, the real thing.',
+      tagline: 'More than 400 entrepreneurs and investors running together — no canapés, no slides, the real thing.',
       item1: 'Weekly social runs in Paris and Lyon, in real life.',
       item2: 'WhatsApp + LinkedIn community to share training, experience, Trail × Leadership news.',
       item3: 'Priority access to news and opportunities.',
@@ -666,7 +666,7 @@ export const dictionary: Record<Locale, Dict> = {
       s2Utmb: 'UTMB index', s2UtmbHint: 'UTMB index (or leave blank)',
       s2Email: 'Email', s2Whatsapp: 'WhatsApp', s2Linkedin: 'LinkedIn',
       s2LinkedinOptional: '(optional)',
-      s2Rgpd: 'I agree that my information is used by TRLBLZR.RUN to process my application and contact me. Under GDPR, I can request deletion of my data at any time by writing to etienne@bourdon.com.',
+      s2Rgpd: 'I agree that my information is used by TRLBLZR.RUN to process my application and contact me. Under GDPR, I can request deletion of my data at any time by writing to contact@brdn.pro.',
       s2Submit: 'Submit my application',
       s2Submitting: 'Sending…',
       s3Title: 'Application',
@@ -698,7 +698,7 @@ export const dictionary: Record<Locale, Dict> = {
       errorTitle: 'An error occurred',
       errorFooter: 'If the issue persists, write to',
       errorFooterEnd: 'and quote the message above.',
-      errorFallback: 'An error occurred. Try again or write to etienne@bourdon.com.',
+      errorFallback: 'An error occurred. Try again or write to contact@trlblzr.run.',
       errorUnknown: 'Unknown error',
       // Batch 3 — Form v2
       s2SelfDescLabelDirigeant: 'Describe yourself as a leader',

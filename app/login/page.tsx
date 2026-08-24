@@ -286,10 +286,10 @@ function LoginForm() {
           <p className="mt-16 font-mono text-[10px] tracking-[0.15em] text-ash">
             {t.login.forgotEmailHint.toUpperCase()}{' '}
             <a
-              href="mailto:etienne@bourdon.com"
+              href="mailto:contact@trlblzr.run"
               className="text-paper-white hover:text-ember transition-colors"
             >
-              ETIENNE@BOURDON.COM
+              CONTACT@TRLBLZR.RUN
             </a>
           </p>
         </div>

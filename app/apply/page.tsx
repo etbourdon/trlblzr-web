@@ -496,11 +496,11 @@ function StepInfos({
             className="mt-1 w-4 h-4 accent-ember"
           />
           <span>
-            {t.apply.s2Rgpd.split('etienne@bourdon.com')[0]}
-            <a href="mailto:etienne@bourdon.com" className="text-ember hover:underline">
-              etienne@bourdon.com
+            {t.apply.s2Rgpd.split('contact@brdn.pro')[0]}
+            <a href="mailto:contact@brdn.pro" className="text-ember hover:underline">
+              contact@brdn.pro
             </a>
-            {t.apply.s2Rgpd.split('etienne@bourdon.com')[1] || ''} *
+            {t.apply.s2Rgpd.split('contact@brdn.pro')[1] || ''} *
           </span>
         </label>
 
@@ -510,8 +510,8 @@ function StepInfos({
             <p className="text-paper-white/80">{submitError}</p>
             <p className="mt-3 text-paper-white/60 text-[10px]">
               {t.apply.errorFooter}{' '}
-              <a href="mailto:etienne@bourdon.com" className="text-ember hover:underline">
-                etienne@bourdon.com
+              <a href="mailto:contact@trlblzr.run" className="text-ember hover:underline">
+                contact@trlblzr.run
               </a>{' '}
               {t.apply.errorFooterEnd}
             </p>
@@ -699,10 +699,10 @@ function StepConfirmation({
       <p className="mt-12 font-mono text-[10px] tracking-[0.2em] text-ash">
         {t.apply.s3Contact.toUpperCase()} →{' '}
         <a
-          href="mailto:etienne@bourdon.com"
+          href="mailto:contact@trlblzr.run"
           className="text-paper-white hover:text-ember transition-colors"
         >
-          ETIENNE@BOURDON.COM
+          CONTACT@TRLBLZR.RUN
         </a>
       </p>
     </section>

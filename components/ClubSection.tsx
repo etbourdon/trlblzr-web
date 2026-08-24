@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useLocale } from '@/lib/locale-provider';
 import { pimUrl } from '@/lib/i18n';
 
@@ -35,7 +34,7 @@ export default function ClubSection() {
               />
               <div className="relative z-10">
                 <span className="font-display font-bold text-7xl md:text-9xl text-paper-white leading-none">
-                  250 +
+                  400 +
                 </span>
                 <div className="mt-2 font-mono text-[10px] tracking-[0.25em] text-paper-white/85">
                   {t.club.statLabel.toUpperCase()}
@@ -65,14 +64,9 @@ export default function ClubSection() {
             </ul>
 
             <div className="mt-10 flex flex-wrap items-center gap-3">
-              {/* CTA primaire : Apply (TRLBLZR WE) */}
-              <Link
-                href="/apply"
-                className="font-mono text-[11px] tracking-[0.2em] bg-ember text-trail-black px-6 py-3 rounded-full hover:bg-paper-white transition-colors"
-              >
-                {t.club.ctaApply.toUpperCase()} ↗
-              </Link>
-              {/* CTA secondaire : Rejoins le réseau (Pitch in Motion → WhatsApp) */}
+              {/* CTA unique : Rejoins le réseau (Pitch in Motion → WhatsApp) — le bouton
+                  "Postuler" a été retiré (SBL-28) : il menait vers /apply (candidature
+                  TRLBLZR WE), hors sujet dans ce bloc qui parle du réseau Pitch in Motion. */}
               <a
                 href={pimUrl('#join', locale, {
                   source: 'trlblzr',

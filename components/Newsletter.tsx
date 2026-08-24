@@ -30,10 +30,10 @@ export default function Newsletter() {
 
         <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
           <a
-            href="mailto:etienne@bourdon.com"
+            href="mailto:contact@trlblzr.run"
             className="font-mono text-xs tracking-[0.2em] text-paper-white border border-paper-white/30 px-6 py-3 rounded-full hover:border-ember hover:text-ember transition-colors"
           >
-            ETIENNE@BOURDON.COM
+            CONTACT@TRLBLZR.RUN
           </a>
           <a
             href="https://cal.com/bourdon/discovery"

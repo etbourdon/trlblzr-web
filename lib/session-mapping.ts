@@ -5,12 +5,17 @@
 // temps que lib/content.ts et SESSION_PAGE_IDS à chaque sync manuelle depuis la base Sessions.
 // Legacy slugs conservés pour compat backwards (liens externes historiques ou sessions annulées).
 export const SESSION_LABELS: Record<string, string> = {
-  // Saison automne 2026 (actives)
-  'france-2026-10': 'France — 2-4 octobre 2026',
-  'grand-canyon-2026-10': 'Grand Canyon — 8-11 octobre 2026 · RIM to RIM to RIM',
+  // Saison 2027 (actives)
   'maroc-2026-11': 'France — 6-8 novembre 2026', // slug conservé tel quel malgré le contenu changé (opaque, cf. SBL-19)
-  'france-2026-11': 'France — 20-22 novembre 2026',
-  // Legacy — mappent tous vers "Sans session ciblée" (sessions non-existantes ou annulées)
+  'france-2027-03-12': 'France — 12-14 mars 2027',
+  'france-2027-04-23': 'France — 23-25 avril 2027',
+  'france-2027-05-21': 'France — 21-23 mai 2027',
+  'france-2027-06-04': 'France — 4-6 juin 2027',
+  'france-2027-06-11': 'France — 11-13 juin 2027',
+  // Legacy — mappent tous vers "Sans session ciblée" (sessions non-existantes, dépubliées ou annulées)
+  'france-2026-10': '— Sans session ciblée —',
+  'grand-canyon-2026-10': '— Sans session ciblée —',
+  'france-2026-11': '— Sans session ciblée —',
   'france-2026-09': '— Sans session ciblée —',
   'annecy-mai-2026': '— Sans session ciblée —',
   'vercors-juillet-2026': '— Sans session ciblée —',
@@ -36,10 +41,12 @@ export function mapSlugsToSessionLabels(slugs: string[] | undefined): string[] {
 // Sessions n'est pas fetchée dynamiquement par le site, ces IDs sont mis à jour ici quand une
 // session est ajoutée/retirée côté Notion.
 export const SESSION_PAGE_IDS: Record<string, string> = {
-  'france-2026-10': '742ee5c5-53d7-440e-855b-6e98dbb55cbd',
-  'grand-canyon-2026-10': '80b72385-9d05-47c3-8d9b-a425e52a3ab3',
   'maroc-2026-11': 'bb32c309-0676-4bce-9338-68561a697a82',
-  'france-2026-11': '0144a83f-5e16-4cde-af2d-1b68903bfb14',
+  'france-2027-03-12': '7d9d4432-917d-47fb-a79b-f867885c00e5',
+  'france-2027-04-23': '78cdab46-f309-4351-91de-4a2eeb9cf07b',
+  'france-2027-05-21': '78037e79-fd5b-4eb6-8cec-9d257c0716ff',
+  'france-2027-06-04': '651d2db2-4c91-40ab-a283-c497f8385bda',
+  'france-2027-06-11': '2122ad68-ec47-476f-8065-787ce140671a',
 };
 
 // Reverse lookup (page ID → slug), used to pre-check /profile's session checkboxes from the

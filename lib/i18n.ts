@@ -45,11 +45,13 @@ export type Dict = {
     clubHeading: string;
   };
   sessions: {
-    // Saison automne 2026 — sessions chronologiques (france-2026-09 annulée, retirée)
-    octDate: string; octPlace: string; octTheme: string; octBody: string;
-    grandCanyonDate: string; grandCanyonPlace: string; grandCanyonTheme: string; grandCanyonBody: string;
+    // SBL-31 — saison 2027 (france-2026-10, grand-canyon-2026-10, france-2026-11 dépubliées)
     marocDate: string; marocPlace: string; marocTheme: string; marocBody: string;
-    novDate: string; novPlace: string; novTheme: string; novBody: string;
+    mar27Date: string; mar27Place: string; mar27Theme: string; mar27Body: string;
+    apr27Date: string; apr27Place: string; apr27Theme: string; apr27Body: string;
+    may27Date: string; may27Place: string; may27Theme: string; may27Body: string;
+    jun27aDate: string; jun27aPlace: string; jun27aTheme: string; jun27aBody: string;
+    jun27bDate: string; jun27bPlace: string; jun27bTheme: string; jun27bBody: string;
     applyShort: string;
   };
   past: {
@@ -221,23 +223,30 @@ export const dictionary: Record<Locale, Dict> = {
       clubHeading: 'La communauté',
     },
     sessions: {
-      // Saison automne 2026
-      octDate: '2 — 4 octobre 2026',
-      octPlace: 'France',
-      octTheme: 'TRLBLZR WE',
-      octBody: "L'automne pour clarifier tes priorités avant le dernier trimestre. Trois jours pour transformer ton élan en progression durable, sur les sentiers comme dans le business. Recul, terrain, intention.",
-      grandCanyonDate: '8 — 11 octobre 2026',
-      grandCanyonPlace: 'Grand Canyon, États-Unis',
-      grandCanyonTheme: 'RIM to RIM to RIM',
-      grandCanyonBody: "67 km de légende au cœur du Grand Canyon. Des milliers de mètres de dénivelé, des paysages à couper le souffle. Trois jours pour sortir du cadre et repousser tes limites avec d'autres entrepreneurs.",
       marocDate: '6 — 8 novembre 2026',
       marocPlace: 'France',
       marocTheme: 'TRLBLZR WE',
       marocBody: "Trois jours pour clôturer la saison fort. Un corps durable, des sentiers d'automne, des échanges profonds. Tes prochains défis se préparent ici, sur les sentiers comme dans tes projets.",
-      novDate: '20 — 22 novembre 2026',
-      novPlace: 'France',
-      novTheme: 'TRLBLZR WE',
-      novBody: "Le dernier week-end de la saison, encore à écrire. Nouveau territoire, nouveau thème, même ambition : le trail pour progresser et créer des connexions fortes. Détails bientôt.",
+      mar27Date: '12 — 14 mars 2027',
+      mar27Place: 'France',
+      mar27Theme: 'TRLBLZR WE',
+      mar27Body: 'Premier rendez-vous de la nouvelle saison. Programme et lieu précis à venir.',
+      apr27Date: '23 — 25 avril 2027',
+      apr27Place: 'France',
+      apr27Theme: 'TRLBLZR WE',
+      apr27Body: 'Le printemps sur les sentiers, pour repartir sur de nouvelles bases. Détails à venir.',
+      may27Date: '21 — 23 mai 2027',
+      may27Place: 'France',
+      may27Theme: 'TRLBLZR WE',
+      may27Body: 'Un nouveau week-end pour progresser, ensemble. Détails à venir.',
+      jun27aDate: '4 — 6 juin 2027',
+      jun27aPlace: 'France',
+      jun27aTheme: 'TRLBLZR WE',
+      jun27aBody: "Premier rendez-vous de juin, pour clôturer le premier semestre sur les sentiers. Détails à venir.",
+      jun27bDate: '11 — 13 juin 2027',
+      jun27bPlace: 'France',
+      jun27bTheme: 'TRLBLZR WE',
+      jun27bBody: 'Deuxième rendez-vous de juin. Détails à venir.',
       applyShort: 'Postuler',
     },
     past: {
@@ -556,23 +565,30 @@ export const dictionary: Record<Locale, Dict> = {
       clubHeading: 'The community',
     },
     sessions: {
-      // Fall 2026 season
-      octDate: 'October 2 — 4, 2026',
-      octPlace: 'France',
-      octTheme: 'TRLBLZR WE',
-      octBody: "Autumn to clarify your priorities before the last quarter. Three days to turn momentum into sustainable progress, on the trails and in business. Perspective, terrain, intention.",
-      grandCanyonDate: 'October 8 — 11, 2026',
-      grandCanyonPlace: 'Grand Canyon, USA',
-      grandCanyonTheme: 'RIM to RIM to RIM',
-      grandCanyonBody: "67 km of legend through the Grand Canyon. Thousands of meters of elevation, breathtaking landscapes. Three days to step out of the frame and push your limits with fellow entrepreneurs.",
       marocDate: 'November 6 — 8, 2026',
       marocPlace: 'France',
       marocTheme: 'TRLBLZR WE',
       marocBody: "Three days to close the season strong. A durable body, autumn trails, deeper conversations. Your next challenges start here, on the trails and in your projects.",
-      novDate: 'November 20 — 22, 2026',
-      novPlace: 'France',
-      novTheme: 'TRLBLZR WE',
-      novBody: "The final weekend of the season, yet to be written. New territory, new theme, same ambition: trail running to progress and build strong connections. Details soon.",
+      mar27Date: 'March 12 — 14, 2027',
+      mar27Place: 'France',
+      mar27Theme: 'TRLBLZR WE',
+      mar27Body: 'First stop of the new season. Program and exact location coming soon.',
+      apr27Date: 'April 23 — 25, 2027',
+      apr27Place: 'France',
+      apr27Theme: 'TRLBLZR WE',
+      apr27Body: 'Spring on the trails, a fresh start. Details coming soon.',
+      may27Date: 'May 21 — 23, 2027',
+      may27Place: 'France',
+      may27Theme: 'TRLBLZR WE',
+      may27Body: 'A new weekend to keep progressing, together. Details coming soon.',
+      jun27aDate: 'June 4 — 6, 2027',
+      jun27aPlace: 'France',
+      jun27aTheme: 'TRLBLZR WE',
+      jun27aBody: 'First June date, closing out the first half of the year on the trails. Details coming soon.',
+      jun27bDate: 'June 11 — 13, 2027',
+      jun27bPlace: 'France',
+      jun27bTheme: 'TRLBLZR WE',
+      jun27bBody: 'Second June date. Details coming soon.',
       applyShort: 'Apply',
     },
     past: {

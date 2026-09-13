@@ -81,6 +81,17 @@ export const upcomingSessions: Session[] = [
     intro: 'Deuxième rendez-vous de juin. Détails à venir.',
     imageSrc: '/sessions/france-2027-06-11.jpg',
   },
+  {
+    // SBL-33 — slug conservé tel quel malgré le contenu changé (opaque, cf. SBL-19)
+    slug: 'grand-canyon-2026-10',
+    number: '0017',
+    location: 'GRAND CANYON, USA',
+    dates: '07 — 10 OCTOBRE 2027',
+    theme: 'RIM TO RIM TO RIM',
+    status: 'upcoming',
+    intro: '67 km de légende au cœur du Grand Canyon.',
+    imageSrc: '/sessions/grand-canyon-2026-10.jpg',
+  },
 ];
 
 // 5 éditions passées, ordre chronologique inverse (plus récente d'abord).

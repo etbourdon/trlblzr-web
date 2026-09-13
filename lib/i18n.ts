@@ -45,13 +45,15 @@ export type Dict = {
     clubHeading: string;
   };
   sessions: {
-    // SBL-31 — saison 2027 (france-2026-10, grand-canyon-2026-10, france-2026-11 dépubliées)
+    // SBL-31 — saison 2027 (france-2026-10, france-2026-11 dépubliées)
     marocDate: string; marocPlace: string; marocTheme: string; marocBody: string;
     mar27Date: string; mar27Place: string; mar27Theme: string; mar27Body: string;
     apr27Date: string; apr27Place: string; apr27Theme: string; apr27Body: string;
     may27Date: string; may27Place: string; may27Theme: string; may27Body: string;
     jun27aDate: string; jun27aPlace: string; jun27aTheme: string; jun27aBody: string;
     jun27bDate: string; jun27bPlace: string; jun27bTheme: string; jun27bBody: string;
+    // SBL-33 — Grand Canyon relancé sur une nouvelle date US 2027
+    grandCanyon27Date: string; grandCanyon27Place: string; grandCanyon27Theme: string; grandCanyon27Body: string;
     applyShort: string;
   };
   past: {
@@ -247,6 +249,10 @@ export const dictionary: Record<Locale, Dict> = {
       jun27bPlace: 'France',
       jun27bTheme: 'TRLBLZR WE',
       jun27bBody: 'Deuxième rendez-vous de juin. Détails à venir.',
+      grandCanyon27Date: '7 — 10 octobre 2027',
+      grandCanyon27Place: 'Grand Canyon, États-Unis',
+      grandCanyon27Theme: 'RIM to RIM to RIM',
+      grandCanyon27Body: "67 km de légende au cœur du Grand Canyon. Des milliers de mètres de dénivelé, des paysages à couper le souffle. Quatre jours, du jeudi au dimanche, pour sortir du cadre et repousser tes limites avec d'autres entrepreneurs.",
       applyShort: 'Postuler',
     },
     past: {
@@ -589,6 +595,10 @@ export const dictionary: Record<Locale, Dict> = {
       jun27bPlace: 'France',
       jun27bTheme: 'TRLBLZR WE',
       jun27bBody: 'Second June date. Details coming soon.',
+      grandCanyon27Date: 'October 7 — 10, 2027',
+      grandCanyon27Place: 'Grand Canyon, USA',
+      grandCanyon27Theme: 'RIM to RIM to RIM',
+      grandCanyon27Body: "67 km of legend through the Grand Canyon. Thousands of meters of elevation, breathtaking landscapes. Four days, Thursday to Sunday, to step out of the frame and push your limits with fellow entrepreneurs.",
       applyShort: 'Apply',
     },
     past: {

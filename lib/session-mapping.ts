@@ -12,9 +12,9 @@ export const SESSION_LABELS: Record<string, string> = {
   'france-2027-05-21': 'France — 21-23 mai 2027',
   'france-2027-06-04': 'France — 4-6 juin 2027',
   'france-2027-06-11': 'France — 11-13 juin 2027',
+  'grand-canyon-2026-10': 'Grand Canyon — 7-10 octobre 2027 · RIM to RIM to RIM', // slug conservé tel quel malgré le contenu changé (opaque, cf. SBL-19/SBL-33)
   // Legacy — mappent tous vers "Sans session ciblée" (sessions non-existantes, dépubliées ou annulées)
   'france-2026-10': '— Sans session ciblée —',
-  'grand-canyon-2026-10': '— Sans session ciblée —',
   'france-2026-11': '— Sans session ciblée —',
   'france-2026-09': '— Sans session ciblée —',
   'annecy-mai-2026': '— Sans session ciblée —',
@@ -47,6 +47,7 @@ export const SESSION_PAGE_IDS: Record<string, string> = {
   'france-2027-05-21': '78037e79-fd5b-4eb6-8cec-9d257c0716ff',
   'france-2027-06-04': '651d2db2-4c91-40ab-a283-c497f8385bda',
   'france-2027-06-11': '2122ad68-ec47-476f-8065-787ce140671a',
+  'grand-canyon-2026-10': '80b72385-9d05-47c3-8d9b-a425e52a3ab3',
 };
 
 // Reverse lookup (page ID → slug), used to pre-check /profile's session checkboxes from the

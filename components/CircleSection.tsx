@@ -7,7 +7,7 @@ import { upcomingSessions } from '@/lib/content';
 export default function CircleSection() {
   const { t } = useLocale();
 
-  // Mapping slug → clés i18n. Saison 2027 (france-2026-10, grand-canyon-2026-10, france-2026-11 dépubliées).
+  // Mapping slug → clés i18n. Saison 2027 (france-2026-10, france-2026-11 dépubliées).
   const labels: Record<string, { date: string; theme: string; place: string; body: string; number: string; isTbd?: boolean }> = {
     'maroc-2026-11': { date: t.sessions.marocDate, theme: t.sessions.marocTheme, place: t.sessions.marocPlace, body: t.sessions.marocBody, number: '0010' },
     'france-2027-03-12': { date: t.sessions.mar27Date, theme: t.sessions.mar27Theme, place: t.sessions.mar27Place, body: t.sessions.mar27Body, number: '0012' },
@@ -15,6 +15,7 @@ export default function CircleSection() {
     'france-2027-05-21': { date: t.sessions.may27Date, theme: t.sessions.may27Theme, place: t.sessions.may27Place, body: t.sessions.may27Body, number: '0014' },
     'france-2027-06-04': { date: t.sessions.jun27aDate, theme: t.sessions.jun27aTheme, place: t.sessions.jun27aPlace, body: t.sessions.jun27aBody, number: '0015' },
     'france-2027-06-11': { date: t.sessions.jun27bDate, theme: t.sessions.jun27bTheme, place: t.sessions.jun27bPlace, body: t.sessions.jun27bBody, number: '0016' },
+    'grand-canyon-2026-10': { date: t.sessions.grandCanyon27Date, theme: t.sessions.grandCanyon27Theme, place: t.sessions.grandCanyon27Place, body: t.sessions.grandCanyon27Body, number: '0017' },
   };
 
   return (

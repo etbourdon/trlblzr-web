@@ -21,10 +21,10 @@ export default function Header() {
         />
         <div className="flex flex-col leading-none">
           <div className="flex items-baseline gap-0">
-            <span className="font-display font-bold text-3xl md:text-4xl tracking-tight text-paper-white">
+            <span className="font-display font-bold text-2xl sm:text-3xl md:text-4xl tracking-tight text-paper-white">
               TRLBLZR
             </span>
-            <span className="font-display font-bold text-xl md:text-2xl tracking-tight text-ember">
+            <span className="font-display font-bold text-lg sm:text-xl md:text-2xl tracking-tight text-ember">
               .run
             </span>
           </div>
@@ -46,11 +46,22 @@ export default function Header() {
         </Link>
       </nav>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3 sm:gap-4">
         <LangSwitcher />
         <Link
+          href="/login"
+          aria-label={t.nav.memberLogin}
+          className="flex items-center gap-1.5 font-mono text-[11px] tracking-[0.2em] text-paper-white hover:text-ember transition-colors"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7" />
+          </svg>
+          <span className="hidden sm:inline">{t.nav.memberLogin.toUpperCase()}</span>
+        </Link>
+        <Link
           href="/apply"
-          className="font-mono text-[11px] tracking-[0.2em] bg-ember text-trail-black px-4 py-2 rounded-full hover:bg-paper-white transition-colors"
+          className="font-mono text-[11px] tracking-[0.2em] whitespace-nowrap bg-ember text-trail-black px-4 py-2 rounded-full hover:bg-paper-white transition-colors"
         >
           {t.common.apply.toUpperCase()} ↗
         </Link>

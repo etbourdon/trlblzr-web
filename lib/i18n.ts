@@ -17,7 +17,7 @@ export const ARCHETYPE_QUESTIONNAIRE_URL = 'https://sideways-anteater-360.notion
 
 export type Dict = {
   meta: { titleHome: string; titleApply: string; desc: string };
-  nav: { sessions: string; athletes: string; club: string };
+  nav: { sessions: string; athletes: string; club: string; memberLogin: string };
   header: { sublogo: string };
   common: { apply: string; back: string };
   hero: {
@@ -92,7 +92,7 @@ export type Dict = {
   athletes: { roleUltra: string; roleTrail: string };
   club: { statLabel: string; tagline: string; item1: string; item2: string; item3: string; cta: string; ctaApply: string; ctaNetwork: string };
   final: { eyebrow: string; titleLine1: string; titleLine2Pre: string; titleLine2Highlight: string; body1: string; body2: string; cta: string };
-  footer: { descr: string; explore: string; follow: string; copyright: string; tagline: string; sisterBrand: string; memberLogin: string };
+  footer: { descr: string; explore: string; follow: string; copyright: string; tagline: string; sisterBrand: string };
   apply: {
     s1Eyebrow: string; s1Title: string; s1TitleHighlight: string; s1Lead: string;
     s1DirigeantTitleLine1: string; s1DirigeantTitleLine2: string; s1DirigeantDesc: string;
@@ -192,7 +192,7 @@ export const dictionary: Record<Locale, Dict> = {
       titleApply: 'Postuler — TRLBLZR.RUN',
       desc: "Du trail running en montagne pour dirigeants, avec des athlètes professionnels. On ne pitche pas — on s'aligne.",
     },
-    nav: { sessions: 'Sessions', athletes: 'Athlètes', club: 'Le Club' },
+    nav: { sessions: 'Sessions', athletes: 'Athlètes', club: 'Le Club', memberLogin: 'Espace membre' },
     header: { sublogo: 'TRACE TON SENTIER' },
     common: { apply: 'Postuler', back: '← Retour' },
     hero: {
@@ -253,7 +253,7 @@ export const dictionary: Record<Locale, Dict> = {
       grandCanyon27Place: 'Grand Canyon, États-Unis',
       grandCanyon27Theme: 'RIM to RIM to RIM',
       grandCanyon27Body: "67 km de légende au cœur du Grand Canyon. Des milliers de mètres de dénivelé, des paysages à couper le souffle. Quatre jours, du jeudi au dimanche, pour sortir du cadre et repousser tes limites avec d'autres entrepreneurs.",
-      applyShort: 'Postuler',
+      applyShort: 'Postuler à ce WE',
     },
     past: {
       e0001Meta: 'Avril 2025',
@@ -318,20 +318,19 @@ export const dictionary: Record<Locale, Dict> = {
       copyright: '© 2026 TRLBLZR · Tous droits réservés',
       tagline: 'Courir — Échanger — Se perfectionner — Recommencer',
       sisterBrand: 'Pitch in Motion',
-      memberLogin: 'Déjà membre ? Se connecter',
     },
     apply: {
       s1Eyebrow: 'Postuler / Étape 1 sur 3',
       s1Title: 'Rejoindre',
       s1TitleHighlight: 'le club.',
-      s1Lead: "Quelques minutes pour qu'on apprenne à se connaître. Sélectionne d'abord ton profil — les informations qu'on te demandera ensuite dépendent de ce choix.",
+      s1Lead: "Quelques minutes pour qu'on apprenne à se connaître. Aucun week-end requis pour postuler. Sélectionne d'abord ton profil — les informations qu'on te demandera ensuite dépendent de ce choix.",
       s1DirigeantTitleLine1: 'Dirigeant',
       s1DirigeantTitleLine2: 'Entrepreneur',
-      s1DirigeantDesc: 'Business leader, entrepreneur, investisseur ou executive. Tu veux rejoindre la communauté et participer à une session — quel que soit ton niveau de trail.',
+      s1DirigeantDesc: "Business leader, entrepreneur, investisseur ou executive. Tu postules d'abord à la communauté ; participer à une session reste optionnel — quel que soit ton niveau de trail.",
       s1AthleteTitleLine1: 'Athlète',
       s1AthleteTitleLine2: 'Pro / Élite',
       s1AthleteDesc: 'Trail running athlete, élite ou pro runner. Tu peux nous rejoindre pour partager ton expérience, encadrer les sessions et bénéficier de la communauté.',
-      s1Note: 'Sessions traitées sous 48–72 h. Si éligible, tu recevras un lien pour réserver un appel découverte de 30 min avec Etienne.',
+      s1Note: 'Candidatures traitées sous 48–72 h. Si éligible, tu recevras un lien pour réserver un appel découverte de 30 min avec Etienne.',
       s2Eyebrow: 'Postuler / Étape 2 sur 3',
       s2TitleDirigeant: 'Profil dirigeant.',
       s2TitleAthlete: 'Profil athlète.',
@@ -538,7 +537,7 @@ export const dictionary: Record<Locale, Dict> = {
       titleApply: 'Apply — TRLBLZR.RUN',
       desc: "Mountain trail running for executives, alongside professional athletes. We don't pitch — we align. The movement does the rest.",
     },
-    nav: { sessions: 'Sessions', athletes: 'Athletes', club: 'The Club' },
+    nav: { sessions: 'Sessions', athletes: 'Athletes', club: 'The Club', memberLogin: 'Member login' },
     header: { sublogo: 'BLAZE YOUR TRAIL' },
     common: { apply: 'Apply', back: '← Back' },
     hero: {
@@ -599,7 +598,7 @@ export const dictionary: Record<Locale, Dict> = {
       grandCanyon27Place: 'Grand Canyon, USA',
       grandCanyon27Theme: 'RIM to RIM to RIM',
       grandCanyon27Body: "67 km of legend through the Grand Canyon. Thousands of meters of elevation, breathtaking landscapes. Four days, Thursday to Sunday, to step out of the frame and push your limits with fellow entrepreneurs.",
-      applyShort: 'Apply',
+      applyShort: 'Apply to this WE',
     },
     past: {
       e0001Meta: 'April 2025',
@@ -664,16 +663,15 @@ export const dictionary: Record<Locale, Dict> = {
       copyright: '© 2026 TRLBLZR · All rights reserved',
       tagline: 'Run — Talk — Sharpen — Repeat',
       sisterBrand: 'Pitch in Motion',
-      memberLogin: 'Already a member? Log in',
     },
     apply: {
       s1Eyebrow: 'Apply / Step 1 of 3',
       s1Title: 'Join',
       s1TitleHighlight: 'the club.',
-      s1Lead: 'A few minutes to get to know each other. Pick your profile first — the questions we ask next depend on this choice.',
+      s1Lead: 'A few minutes to get to know each other. No weekend required to apply. Pick your profile first — the questions we ask next depend on this choice.',
       s1DirigeantTitleLine1: 'Executive',
       s1DirigeantTitleLine2: 'Entrepreneur',
-      s1DirigeantDesc: 'Business leader, entrepreneur, investor or executive. You want to join the community and take part in a session — whatever your trail level.',
+      s1DirigeantDesc: 'Business leader, entrepreneur, investor or executive. You apply to the community first; taking part in a session is optional — whatever your trail level.',
       s1AthleteTitleLine1: 'Athlete',
       s1AthleteTitleLine2: 'Pro / Elite',
       s1AthleteDesc: 'Trail running athlete, elite runner or pro runner. Join us to share your experience, run the sessions and tap into the community.',

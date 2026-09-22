@@ -9,6 +9,7 @@ import Link from 'next/link';
 import FlowHeader from '@/components/FlowHeader';
 import DirectoryTeaser from '@/components/DirectoryTeaser';
 import MemberCard from '@/components/MemberCard';
+import TopoBackground from '@/components/TopoBackground';
 import { getSessionFromCookies } from '@/lib/auth';
 import { getCandidateById } from '@/lib/notion-candidates';
 import { dictionary } from '@/lib/i18n';
@@ -31,15 +32,22 @@ export default async function RefugePage({
 
   if (!session) {
     return (
-      <div className="min-h-screen bg-trail-black text-paper-white">
-        <FlowHeader homeHref={homeHref} backLabel={t.common.back} />
-        <DirectoryTeaser
-          t={t.directory}
-          variant="loggedOut"
-          loginHref={`/login?next=${encodeURIComponent('/refuge')}`}
-          titleOverride="Refuge"
-          bodyOverride={t.refuge.lead}
+      <div className="relative min-h-screen overflow-hidden bg-trail-black text-paper-white">
+        <TopoBackground />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 z-[1] bg-gradient-to-b from-trail-black/40 via-transparent to-trail-black/90"
         />
+        <div className="relative z-10">
+          <FlowHeader homeHref={homeHref} backLabel={t.common.back} />
+          <DirectoryTeaser
+            t={t.directory}
+            variant="loggedOut"
+            loginHref={`/login?next=${encodeURIComponent('/refuge')}`}
+            titleOverride="Refuge"
+            bodyOverride={t.refuge.lead}
+          />
+        </div>
       </div>
     );
   }
@@ -51,7 +59,13 @@ export default async function RefugePage({
     !!candidate && candidate.cardStatus === 'validated' && isAlumni(candidate);
 
   return (
-    <div className="min-h-screen bg-trail-black text-paper-white">
+    <div className="relative min-h-screen overflow-hidden bg-trail-black text-paper-white">
+      <TopoBackground />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 z-[1] bg-gradient-to-b from-trail-black/40 via-transparent to-trail-black/90"
+      />
+      <div className="relative z-10">
       <FlowHeader homeHref={homeHref} backLabel={t.common.back} />
       <main className="pt-32 md:pt-40 px-6 md:px-10 pb-32">
         <div className="max-w-2xl mx-auto space-y-10">
@@ -130,6 +144,7 @@ export default async function RefugePage({
           )}
         </div>
       </main>
+      </div>
     </div>
   );
 }

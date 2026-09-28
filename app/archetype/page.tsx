@@ -7,7 +7,6 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { useLocale } from '@/lib/locale-provider';
 import FlowHeader from '@/components/FlowHeader';
 import ArchetypeAnalysis from '@/components/ArchetypeAnalysis';
@@ -123,12 +122,21 @@ export default function ArchetypePage() {
 
             <p className="font-mono text-[10px] text-ash">{t.archetype.privateNote}</p>
 
-            <Link
-              href="/refuge"
+            {/* Not a <Link> — the Refuge page is a Server Component the router had already
+                cached from before the quiz was completed (visited on the way in, via its own
+                "take the test" prompt). A plain client-side navigation would replay that stale
+                cached copy; push + refresh forces Refuge to re-fetch the candidate from Notion
+                so the analysis shows up on the first visit back, not the second. */}
+            <button
+              type="button"
+              onClick={() => {
+                router.push('/refuge');
+                router.refresh();
+              }}
               className="inline-block font-mono text-xs tracking-[0.2em] bg-ember text-trail-black px-7 py-4 rounded-full hover:bg-paper-white transition-colors"
             >
               {t.archetype.backToRefuge.toUpperCase()}
-            </Link>
+            </button>
           </div>
         </main>
       </div>

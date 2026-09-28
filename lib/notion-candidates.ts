@@ -27,6 +27,18 @@ export function txt(content: string | undefined | null) {
   return [{ type: 'text', text: { content: String(content).slice(0, 2000) } }];
 }
 
+// Same as txt(), but chunks into multiple 2000-char blocks instead of silently truncating —
+// for fields that can run long, like the LLM-generated archetype analysis (SBL-35).
+export function longTxt(content: string | undefined | null) {
+  if (!content) return [];
+  const s = String(content);
+  const chunks: { type: 'text'; text: { content: string } }[] = [];
+  for (let i = 0; i < s.length; i += 2000) {
+    chunks.push({ type: 'text', text: { content: s.slice(i, i + 2000) } });
+  }
+  return chunks;
+}
+
 export type CandidateRecord = {
   id: string;
   email: string | null;
@@ -62,6 +74,10 @@ export type CandidateRecord = {
   cardDeleteAfter: string | null;
   weParticipation: string[];
   membershipValidUntil: string | null;
+  archetype: string | null;
+  secondaryArchetype: string | null;
+  archetypeAnalysis: string | null;
+  archetypeCompletedAt: string | null;
 };
 
 // Minimal shape of what we read out of a Notion property value — avoids pulling in Notion's SDK.
@@ -155,6 +171,10 @@ function toCandidateRecord(page: { id: string; properties: Record<string, Notion
     cardDeleteAfter: dateValue(p['Card delete after']),
     weParticipation: multiSelectNames(p['WE Participation']),
     membershipValidUntil: dateValue(p['Membership valid until']),
+    archetype: selectName(p['Archetype']),
+    secondaryArchetype: selectName(p['Secondary Archetype']),
+    archetypeAnalysis: richText(p['Archetype Analysis']),
+    archetypeCompletedAt: dateValue(p['Archetype Completed At']),
   };
 }
 

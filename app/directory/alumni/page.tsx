@@ -12,6 +12,8 @@ import { getCandidateById, listValidatedCandidates } from '@/lib/notion-candidat
 import { dictionary } from '@/lib/i18n';
 import { resolveServerLocale } from '@/lib/locale-server';
 import { deriveCardMeta, isAlumni } from '@/lib/card-display';
+import { archetypeBadge } from '@/lib/archetype';
+import type { Locale } from '@/lib/i18n';
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
@@ -42,7 +44,7 @@ export default async function AlumniDirectoryPage({
     if (!viewer || viewer.cardStatus !== 'validated' || !isAlumni(viewer)) {
       body = <DirectoryTeaser t={t.directory} variant="alumniOnly" />;
     } else {
-      body = <AlumniList title={t.directory.title} />;
+      body = <AlumniList title={t.directory.title} locale={locale} />;
     }
   }
 
@@ -54,7 +56,7 @@ export default async function AlumniDirectoryPage({
   );
 }
 
-async function AlumniList({ title }: { title: string }) {
+async function AlumniList({ title, locale }: { title: string; locale: Locale }) {
   const candidates = await listValidatedCandidates({ alumniOnly: true });
   return (
     <main className="pt-32 md:pt-40 px-6 md:px-10 pb-32">
@@ -65,6 +67,7 @@ async function AlumniList({ title }: { title: string }) {
         <div className="flex flex-col gap-10 items-center">
           {candidates.map((c) => {
             const { metaLine, sportLevelNumber } = deriveCardMeta(c);
+            const badge = archetypeBadge(c.archetype, locale);
             return (
               <MemberCard
                 key={c.id}
@@ -81,6 +84,8 @@ async function AlumniList({ title }: { title: string }) {
                 proWebsite={c.proWebsite}
                 whatsapp={c.whatsapp}
                 weParticipationCount={c.weParticipation.length}
+                archetypeLabel={badge?.label}
+                archetypeEmoji={badge?.emoji}
                 responsive
               />
             );

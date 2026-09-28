@@ -12,6 +12,8 @@ import { getCandidateById, listValidatedCandidates } from '@/lib/notion-candidat
 import { dictionary } from '@/lib/i18n';
 import { resolveServerLocale } from '@/lib/locale-server';
 import { deriveCardMeta, isActiveMembership } from '@/lib/card-display';
+import { archetypeBadge } from '@/lib/archetype';
+import type { Locale } from '@/lib/i18n';
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
@@ -42,7 +44,7 @@ export default async function DirectoryPage({
     if (!viewer || viewer.cardStatus !== 'validated' || !isActiveMembership(viewer)) {
       body = <DirectoryTeaser t={t.directory} variant="membershipRequired" />;
     } else {
-      body = <DirectoryList title={t.directory.title} />;
+      body = <DirectoryList title={t.directory.title} locale={locale} />;
     }
   }
 
@@ -54,7 +56,7 @@ export default async function DirectoryPage({
   );
 }
 
-async function DirectoryList({ title }: { title: string }) {
+async function DirectoryList({ title, locale }: { title: string; locale: Locale }) {
   const candidates = await listValidatedCandidates({});
   return (
     <main className="pt-32 md:pt-40 px-6 md:px-10 pb-32">
@@ -65,6 +67,7 @@ async function DirectoryList({ title }: { title: string }) {
         <div className="flex flex-col gap-10 items-center">
           {candidates.map((c) => {
             const { metaLine, sportLevelNumber } = deriveCardMeta(c);
+            const badge = archetypeBadge(c.archetype, locale);
             return (
               <MemberCard
                 key={c.id}
@@ -81,6 +84,8 @@ async function DirectoryList({ title }: { title: string }) {
                 proWebsite={c.proWebsite}
                 whatsapp={c.whatsapp}
                 weParticipationCount={c.weParticipation.length}
+                archetypeLabel={badge?.label}
+                archetypeEmoji={badge?.emoji}
                 responsive
               />
             );

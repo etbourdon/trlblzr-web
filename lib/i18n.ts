@@ -183,6 +183,25 @@ export type Dict = {
     goToAlumniDirectory: string;
     membershipRequiredNote: string;
   };
+  archetype: {
+    eyebrow: string;
+    quizTitle: string;
+    quizLead: string;
+    privateNote: string;
+    submitCta: string;
+    submittingCta: string;
+    incompleteError: string;
+    generationError: string;
+    resultHeading: string;
+    primaryLabel: string;
+    secondaryLabel: string;
+    retakeCta: string;
+    backToRefuge: string;
+    promptTitle: string;
+    promptBody: string;
+    promptCta: string;
+    completedNote: string;
+  };
 };
 
 export const dictionary: Record<Locale, Dict> = {
@@ -421,7 +440,7 @@ export const dictionary: Record<Locale, Dict> = {
       step3: "Sinon, on t'écrit aussi. Si la session ciblée est complète ou si le timing n'est pas le bon, on revient vers toi dès qu'une fenêtre se libère.",
       ctaProfile: 'Compléter ma carte',
       ctaHome: "Retour à l'accueil",
-      archetypeTeaser: 'En attendant, découvre ton profil Trailblazer — 10 questions, 2 minutes.',
+      archetypeTeaser: 'En attendant, découvre ton profil Trailblazer — 11 questions, 3 minutes.',
       archetypeCta: 'Faire le test →',
     },
     progress: {
@@ -503,7 +522,7 @@ export const dictionary: Record<Locale, Dict> = {
       unsavedChanges: 'Modifications non enregistrées — confirme ta card pour les appliquer.',
       downloadRequiresValidation: 'Disponible une fois ta card validée par TRLBLZR.',
       archetypeTeaser: 'Pendant que ta card est en revue, découvre ton profil Trailblazer.',
-      archetypeCta: 'Faire le test (2 min) →',
+      archetypeCta: 'Faire le test (3 min) →',
     },
     directory: {
       title: 'Annuaire des membres',
@@ -529,6 +548,27 @@ export const dictionary: Record<Locale, Dict> = {
       goToAlumniDirectory: 'Annuaire Alumni',
       membershipRequiredNote:
         "L'accès aux annuaires nécessite une adhésion active. Écris-nous si tu penses que c'est une erreur.",
+    },
+    archetype: {
+      eyebrow: 'Trailblazer Archetype',
+      quizTitle: 'Découvre ton archétype.',
+      quizLead:
+        "11 questions, environ 3 minutes. Réponds à l'instinct — il n'y a pas de bonne réponse.",
+      privateNote: 'Ta lecture complète reste privée — visible par toi seul dans ton Refuge.',
+      submitCta: 'Voir mon archétype',
+      submittingCta: 'Analyse en cours…',
+      incompleteError: 'Réponds à toutes les questions avant de continuer.',
+      generationError: 'Échec de la génération. Réessaie dans un instant.',
+      resultHeading: 'Ton profil Trailblazer',
+      primaryLabel: 'Archétype principal',
+      secondaryLabel: 'Archétype secondaire',
+      retakeCta: 'Refaire le test',
+      backToRefuge: 'Retour au Refuge',
+      promptTitle: 'Découvre ton archétype Trailblazer.',
+      promptBody:
+        "10 minutes pour révéler comment ta façon de courir dit quelque chose de ta façon de diriger. Reste privé, rien n'est partagé dans l'annuaire.",
+      promptCta: 'Faire le test →',
+      completedNote: 'Visible par toi seul — jamais diffusé dans l\'annuaire.',
     },
   },
   en: {
@@ -766,7 +806,7 @@ export const dictionary: Record<Locale, Dict> = {
       step3: "If not, we still write back. If the targeted session is full or the timing is off, we'll come back as soon as a window opens.",
       ctaProfile: 'Complete my card',
       ctaHome: 'Back to homepage',
-      archetypeTeaser: 'While you wait, discover your Trailblazer profile — 10 questions, 2 minutes.',
+      archetypeTeaser: 'While you wait, discover your Trailblazer profile — 11 questions, 3 minutes.',
       archetypeCta: 'Take the test →',
     },
     progress: {
@@ -848,7 +888,7 @@ export const dictionary: Record<Locale, Dict> = {
       unsavedChanges: 'Unsaved changes — confirm your card to apply them.',
       downloadRequiresValidation: 'Available once your card is validated by TRLBLZR.',
       archetypeTeaser: 'While your card is under review, discover your Trailblazer profile.',
-      archetypeCta: 'Take the test (2 min) →',
+      archetypeCta: 'Take the test (3 min) →',
     },
     directory: {
       title: 'Member directory',
@@ -874,6 +914,26 @@ export const dictionary: Record<Locale, Dict> = {
       goToAlumniDirectory: 'Alumni directory',
       membershipRequiredNote:
         'Directory access requires an active membership. Write to us if you think this is a mistake.',
+    },
+    archetype: {
+      eyebrow: 'Trailblazer Archetype',
+      quizTitle: 'Discover your archetype.',
+      quizLead: '11 questions, about 3 minutes. Go with your gut — there are no wrong answers.',
+      privateNote: 'Your full reading stays private — visible only to you in your Refuge.',
+      submitCta: 'See my archetype',
+      submittingCta: 'Analyzing…',
+      incompleteError: 'Answer every question before continuing.',
+      generationError: 'Generation failed. Try again in a moment.',
+      resultHeading: 'Your Trailblazer profile',
+      primaryLabel: 'Primary archetype',
+      secondaryLabel: 'Secondary archetype',
+      retakeCta: 'Retake the test',
+      backToRefuge: 'Back to Refuge',
+      promptTitle: 'Discover your Trailblazer archetype.',
+      promptBody:
+        "A few minutes to reveal how your running style mirrors your leadership style. Stays private, never shared in the directory.",
+      promptCta: 'Take the test →',
+      completedNote: 'Visible to you only — never shared in the directory.',
     },
   },
 };

@@ -116,6 +116,8 @@ export default function MemberCard({
   proWebsite,
   whatsapp,
   weParticipationCount,
+  archetypeLabel,
+  archetypeEmoji,
   onPhotoClick,
   responsive,
 }: {
@@ -132,6 +134,10 @@ export default function MemberCard({
   proWebsite?: string | null;
   whatsapp?: string | null;
   weParticipationCount?: number | null;
+  // SBL-35 — the archetype LABEL only (e.g. "⚡ Le Engine"), never the private analysis text —
+  // this component is rendered in the directory too, so it must never receive that text.
+  archetypeLabel?: string | null;
+  archetypeEmoji?: string | null;
   // SBL-26 follow-up — when provided, the photo area becomes clickable (own editable card only;
   // read-only renders like /directory or another member's card simply omit this).
   onPhotoClick?: () => void;
@@ -242,6 +248,12 @@ export default function MemberCard({
         {metaLine && (
           <div className="font-mono text-xs tracking-[0.06em] text-dust mt-1.5 uppercase">
             {metaLine}
+          </div>
+        )}
+        {archetypeLabel && (
+          <div className="inline-flex items-center gap-1.5 mt-2 font-mono text-[10px] tracking-[0.12em] text-ember bg-ember/10 border border-ember/30 rounded-full px-2.5 py-1">
+            {archetypeEmoji && <span aria-hidden="true">{archetypeEmoji}</span>}
+            {archetypeLabel.toUpperCase()}
           </div>
         )}
 

@@ -14,6 +14,7 @@ import { findCandidateByMemberNo, getCandidateById } from '@/lib/notion-candidat
 import { dictionary } from '@/lib/i18n';
 import { resolveServerLocale } from '@/lib/locale-server';
 import { deriveCardMeta, isActiveMembership } from '@/lib/card-display';
+import { archetypeBadge } from '@/lib/archetype';
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
@@ -63,6 +64,7 @@ export default async function MemberCardPage({
   if (!candidate) notFound();
 
   const { metaLine, sportLevelNumber } = deriveCardMeta(candidate);
+  const badge = archetypeBadge(candidate.archetype, locale);
 
   return (
     <div className="min-h-screen bg-trail-black text-paper-white">
@@ -83,6 +85,8 @@ export default async function MemberCardPage({
             proWebsite={candidate.proWebsite}
             whatsapp={candidate.whatsapp}
             weParticipationCount={candidate.weParticipation.length}
+            archetypeLabel={badge?.label}
+            archetypeEmoji={badge?.emoji}
             responsive
           />
         </div>

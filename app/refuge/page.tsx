@@ -10,11 +10,13 @@ import FlowHeader from '@/components/FlowHeader';
 import DirectoryTeaser from '@/components/DirectoryTeaser';
 import MemberCard from '@/components/MemberCard';
 import TopoBackground from '@/components/TopoBackground';
+import ArchetypeAnalysis from '@/components/ArchetypeAnalysis';
 import { getSessionFromCookies } from '@/lib/auth';
 import { getCandidateById } from '@/lib/notion-candidates';
 import { dictionary } from '@/lib/i18n';
 import { resolveServerLocale } from '@/lib/locale-server';
 import { deriveCardMeta, isActiveMembership, isAlumni } from '@/lib/card-display';
+import { archetypeBadge } from '@/lib/archetype';
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
@@ -88,6 +90,7 @@ export default async function RefugePage({
             ) : candidate.cardStatus === 'validated' ? (
               (() => {
                 const { metaLine, sportLevelNumber } = deriveCardMeta(candidate);
+                const badge = archetypeBadge(candidate.archetype, locale);
                 return (
                   <MemberCard
                     photoUrl={candidate.profilePictureUrl}
@@ -103,6 +106,8 @@ export default async function RefugePage({
                     proWebsite={candidate.proWebsite}
                     whatsapp={candidate.whatsapp}
                     weParticipationCount={candidate.weParticipation.length}
+                    archetypeLabel={badge?.label}
+                    archetypeEmoji={badge?.emoji}
                     responsive
                   />
                 );
@@ -111,6 +116,43 @@ export default async function RefugePage({
               <p className="font-mono text-sm text-ash">{t.refuge.noCardYet}</p>
             )}
           </div>
+
+          {candidate && (
+            <div className="border-t border-stone pt-8">
+              {candidate.archetypeAnalysis ? (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between flex-wrap gap-3">
+                    <p className="font-mono text-[10px] tracking-[0.25em] text-ember">
+                      // {t.archetype.resultHeading.toUpperCase()}
+                    </p>
+                    <Link
+                      href="/archetype"
+                      className="font-mono text-[10px] tracking-[0.2em] text-ash hover:text-ember transition-colors"
+                    >
+                      {t.archetype.retakeCta.toUpperCase()} →
+                    </Link>
+                  </div>
+                  <ArchetypeAnalysis text={candidate.archetypeAnalysis} />
+                  <p className="font-mono text-[10px] text-ash">{t.archetype.completedNote}</p>
+                </div>
+              ) : (
+                <div className="text-center space-y-3">
+                  <p className="font-display font-bold text-xl text-paper-white">
+                    {t.archetype.promptTitle}
+                  </p>
+                  <p className="max-w-md mx-auto font-sans text-sm text-ash leading-relaxed">
+                    {t.archetype.promptBody}
+                  </p>
+                  <Link
+                    href="/archetype"
+                    className="inline-block font-mono text-xs tracking-[0.2em] text-ember hover:text-paper-white transition-colors"
+                  >
+                    {t.archetype.promptCta}
+                  </Link>
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Link

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { toBlob } from 'html-to-image';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useLocale } from '@/lib/locale-provider';
 import FlowHeader from '@/components/FlowHeader';
 import SessionPicker from '@/components/SessionPicker';
@@ -10,7 +11,8 @@ import CityCountryFields from '@/components/CityCountryFields';
 import MemberCard from '@/components/MemberCard';
 import { Field, Input, Textarea, SectionHeader } from '@/components/FormFields';
 import { SPORT_LEVEL_LABELS } from '@/lib/field-options';
-import { ARCHETYPE_QUESTIONNAIRE_URL, type Dict } from '@/lib/i18n';
+import { type Dict } from '@/lib/i18n';
+import { archetypeBadge } from '@/lib/archetype';
 
 const CODE_BY_SPORT_LABEL: Record<string, string> = Object.fromEntries(
   Object.entries(SPORT_LEVEL_LABELS).map(([code, label]) => [label, code]),
@@ -111,6 +113,7 @@ export default function ProfilePage() {
   const [cardDeleteAfter, setCardDeleteAfter] = useState<string | null>(null);
   const [memberNo, setMemberNo] = useState<number | null>(null);
   const [weParticipationCount, setWeParticipationCount] = useState(0);
+  const [archetype, setArchetype] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
   const [generateError, setGenerateError] = useState<string | null>(null);
   const [submittingCard, setSubmittingCard] = useState(false);
@@ -165,6 +168,7 @@ export default function ProfilePage() {
         setCardDeleteAfter(c.cardDeleteAfter || null);
         setMemberNo(typeof c.memberNo === 'number' ? c.memberNo : null);
         setWeParticipationCount(Array.isArray(c.weParticipation) ? c.weParticipation.length : 0);
+        setArchetype(c.archetype || null);
       } catch {
         if (!cancelled) setLoadError(true);
       } finally {
@@ -256,6 +260,7 @@ export default function ProfilePage() {
     .filter(Boolean)
     .join(' · ');
   const sportLevelNumber = form.sportLevel ? parseInt(form.sportLevel, 10) : null;
+  const archetypeBadgeInfo = archetypeBadge(archetype, locale);
   const cardHasUnsavedChanges =
     (cardBio || cardLookingFor) &&
     (cardBio !== savedCardBio || cardLookingFor !== savedCardLookingFor);
@@ -705,6 +710,8 @@ export default function ProfilePage() {
                         proWebsite={form.proWebsite}
                         whatsapp={form.whatsapp}
                         weParticipationCount={weParticipationCount}
+                        archetypeLabel={archetypeBadgeInfo?.label}
+                        archetypeEmoji={archetypeBadgeInfo?.emoji}
                     onPhotoClick={() => photoInputRef.current?.click()}
                       />
                     </div>
@@ -791,22 +798,30 @@ export default function ProfilePage() {
                       <p className="font-mono text-xs text-ember">{cardSubmitError}</p>
                     )}
                     {cardStatus === 'submitted' && !cardHasUnsavedChanges && (
-                      <>
-                        <p className="font-mono text-xs text-ember">{t.card.submittedMessage}</p>
-                        <a
-                          href={ARCHETYPE_QUESTIONNAIRE_URL}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 font-sans text-sm text-ash hover:text-ember transition-colors w-fit"
-                        >
-                          {t.card.archetypeTeaser}
-                          <span className="text-ember">{t.card.archetypeCta}</span>
-                        </a>
-                      </>
+                      <p className="font-mono text-xs text-ember">{t.card.submittedMessage}</p>
                     )}
                     {cardStatus === 'validated' && !cardHasUnsavedChanges && (
                       <p className="font-mono text-xs text-ember">{t.card.validatedMessage}</p>
                     )}
+                    {(cardStatus === 'submitted' || cardStatus === 'validated') &&
+                      !cardHasUnsavedChanges && (
+                        <Link
+                          href="/archetype"
+                          className="flex items-center gap-2 font-sans text-sm text-ash hover:text-ember transition-colors w-fit"
+                        >
+                          {archetype ? (
+                            <>
+                              {archetypeBadgeInfo?.emoji} {archetypeBadgeInfo?.label}
+                              <span className="text-ember">{t.archetype.retakeCta} →</span>
+                            </>
+                          ) : (
+                            <>
+                              {t.card.archetypeTeaser}
+                              <span className="text-ember">{t.card.archetypeCta}</span>
+                            </>
+                          )}
+                        </Link>
+                      )}
 
                     {(cardStatus === 'submitted' || cardStatus === 'validated') && (
                       <div className="pt-6 border-t border-stone/50">

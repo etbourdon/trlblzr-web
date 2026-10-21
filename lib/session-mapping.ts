@@ -6,7 +6,7 @@
 // Legacy slugs conservés pour compat backwards (liens externes historiques ou sessions annulées).
 export const SESSION_LABELS: Record<string, string> = {
   // Saison 2027 (actives)
-  'maroc-2026-11': 'France — 6-8 novembre 2026', // slug conservé tel quel malgré le contenu changé (opaque, cf. SBL-19)
+  'maroc-2026-11': 'France — 11-13 décembre 2026', // slug conservé tel quel malgré le contenu changé (opaque, cf. SBL-19)
   'france-2027-03-12': 'France — 12-14 mars 2027',
   'france-2027-04-23': 'France — 23-25 avril 2027',
   'france-2027-05-21': 'France — 21-23 mai 2027',

@@ -25,7 +25,7 @@ export const upcomingSessions: Session[] = [
     slug: 'maroc-2026-11',
     number: '0010',
     location: 'FRANCE',
-    dates: '06 — 08 NOVEMBRE 2026',
+    dates: '11 — 13 DÉCEMBRE 2026',
     theme: 'TRLBLZR WE',
     status: 'upcoming',
     intro: 'Clôture de saison — corps durable, sentiers d’automne.',

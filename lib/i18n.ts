@@ -244,7 +244,7 @@ export const dictionary: Record<Locale, Dict> = {
       clubHeading: 'La communauté',
     },
     sessions: {
-      marocDate: '6 — 8 novembre 2026',
+      marocDate: '11 — 13 décembre 2026',
       marocPlace: 'France',
       marocTheme: 'TRLBLZR WE',
       marocBody: "Trois jours pour clôturer la saison fort. Un corps durable, des sentiers d'automne, des échanges profonds. Tes prochains défis se préparent ici, sur les sentiers comme dans tes projets.",
@@ -610,7 +610,7 @@ export const dictionary: Record<Locale, Dict> = {
       clubHeading: 'The community',
     },
     sessions: {
-      marocDate: 'November 6 — 8, 2026',
+      marocDate: 'December 11 — 13, 2026',
       marocPlace: 'France',
       marocTheme: 'TRLBLZR WE',
       marocBody: "Three days to close the season strong. A durable body, autumn trails, deeper conversations. Your next challenges start here, on the trails and in your projects.",

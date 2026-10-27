@@ -121,9 +121,10 @@ export default function PrivacyPage() {
             — voir section 6.
           </P>
           <P>
-            pitchinmotion.com ne dépose aucun cookie : votre préférence de langue est retenue
-            uniquement dans le stockage local de votre navigateur (localStorage), jamais transmise
-            à nos serveurs.
+            pitchinmotion.com ne dépose aucun cookie sans votre accord : votre préférence de langue
+            est retenue uniquement dans le stockage local de votre navigateur (localStorage),
+            jamais transmise à nos serveurs. Un cookie de mesure d&rsquo;audience n&rsquo;est déposé
+            que si vous l&rsquo;acceptez (voir section 8).
           </P>
 
           <H2>4. Pourquoi collectons-nous ces données ?</H2>
@@ -269,7 +270,7 @@ export default function PrivacyPage() {
           </P>
 
           <H2 id="cookies">8. Cookies</H2>
-          <P>trlblzr.run utilise deux cookies :</P>
+          <P>trlblzr.run utilise deux cookies, tous deux exemptés de consentement :</P>
           <div className="overflow-x-auto mb-4">
             <table className="w-full border border-stone text-sm">
               <thead>
@@ -311,8 +312,38 @@ export default function PrivacyPage() {
             </table>
           </div>
           <P>
-            Aucun cookie de mesure d&rsquo;audience, de publicité ou de traçage n&rsquo;est utilisé
-            sur trlblzr.run. pitchinmotion.com ne dépose aucun cookie (voir section 3.2).
+            <strong className="text-paper-white">Mesure d&rsquo;audience — uniquement avec votre consentement.</strong>{' '}
+            Si vous l&rsquo;acceptez dans le bandeau, nous utilisons Google Analytics 4, avec une
+            seule propriété pour trlblzr.run et pitchinmotion.com, afin de savoir quelles pages sont
+            consultées et comment les visiteurs passent d&rsquo;un site à l&rsquo;autre. Aucun script
+            Google n&rsquo;est chargé avant votre choix.
+          </P>
+          <Ul>
+            <li>
+              Cookies déposés si vous acceptez : <span className="font-mono text-xs">_ga</span> et{' '}
+              <span className="font-mono text-xs">_ga_&lt;identifiant&gt;</span> (statistiques
+              d&rsquo;audience, durée : 13 mois) ;
+            </li>
+            <li>
+              aucune publicité, aucun profilage : les fonctions publicitaires et de personnalisation
+              de Google sont désactivées ;
+            </li>
+            <li>
+              les adresses de pages sont nettoyées avant envoi : aucun numéro de membre ni paramètre
+              personnel n&rsquo;est transmis, et les pages de connexion et de profil ne sont pas
+              mesurées ;
+            </li>
+            <li>
+              Google (Google Ireland Limited, avec d&rsquo;éventuels transferts hors Union européenne
+              encadrés par le cadre de protection des données UE–États-Unis ou des clauses
+              contractuelles types) agit comme sous-traitant pour ces statistiques.
+            </li>
+          </Ul>
+          <P>
+            Refuser est aussi simple qu&rsquo;accepter. Vous pouvez changer d&rsquo;avis à tout
+            moment via le lien « Gérer mes cookies » en bas de page ; un refus supprime les cookies
+            de mesure déjà déposés. Votre choix est mémorisé dans le stockage local de votre
+            navigateur et doit être renouvelé sur chacun des deux sites.
           </P>
 
           <H2>9. Vos droits</H2>

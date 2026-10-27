@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useLocale } from '@/lib/locale-provider';
+import { CookieSettingsLink } from '@/components/Analytics';
 import { pimUrl } from '@/lib/i18n';
 
 export default function Footer() {
@@ -104,6 +105,7 @@ export default function Footer() {
           <Link href="/mentions-legales" className="hover:text-ember transition-colors">
             Mentions légales
           </Link>
+          <CookieSettingsLink className="hover:text-ember transition-colors" />
         </div>
         <span className="text-paper-white">{t.footer.tagline}</span>
       </div>
